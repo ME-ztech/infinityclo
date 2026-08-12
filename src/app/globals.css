@@ -21,6 +21,11 @@
   --color-smoke: #8a8a86;
   --color-dim: #5c5c58;
 
+  /* Form field borders sit lighter than structural borders on purpose. At
+     --color-ash an input is nearly invisible against the page, and a field a
+     customer cannot see is a field they will not fill in. */
+  --color-field: #4c4c47;
+
   /* Signal. Used only where something is genuinely true — a live sale, an
      error. Never decorative; a brand this dark loses its authority if colour
      is sprinkled around. */

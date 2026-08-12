@@ -54,13 +54,12 @@ export function ShopControls(props: ShopControlsProps) {
         <SortSelect sort={props.sort} />
       </div>
 
-      {/* Desktop sidebar */}
+      {/* Desktop sidebar. The result count is not repeated here — the page
+          header already states it, and at this column width the two sat on one
+          row and wrapped into each other. */}
       <div className="hidden lg:block">
-        <div className="mb-8 flex items-center justify-between gap-4">
-          <p className="text-dim text-[0.7rem] tracking-[0.14em] uppercase">
-            {props.resultCount} {props.resultCount === 1 ? 'piece' : 'pieces'}
-          </p>
-          <SortSelect sort={props.sort} />
+        <div className="mb-8">
+          <SortSelect sort={props.sort} stacked />
         </div>
         <FacetList {...props} />
       </div>
@@ -70,12 +69,12 @@ export function ShopControls(props: ShopControlsProps) {
   );
 }
 
-function SortSelect({ sort }: { sort: ProductSort }) {
+function SortSelect({ sort, stacked = false }: { sort: ProductSort; stacked?: boolean }) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
   return (
-    <div className="flex items-center gap-2">
+    <div className={stacked ? 'flex flex-col gap-2' : 'flex items-center gap-2'}>
       <label htmlFor="shop-sort" className="text-dim text-[0.7rem] tracking-[0.14em] uppercase">
         Sort
       </label>
@@ -88,7 +87,7 @@ function SortSelect({ sort }: { sort: ProductSort }) {
           next.set('sort', event.target.value);
           router.push(`?${next.toString()}`, { scroll: false });
         }}
-        className="border-ash text-bone focus:border-bone h-11 border bg-transparent px-3 text-xs outline-none"
+        className="border-field text-bone focus:border-bone h-11 border bg-transparent px-3 text-xs outline-none"
       >
         {SORT_OPTIONS.map((option) => (
           <option key={option.value} value={option.value} className="bg-ink">

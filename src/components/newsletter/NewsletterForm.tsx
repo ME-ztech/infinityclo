@@ -100,7 +100,7 @@ export function NewsletterForm({
           data-testid="newsletter-email"
           className={cn(
             'text-bone placeholder:text-dim h-12 flex-1 border bg-transparent px-4 text-sm transition-colors outline-none',
-            status === 'error' ? 'border-signal' : 'border-ash focus:border-bone',
+            status === 'error' ? 'border-signal' : 'border-field focus:border-bone',
           )}
         />
         <Button type="submit" disabled={status === 'submitting'} size="md">

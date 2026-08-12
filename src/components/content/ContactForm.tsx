@@ -71,7 +71,7 @@ export function ContactForm() {
             aria-describedby={errors[field.key] ? `${baseId}-${field.key}-error` : undefined}
             className={cn(
               'text-bone h-12 w-full border bg-transparent px-4 text-sm transition-colors outline-none',
-              errors[field.key] ? 'border-signal' : 'border-ash focus:border-bone',
+              errors[field.key] ? 'border-signal' : 'border-field focus:border-bone',
             )}
           />
           {errors[field.key] && (
@@ -105,7 +105,7 @@ export function ContactForm() {
           aria-describedby={errors.message ? `${baseId}-message-error` : undefined}
           className={cn(
             'text-bone w-full resize-y border bg-transparent p-4 text-sm transition-colors outline-none',
-            errors.message ? 'border-signal' : 'border-ash focus:border-bone',
+            errors.message ? 'border-signal' : 'border-field focus:border-bone',
           )}
         />
         {errors.message && (

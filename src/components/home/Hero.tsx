@@ -38,13 +38,10 @@ export function Hero({ media }: { media: ProductMedia | null }) {
           />
         </>
       ) : (
-        <div aria-hidden className="absolute inset-0">
-          {/* No campaign asset yet. Rather than a stock photograph or a
-              decorative gradient, the surface stays flat and lets the wordmark
-              carry it. Replaced by the real campaign shot at import. */}
-          <div className="bg-void absolute inset-0" />
-          <div className="border-ash/30 absolute inset-x-[--spacing-gutter] inset-y-16 border" />
-        </div>
+        // No campaign asset yet. Rather than a stock photograph or a decorative
+        // gradient, the surface stays flat and lets the type carry the
+        // composition. Replaced by the real campaign shot at import.
+        <div aria-hidden className="bg-void absolute inset-0" />
       )}
 
       <div className="edge relative w-full pb-16 md:pb-24">
@@ -64,7 +61,9 @@ export function Hero({ media }: { media: ProductMedia | null }) {
           follow.
         </p>
 
-        <div className="mt-9 flex flex-wrap gap-3">
+        {/* Equal-width on a phone so the stacked pair reads as one block
+            instead of a ragged edge; content-width side by side above that. */}
+        <div className="mt-9 grid max-w-md grid-cols-1 gap-3 sm:flex sm:max-w-none sm:flex-wrap">
           <ButtonLink href="/shop" variant="primary" size="lg">
             Shop all
           </ButtonLink>
