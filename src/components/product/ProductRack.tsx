@@ -27,7 +27,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { ProductCard } from '@/components/product/ProductCard';
-import { RACK, RACK_ITEM } from '@/lib/rack';
+import { RACK, RACK_GUTTER, RACK_ITEM } from '@/lib/rack';
 import type { Product } from '@/domain/types';
 import { cn } from '@/lib/cn';
 
@@ -94,14 +94,21 @@ export function ProductRack({
   if (products.length === 0) return null;
 
   return (
-    <div className={cn('relative', className)}>
+    // `min-w-0` for the same reason the rail itself carries it: this wrapper is
+    // whatever its parent makes it — a section child here, a grid item on some
+    // future page — and the rail behind it has a min-content width of four
+    // cards. Without this the recommendations could widen the document instead
+    // of scrolling inside it.
+    <div className={cn('relative min-w-0', className)}>
       <ul
         ref={scrollerRef}
+        data-testid="product-rack"
         className={cn(
           // Mobile: full-bleed rail. Negative margin cancels the section gutter
           // so the rail runs edge to edge, and the inner padding puts the first
           // card back on the grid line.
           RACK,
+          RACK_GUTTER,
           '-mx-(--spacing-gutter) gap-4 px-(--spacing-gutter) pb-2',
           // Desktop: grid. `overflow-visible` matters — the rail's clipping
           // would otherwise cut off the quick-add control on the top row.

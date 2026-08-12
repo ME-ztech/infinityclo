@@ -139,11 +139,17 @@ export function ProductCard({
           />
 
           {/* Hover shot. Decorative and duplicative of the primary alt, so it is
-              hidden from assistive tech; it is never the only image. */}
+              hidden from assistive tech; it is never the only image.
+
+              `overflow-hidden` matches the primary frame, which MediaFrame
+              clips: without it the pre-scaled shot sat ~5px proud of the card on
+              every side, so the last column of the desktop grid reported a
+              wider scroll width than the grid box and the two images cropped
+              differently as a customer hovered. */}
           {secondary && (
             <span
               aria-hidden
-              className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-700 ease-(--ease-brand) group-hover/card:opacity-100"
+              className="pointer-events-none absolute inset-0 overflow-hidden opacity-0 transition-opacity duration-700 ease-(--ease-brand) group-hover/card:opacity-100"
             >
               <Image
                 src={secondary.url}

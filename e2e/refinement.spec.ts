@@ -193,3 +193,115 @@ test.describe('product page', () => {
     await expect(options.first()).toHaveAttribute('aria-pressed', 'false');
   });
 });
+
+/**
+ * Mobile containment on the PDP.
+ *
+ * This is the one page where a rail sits inside a grid column, and that
+ * combination shipped the worst layout bug of 1.1: the gallery's slides were a
+ * viewport wide each, the column refused to be narrower than all of them at
+ * once, and a four-shot product laid the document out four screens wide. Every
+ * `vw`-sized thing on the page — the header, the breadcrumb, the
+ * recommendations — then rendered into the left quarter of a page iOS had zoomed
+ * out to fit, which is what the store owner photographed and reported.
+ *
+ * These run on both projects: the desktop grid is the other half of the same
+ * component and must stay as it is.
+ */
+test.describe('product page containment', () => {
+  /** Whichever catalogue is loaded, start from a product that really exists. */
+  async function openFirstProduct(page: import('@playwright/test').Page) {
+    await page.goto('/shop');
+    const card = page.getByTestId('product-card').first();
+    if ((await card.count()) === 0) return false;
+    await card.getByRole('link').first().click();
+    await expect(page.getByTestId('add-to-cart')).toBeVisible();
+    return true;
+  }
+
+  test('the page never grows wider than the viewport', async ({ page }) => {
+    test.skip(!(await openFirstProduct(page)), 'Catalogue is empty');
+
+    const { scrollWidth, clientWidth } = await page.evaluate(() => ({
+      scrollWidth: document.documentElement.scrollWidth,
+      clientWidth: document.documentElement.clientWidth,
+    }));
+
+    // One pixel of tolerance for sub-pixel rounding.
+    expect(
+      scrollWidth,
+      `the product page is ${scrollWidth}px wide in a ${clientWidth}px viewport`,
+    ).toBeLessThanOrEqual(clientWidth + 1);
+  });
+
+  test('the gallery shows one shot per viewport and swipes cleanly', async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== 'mobile', 'The mobile gallery is a rail; desktop stacks.');
+    test.skip(!(await openFirstProduct(page)), 'Catalogue is empty');
+
+    const rail = page.getByTestId('gallery-rail');
+    test.skip((await rail.count()) === 0, 'This catalogue has no photography');
+
+    const geometry = await rail.evaluate((el) => ({
+      railWidth: el.clientWidth,
+      slideWidth: el.firstElementChild?.getBoundingClientRect().width ?? 0,
+      slides: el.children.length,
+      scrollWidth: el.scrollWidth,
+      viewport: document.documentElement.clientWidth,
+      snap: getComputedStyle(el).scrollSnapType,
+    }));
+    test.skip(geometry.slides < 2, 'Product has a single shot — nothing to swipe');
+
+    // One garment shot fills the rail exactly: no half-images, no desktop
+    // thumbnail strip eating the top of a phone screen.
+    expect(Math.round(geometry.slideWidth)).toBe(geometry.railWidth);
+    expect(geometry.railWidth).toBeLessThanOrEqual(geometry.viewport + 1);
+    expect(geometry.snap).toContain('mandatory');
+
+    // The extra shots live inside the rail's scroll width, not the page's.
+    expect(geometry.scrollWidth).toBeGreaterThan(geometry.railWidth);
+
+    // Driven through the pager rather than a synthetic scroll: the rail also
+    // moves itself when a variant carries its own shot, and polling the settled
+    // position is what makes this a claim about where a swipe *lands* rather
+    // than a race with a smooth scroll still in flight.
+    await page.getByRole('button', { name: 'Next image' }).click();
+    await expect
+      .poll(() => rail.evaluate((el) => Math.round(el.scrollLeft)), { timeout: 5000 })
+      .toBe(geometry.railWidth);
+  });
+
+  test('the recommendations scroll inside their rail', async ({ page }, testInfo) => {
+    test.skip(!(await openFirstProduct(page)), 'Catalogue is empty');
+
+    const rack = page.getByTestId('product-rack').last();
+    test.skip((await rack.count()) === 0, 'This product has no related pieces');
+    await rack.scrollIntoViewIfNeeded();
+
+    const geometry = await rack.evaluate((el) => ({
+      display: getComputedStyle(el).display,
+      railWidth: el.clientWidth,
+      scrollWidth: el.scrollWidth,
+      cardWidth: el.firstElementChild?.getBoundingClientRect().width ?? 0,
+      cards: el.children.length,
+      viewport: document.documentElement.clientWidth,
+      documentWidth: document.documentElement.scrollWidth,
+    }));
+
+    expect(geometry.documentWidth).toBeLessThanOrEqual(geometry.viewport + 1);
+
+    if (testInfo.project.name === 'mobile') {
+      expect(geometry.display).toBe('flex');
+      // A card narrower than the screen is what leaves the next piece peeking in
+      // from the right — the affordance that says "swipe me".
+      expect(geometry.cardWidth).toBeLessThan(geometry.viewport);
+      expect(geometry.cardWidth / geometry.viewport).toBeGreaterThan(0.6);
+      if (geometry.cards > 1) expect(geometry.scrollWidth).toBeGreaterThan(geometry.railWidth);
+    } else {
+      expect(geometry.display).toBe('grid');
+      // Same 4px tolerance as the rack test above: the desktop grid is
+      // `overflow-visible` so the quick-add control's transform counts towards
+      // scrollWidth without the grid itself overflowing.
+      expect(geometry.scrollWidth).toBeLessThanOrEqual(geometry.railWidth + 4);
+    }
+  });
+});

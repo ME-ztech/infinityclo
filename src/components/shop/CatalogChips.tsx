@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 import type { CategoryGroupDefinition, CategoryGroup } from '@/domain/taxonomy';
 import { cn } from '@/lib/cn';
-import { RACK, RACK_ITEM } from '@/lib/rack';
+import { RACK, RACK_GUTTER, RACK_ITEM } from '@/lib/rack';
 
 /**
  * Catalogue section chips.
@@ -35,6 +35,7 @@ export function CatalogChips({
       <ul
         className={cn(
           RACK,
+          RACK_GUTTER,
           '-mx-(--spacing-gutter) gap-2 px-(--spacing-gutter)',
           'sm:mx-0 sm:snap-none sm:flex-wrap sm:overflow-visible sm:px-0',
         )}
