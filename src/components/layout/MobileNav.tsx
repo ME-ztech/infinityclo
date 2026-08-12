@@ -72,7 +72,9 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
                   )}
                 >
                   <span>{item.label}</span>
-                  <span className="text-dim text-xs tabular-nums">
+                  {/* Decorative index — hidden from assistive tech so the link's
+                      accessible name stays "Shop", not "Shop 02". */}
+                  <span aria-hidden className="text-dim text-xs tabular-nums">
                     {String(index + 1).padStart(2, '0')}
                   </span>
                 </Link>
@@ -81,21 +83,22 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
           })}
         </ul>
 
-        <div className="mt-10 flex flex-col gap-4">
-          <Link
-            href="/account"
-            onClick={onClose}
-            className="text-bone hover:text-paper text-xs font-semibold tracking-[0.18em] uppercase"
-          >
-            Account
-          </Link>
-          <Link
-            href="/contact"
-            onClick={onClose}
-            className="text-bone hover:text-paper text-xs font-semibold tracking-[0.18em] uppercase"
-          >
-            Contact
-          </Link>
+        {/* Secondary links keep a 44px touch target even though the type is
+            small — the label sets the size, the row sets the tap area. */}
+        <div className="mt-8 flex flex-col">
+          {[
+            { label: 'Account', href: '/account' },
+            { label: 'Contact', href: '/contact' },
+          ].map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              onClick={onClose}
+              className="text-bone hover:text-paper flex min-h-11 items-center text-xs font-semibold tracking-[0.18em] uppercase"
+            >
+              {link.label}
+            </Link>
+          ))}
         </div>
       </nav>
 
@@ -105,7 +108,7 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
             key={link.href}
             href={link.href}
             onClick={onClose}
-            className="text-dim hover:text-bone text-[0.68rem] tracking-[0.14em] uppercase"
+            className="text-dim hover:text-bone flex min-h-11 items-center text-[0.68rem] tracking-[0.14em] uppercase"
           >
             {link.label}
           </Link>

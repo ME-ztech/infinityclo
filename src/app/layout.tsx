@@ -4,7 +4,6 @@ import { Anton, Archivo } from 'next/font/google';
 import { CartDrawer } from '@/components/cart/CartDrawer';
 import { Footer } from '@/components/layout/Footer';
 import { Header } from '@/components/layout/Header';
-import { PreviewNotice } from '@/components/layout/PreviewNotice';
 import { CartProvider } from '@/lib/cart/CartProvider';
 import { BRAND, SITE_URL } from '@/lib/site';
 
@@ -68,7 +67,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           >
             Skip to content
           </a>
-          <PreviewNotice />
+          {/* The preview notice is rendered inside Header's fixed stack. */}
           <Header />
           <main id="main">{children}</main>
           <Footer />

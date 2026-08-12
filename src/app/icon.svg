@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!--
+    INFNITY mark, placeholder until the brand's official logo files can be
+    retrieved. An infinity glyph drawn as two hard-cornered loops rather than a
+    soft lemniscate, so it reads streetwear rather than wellness, and stays
+    legible at 16px. See docs/ASSET_PROVENANCE.md.
+  -->
+  <rect width="64" height="64" fill="#050505" />
+  <g fill="none" stroke="#ffffff" stroke-width="7" stroke-linejoin="miter">
+    <rect x="9.5" y="22.5" width="19" height="19" />
+    <rect x="35.5" y="22.5" width="19" height="19" />
+  </g>
+</svg>

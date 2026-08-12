@@ -18,6 +18,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
+import { PreviewNotice } from '@/components/layout/PreviewNotice';
 import { SearchOverlay } from '@/components/search/SearchOverlay';
 import { Wordmark } from '@/components/ui/Wordmark';
 import { useCart } from '@/lib/cart/CartProvider';
@@ -68,104 +69,115 @@ export function Header() {
 
   return (
     <>
-      <header
-        data-testid="site-header"
+      {/* One fixed stack for the whole top chrome. The preview notice lives
+          inside it rather than in page flow, so the two can never overlap and
+          steal each other's clicks, and they hide and return together. */}
+      <div
         className={cn(
-          'fixed inset-x-0 top-0 z-50 transition-[transform,background-color,border-color] duration-300 ease-[--ease-brand]',
-          isSolid
-            ? 'bg-void/95 border-ash/60 border-b backdrop-blur-sm'
-            : 'border-b border-transparent',
+          'fixed inset-x-0 top-0 z-50 transition-transform duration-300 ease-[--ease-brand]',
           isHidden ? '-translate-y-full' : 'translate-y-0',
         )}
       >
-        <div className="edge flex h-16 items-center justify-between gap-4 md:h-20">
-          <div className="flex items-center gap-8">
-            <button
-              type="button"
-              onClick={() => setIsMobileNavOpen(true)}
-              aria-label="Open menu"
-              aria-expanded={isMobileNavOpen}
-              className="text-bone hover:text-paper -ml-2 p-2 lg:hidden"
-            >
-              <MenuIcon />
-            </button>
+        <PreviewNotice />
 
-            <Link href="/" aria-label="INFNITY — home" className="shrink-0">
-              <Wordmark className="text-lg md:text-xl" />
-            </Link>
-          </div>
+        <header
+          data-testid="site-header"
+          className={cn(
+            'transition-[background-color,border-color] duration-300 ease-[--ease-brand]',
+            isSolid
+              ? 'bg-void/95 border-ash/60 border-b backdrop-blur-sm'
+              : 'border-b border-transparent',
+          )}
+        >
+          <div className="edge flex h-16 items-center justify-between gap-4 md:h-20">
+            <div className="flex items-center gap-8">
+              <button
+                type="button"
+                onClick={() => setIsMobileNavOpen(true)}
+                aria-label="Open menu"
+                aria-expanded={isMobileNavOpen}
+                className="text-bone hover:text-paper -ml-2 p-2 lg:hidden"
+              >
+                <MenuIcon />
+              </button>
 
-          <nav aria-label="Primary" className="hidden lg:block">
-            <ul className="flex items-center gap-8">
-              {PRIMARY_NAV.map((item) => {
-                const isActive =
-                  item.href === '/shop'
-                    ? pathname === '/shop'
-                    : pathname.startsWith(item.href.split('?')[0] ?? item.href) &&
-                      item.href !== '/shop?sort=newest';
-                return (
-                  <li key={item.label}>
-                    <Link
-                      href={item.href}
-                      className={cn(
-                        'hover:text-paper relative py-2 text-[0.72rem] font-semibold tracking-[0.18em] uppercase transition-colors',
-                        isActive ? 'text-paper' : 'text-bone/80',
-                      )}
-                    >
-                      {item.label}
-                      {isActive && (
-                        <span
-                          className="bg-paper absolute inset-x-0 -bottom-0.5 h-px"
-                          aria-hidden
-                        />
-                      )}
-                    </Link>
-                  </li>
-                );
-              })}
-            </ul>
-          </nav>
+              <Link href="/" aria-label="INFNITY — home" className="shrink-0">
+                <Wordmark className="text-lg md:text-xl" />
+              </Link>
+            </div>
 
-          <div className="flex items-center gap-1 md:gap-2">
-            <button
-              type="button"
-              onClick={() => setIsSearchOpen(true)}
-              aria-label="Search"
-              className="text-bone hover:text-paper p-2"
-            >
-              <SearchIcon />
-            </button>
+            <nav aria-label="Primary" className="hidden lg:block">
+              <ul className="flex items-center gap-8">
+                {PRIMARY_NAV.map((item) => {
+                  const isActive =
+                    item.href === '/shop'
+                      ? pathname === '/shop'
+                      : pathname.startsWith(item.href.split('?')[0] ?? item.href) &&
+                        item.href !== '/shop?sort=newest';
+                  return (
+                    <li key={item.label}>
+                      <Link
+                        href={item.href}
+                        className={cn(
+                          'hover:text-paper relative py-2 text-[0.72rem] font-semibold tracking-[0.18em] uppercase transition-colors',
+                          isActive ? 'text-paper' : 'text-bone/80',
+                        )}
+                      >
+                        {item.label}
+                        {isActive && (
+                          <span
+                            className="bg-paper absolute inset-x-0 -bottom-0.5 h-px"
+                            aria-hidden
+                          />
+                        )}
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </nav>
 
-            <Link
-              href="/account"
-              aria-label="Account"
-              className="text-bone hover:text-paper hidden p-2 sm:block"
-            >
-              <AccountIcon />
-            </Link>
+            <div className="flex items-center gap-1 md:gap-2">
+              <button
+                type="button"
+                onClick={() => setIsSearchOpen(true)}
+                aria-label="Search"
+                className="text-bone hover:text-paper p-2"
+              >
+                <SearchIcon />
+              </button>
 
-            <button
-              type="button"
-              onClick={openDrawer}
-              aria-label={isHydrated && lineCount > 0 ? `Cart, ${lineCount} items` : 'Cart'}
-              data-testid="cart-button"
-              className="text-bone hover:text-paper relative p-2"
-            >
-              <CartIcon />
-              {/* Rendered only after hydration so the server and first client
+              <Link
+                href="/account"
+                aria-label="Account"
+                className="text-bone hover:text-paper hidden p-2 sm:block"
+              >
+                <AccountIcon />
+              </Link>
+
+              <button
+                type="button"
+                onClick={openDrawer}
+                aria-label={isHydrated && lineCount > 0 ? `Cart, ${lineCount} items` : 'Cart'}
+                data-testid="cart-button"
+                className="text-bone hover:text-paper relative p-2"
+              >
+                <CartIcon />
+                {/* Rendered only after hydration so the server and first client
                   paint agree; a 0 badge would flash on every cold load. */}
-              {isHydrated && lineCount > 0 && (
-                <span
-                  data-testid="cart-count"
-                  className="bg-paper text-void absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[0.6rem] font-bold tabular-nums"
-                >
-                  {lineCount}
-                </span>
-              )}
-            </button>
+                {isHydrated && lineCount > 0 && (
+                  <span
+                    data-testid="cart-count"
+                    className="bg-paper text-void absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[0.6rem] font-bold tabular-nums"
+                  >
+                    {lineCount}
+                  </span>
+                )}
+              </button>
+            </div>
           </div>
-        </div>
-      </header>
+        </header>
+      </div>
 
       <MobileNav isOpen={isMobileNavOpen} onClose={() => setIsMobileNavOpen(false)} />
       {isSearchOpen && <SearchOverlay onClose={() => setIsSearchOpen(false)} />}

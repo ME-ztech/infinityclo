@@ -25,7 +25,10 @@ export function PreviewNotice() {
     <div
       role="status"
       data-testid="preview-notice"
-      className="bg-paper text-void relative z-[60] px-4 py-2 text-center text-[0.7rem] leading-snug font-semibold tracking-[0.1em] uppercase"
+      // No positioning or z-index of its own: it is rendered inside the
+      // header's fixed stack, so it shares that layer. Giving it a higher
+      // z-index made it intercept pointer events over the header's controls.
+      className="bg-paper text-void px-4 py-2 text-center text-[0.7rem] leading-snug font-semibold tracking-[0.1em] uppercase"
     >
       <span>Preview build — checkout is not live and no orders can be placed.</span>
       <button
