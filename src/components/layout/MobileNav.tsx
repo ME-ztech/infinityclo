@@ -43,7 +43,8 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
       aria-label="Menu"
       data-testid="mobile-nav"
       tabIndex={-1}
-      className="bg-void fixed inset-0 z-[70] flex animate-[fade-in_200ms_ease-out] flex-col lg:hidden"
+      data-surface="void"
+      className="bg-surface text-fg fixed inset-0 z-[70] flex animate-[fade-in_200ms_ease-out] flex-col lg:hidden"
     >
       <div className="edge flex h-16 shrink-0 items-center justify-between">
         <Wordmark className="text-lg" />
@@ -51,7 +52,7 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
           type="button"
           onClick={onClose}
           aria-label="Close menu"
-          className="text-bone hover:text-paper -mr-2 p-3"
+          className="text-fg hover:text-signal -mr-2 p-3 transition-colors"
         >
           <CloseIcon />
         </button>
@@ -62,19 +63,19 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
           {PRIMARY_NAV.map((item, index) => {
             const isActive = pathname === item.href.split('?')[0];
             return (
-              <li key={item.label} className="border-ash/40 border-b">
+              <li key={item.label} className="border-line border-b">
                 <Link
                   href={item.href}
                   onClick={onClose}
                   className={cn(
-                    'font-display flex items-center justify-between py-5 text-3xl leading-none transition-colors',
-                    isActive ? 'text-paper' : 'text-bone hover:text-paper',
+                    'font-display oblique flex items-center justify-between py-5 text-[2rem] leading-none transition-colors',
+                    isActive ? 'text-signal' : 'text-fg hover:text-signal',
                   )}
                 >
                   <span>{item.label}</span>
                   {/* Decorative index — hidden from assistive tech so the link's
                       accessible name stays "Shop", not "Shop 02". */}
-                  <span aria-hidden className="text-dim text-xs tabular-nums">
+                  <span aria-hidden className="text-fg-faint text-xs tabular-nums">
                     {String(index + 1).padStart(2, '0')}
                   </span>
                 </Link>
@@ -94,7 +95,7 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
               key={link.href}
               href={link.href}
               onClick={onClose}
-              className="text-bone hover:text-paper flex min-h-11 items-center text-xs font-semibold tracking-[0.18em] uppercase"
+              className="text-fg-muted hover:text-fg flex min-h-11 items-center text-xs font-semibold tracking-[0.2em] uppercase transition-colors"
             >
               {link.label}
             </Link>
@@ -102,13 +103,13 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
         </div>
       </nav>
 
-      <div className="edge border-ash/40 flex shrink-0 items-center gap-6 border-t py-5">
+      <div className="edge border-line flex shrink-0 items-center gap-6 border-t py-5">
         {LEGAL_NAV.map((link) => (
           <Link
             key={link.href}
             href={link.href}
             onClick={onClose}
-            className="text-dim hover:text-bone flex min-h-11 items-center text-[0.68rem] tracking-[0.14em] uppercase"
+            className="text-fg-faint hover:text-fg flex min-h-11 items-center text-[0.66rem] tracking-[0.18em] uppercase transition-colors"
           >
             {link.label}
           </Link>

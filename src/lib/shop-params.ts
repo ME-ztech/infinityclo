@@ -6,6 +6,7 @@
  * that knows the encoding, used by both the server page and the client filter
  * UI so the two can never disagree about what a URL means.
  */
+import { CATEGORY_GROUPS, type CategoryGroup } from '@/domain/taxonomy';
 import type { ProductFilters, ProductSort } from '@/domain/types';
 
 export const SORT_OPTIONS: ReadonlyArray<{ value: ProductSort; label: string }> = [
@@ -33,9 +34,21 @@ export interface ParsedShopParams {
   readonly filters: ProductFilters;
   readonly sort: ProductSort;
   readonly activeCount: number;
+  /**
+   * The catalogue chip selection (TOPS / HOODIES / …). Kept separate from
+   * `filters` because it is derived by `domain/taxonomy` from the product's own
+   * name rather than stored on the record, so the repository — which only knows
+   * what the data says — cannot answer it. The page applies it after the query.
+   */
+  readonly group: CategoryGroup | null;
 }
 
+const VALID_GROUPS = new Set<string>(CATEGORY_GROUPS.map((group) => group.id));
+
 export function parseShopParams(params: RawSearchParams): ParsedShopParams {
+  const groupParam = typeof params.group === 'string' ? params.group : '';
+  const group = VALID_GROUPS.has(groupParam) ? (groupParam as CategoryGroup) : null;
+
   const sizes = toList(params.size);
   const colours = toList(params.colour);
   const categories = toList(params.category);
@@ -56,7 +69,7 @@ export function parseShopParams(params: RawSearchParams): ParsedShopParams {
   const activeCount =
     sizes.length + colours.length + categories.length + collections.length + (inStockOnly ? 1 : 0);
 
-  return { filters, sort, activeCount };
+  return { filters, sort, activeCount, group };
 }
 
 /**
@@ -81,9 +94,17 @@ export function toggleFacetValue(
   return next;
 }
 
+/**
+ * Clears the facet drawer only. The sort order and the catalogue chip survive,
+ * because "clear filters" means "widen this search", not "take me back to the
+ * top of the shop" — losing the section a customer is browsing is a different
+ * action and it has its own control.
+ */
 export function clearFilters(current: URLSearchParams): URLSearchParams {
   const next = new URLSearchParams();
   const sort = current.get('sort');
   if (sort) next.set('sort', sort);
+  const group = current.get('group');
+  if (group) next.set('group', group);
   return next;
 }

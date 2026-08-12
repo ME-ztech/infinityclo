@@ -31,14 +31,17 @@ export default async function VaultPage() {
   const hasArchive = archivedCollections.length > 0 || soldOutPieces.length > 0;
 
   return (
-    <div>
-      <section className="edge flex min-h-[70svh] items-end pt-28 pb-16 md:pt-36">
+    <div data-surface="ink" className="bg-surface text-fg">
+      <section
+        data-surface="void"
+        className="bg-surface edge flex min-h-[62svh] items-end pt-20 pb-16 md:pt-24"
+      >
         <div>
-          <p className="text-dim mb-5 text-[0.7rem] font-semibold tracking-[0.3em] uppercase">
+          <p className="text-fg-faint mb-5 text-[0.7rem] font-semibold tracking-[0.3em] uppercase">
             The archive
           </p>
-          <h1 className="font-display text-statement text-paper">Enter the Vault</h1>
-          <p className="font-display text-smoke mt-8 text-xl leading-tight tracking-[0.06em] md:text-3xl">
+          <h1 className="font-display text-statement text-fg oblique">Enter the Vault</h1>
+          <p className="font-display text-fg-muted mt-8 text-xl leading-tight tracking-[0.06em] md:text-3xl">
             Past drops.
             <br />
             Old stories.
@@ -48,7 +51,7 @@ export default async function VaultPage() {
         </div>
       </section>
 
-      <div className="edge pb-[--spacing-section]">
+      <div className="edge pb-(--spacing-section)">
         {!hasArchive ? (
           <EmptyState
             title="The Vault is sealed"
@@ -67,25 +70,25 @@ export default async function VaultPage() {
         ) : (
           <>
             {archivedCollections.length > 0 && (
-              <section aria-labelledby="archive-collections" className="mb-[--spacing-section]">
+              <section aria-labelledby="archive-collections" className="mb-(--spacing-section)">
                 <h2
                   id="archive-collections"
-                  className="text-dim mb-8 text-[0.68rem] font-semibold tracking-[0.24em] uppercase"
+                  className="text-fg-faint mb-8 text-[0.68rem] font-semibold tracking-[0.24em] uppercase"
                 >
                   Archived collections
                 </h2>
 
-                <ul className="border-ash/50 border-t">
+                <ul className="border-line border-t">
                   {archivedCollections.map((collection) => (
-                    <li key={collection.slug} className="border-ash/50 border-b">
+                    <li key={collection.slug} className="border-line border-b">
                       <Link
                         href={`/collections/${collection.slug}`}
                         className="group flex items-baseline justify-between gap-6 py-6 transition-colors"
                       >
-                        <span className="font-display text-paper group-hover:text-bone text-2xl md:text-4xl">
+                        <span className="font-display text-fg group-hover:text-fg-muted text-2xl md:text-4xl">
                           {collection.name}
                         </span>
-                        <span className="text-dim shrink-0 text-[0.7rem] tracking-[0.14em] uppercase">
+                        <span className="text-fg-faint shrink-0 text-[0.7rem] tracking-[0.14em] uppercase">
                           {collection.dropLabel ?? `${collection.productSlugs.length} pieces`}
                         </span>
                       </Link>
@@ -99,11 +102,11 @@ export default async function VaultPage() {
               <section aria-labelledby="archive-pieces">
                 <h2
                   id="archive-pieces"
-                  className="text-dim mb-8 text-[0.68rem] font-semibold tracking-[0.24em] uppercase"
+                  className="text-fg-faint mb-8 text-[0.68rem] font-semibold tracking-[0.24em] uppercase"
                 >
                   Sold through
                 </h2>
-                <ProductGrid products={soldOutPieces} density="comfortable" priorityCount={0} />
+                <ProductGrid products={soldOutPieces} density="showroom" priorityCount={0} />
               </section>
             )}
           </>

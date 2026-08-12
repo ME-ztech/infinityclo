@@ -42,7 +42,7 @@ export function TroopGallery({
               track({ name: 'ugc_opened', entryId: entry.id });
             }}
             data-testid="troop-entry"
-            className="group bg-carbon relative mb-4 block w-full break-inside-avoid overflow-hidden text-left"
+            className="group bg-surface-sunken relative mb-4 block w-full break-inside-avoid overflow-hidden text-left"
           >
             <Image
               src={entry.media.url}
@@ -50,7 +50,7 @@ export function TroopGallery({
               width={entry.media.width || 800}
               height={entry.media.height || 1000}
               sizes="(min-width: 1024px) 25vw, (min-width: 768px) 33vw, 50vw"
-              className="w-full transition-transform duration-700 ease-[--ease-brand] group-hover:scale-[1.04]"
+              className="w-full transition-transform duration-700 ease-(--ease-brand) group-hover:scale-[1.04]"
             />
 
             <div
@@ -59,13 +59,13 @@ export function TroopGallery({
             />
 
             {entry.handle && (
-              <span className="text-paper absolute bottom-3 left-3 text-[0.7rem] font-semibold tracking-[0.1em] opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+              <span className="text-fg absolute bottom-3 left-3 text-[0.7rem] font-semibold tracking-[0.1em] opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                 {entry.handle}
               </span>
             )}
 
             {entry.productSlugs.length > 0 && (
-              <span className="bg-paper text-void absolute top-3 right-3 px-2 py-1 text-[0.58rem] font-bold tracking-[0.14em] uppercase">
+              <span className="bg-inverse-surface text-inverse-fg absolute top-3 right-3 px-2 py-1 text-[0.58rem] font-bold tracking-[0.14em] uppercase">
                 Shop
               </span>
             )}
@@ -87,7 +87,7 @@ function TroopLightbox({ entry, onClose }: { entry: UGCEntry; onClose: () => voi
         type="button"
         aria-label="Close"
         onClick={onClose}
-        className="bg-void/85 absolute inset-0 h-full w-full cursor-default"
+        className="bg-surface/85 absolute inset-0 h-full w-full cursor-default"
         tabIndex={-1}
       />
 
@@ -97,7 +97,7 @@ function TroopLightbox({ entry, onClose }: { entry: UGCEntry; onClose: () => voi
         aria-modal="true"
         aria-label="Customer fit"
         tabIndex={-1}
-        className="bg-ink border-ash relative flex max-h-[90svh] w-full max-w-3xl flex-col overflow-hidden border md:flex-row"
+        className="bg-surface-raised border-line relative flex max-h-[90svh] w-full max-w-3xl flex-col overflow-hidden border md:flex-row"
       >
         <div className="relative min-h-[45svh] flex-1 md:min-h-0">
           <Image
@@ -112,16 +112,16 @@ function TroopLightbox({ entry, onClose }: { entry: UGCEntry; onClose: () => voi
         <div className="flex w-full shrink-0 flex-col gap-5 overflow-y-auto p-6 md:w-72">
           <div className="flex items-start justify-between gap-3">
             <div>
-              <p className="text-dim text-[0.68rem] font-semibold tracking-[0.2em] uppercase">
+              <p className="text-fg-faint text-[0.68rem] font-semibold tracking-[0.2em] uppercase">
                 The Troop
               </p>
-              {entry.handle && <p className="text-paper mt-1 text-sm">{entry.handle}</p>}
+              {entry.handle && <p className="text-fg mt-1 text-sm">{entry.handle}</p>}
             </div>
             <button
               type="button"
               onClick={onClose}
               aria-label="Close"
-              className="text-bone hover:text-paper -mt-2 -mr-2 p-2"
+              className="text-fg-muted hover:text-fg -mt-2 -mr-2 p-2"
             >
               <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden>
                 <path d="m4 4 12 12M16 4 4 16" stroke="currentColor" strokeWidth="1.5" />
@@ -129,11 +129,13 @@ function TroopLightbox({ entry, onClose }: { entry: UGCEntry; onClose: () => voi
             </button>
           </div>
 
-          {entry.caption && <p className="text-smoke text-sm leading-relaxed">{entry.caption}</p>}
+          {entry.caption && (
+            <p className="text-fg-muted text-sm leading-relaxed">{entry.caption}</p>
+          )}
 
           {entry.productSlugs.length > 0 && (
             <div>
-              <p className="text-dim mb-3 text-[0.68rem] font-semibold tracking-[0.2em] uppercase">
+              <p className="text-fg-faint mb-3 text-[0.68rem] font-semibold tracking-[0.2em] uppercase">
                 In this fit
               </p>
               <ul className="flex flex-col gap-2">
@@ -142,7 +144,7 @@ function TroopLightbox({ entry, onClose }: { entry: UGCEntry; onClose: () => voi
                     <Link
                       href={`/products/${slug}`}
                       onClick={onClose}
-                      className="text-bone hover:text-paper text-sm underline underline-offset-4"
+                      className="text-fg-muted hover:text-fg text-sm underline underline-offset-4"
                     >
                       {slug.replace(/-/g, ' ')}
                     </Link>

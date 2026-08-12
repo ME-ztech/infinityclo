@@ -122,7 +122,7 @@ first-hand, but the rebuild is built so they cannot recur:
 Allow `infinityclo.ca` and `cdn.shopify.com` for this environment, then run:
 
 ```bash
-npm run import:legacy
+npm run import:catalog
 ```
 
 The importer reads the public catalog once, normalises it into the domain model,

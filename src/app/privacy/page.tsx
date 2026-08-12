@@ -68,7 +68,7 @@ export default function PrivacyPage() {
       <PolicySection heading="Contact">
         <p>
           For privacy questions, use the{' '}
-          <a href="/contact" className="text-paper underline underline-offset-4">
+          <a href="/contact" className="text-fg underline underline-offset-4">
             contact page
           </a>
           .

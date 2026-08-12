@@ -21,15 +21,17 @@ export default function ErrorBoundary({
   }, [error]);
 
   return (
-    <div className="edge flex min-h-[70svh] flex-col items-center justify-center pt-28 pb-[--spacing-section] text-center">
-      <p className="font-display text-headline text-paper">Something broke</p>
-      <p className="text-smoke mt-5 max-w-sm text-sm leading-relaxed">
+    <div className="edge flex min-h-[70svh] flex-col items-center justify-center pt-14 pb-(--spacing-section) text-center">
+      <p className="font-display text-headline text-fg">Something broke</p>
+      <p className="text-fg-muted mt-5 max-w-sm text-sm leading-relaxed">
         This page failed to load. Try again — if it keeps happening, the rest of the store still
         works.
       </p>
 
       {error.digest && (
-        <p className="text-dim mt-4 text-[0.7rem] tracking-[0.1em]">Reference: {error.digest}</p>
+        <p className="text-fg-faint mt-4 text-[0.7rem] tracking-[0.1em]">
+          Reference: {error.digest}
+        </p>
       )}
 
       <div className="mt-9 flex flex-wrap justify-center gap-3">

@@ -21,12 +21,12 @@ export function PolicyPage({
   children: ReactNode;
 }) {
   return (
-    <div className="edge pt-28 pb-[--spacing-section] md:pt-36">
+    <div className="edge pt-14 pb-(--spacing-section) md:pt-20">
       <header className="mb-12 max-w-2xl">
-        <h1 className="font-display text-headline text-paper">{title}</h1>
-        {intro && <p className="text-smoke mt-5 text-sm leading-relaxed">{intro}</p>}
+        <h1 className="font-display text-headline text-fg">{title}</h1>
+        {intro && <p className="text-fg-muted mt-5 text-sm leading-relaxed">{intro}</p>}
         {lastUpdated && (
-          <p className="text-dim mt-4 text-[0.7rem] tracking-[0.14em] uppercase">
+          <p className="text-fg-faint mt-4 text-[0.7rem] tracking-[0.14em] uppercase">
             Last updated {lastUpdated}
           </p>
         )}
@@ -39,11 +39,9 @@ export function PolicyPage({
 
 export function PolicySection({ heading, children }: { heading: string; children: ReactNode }) {
   return (
-    <section className="border-ash/50 border-t py-8 first:border-t-0 first:pt-0">
-      <h2 className="text-paper mb-4 text-sm font-semibold tracking-[0.14em] uppercase">
-        {heading}
-      </h2>
-      <div className="text-smoke flex flex-col gap-4 text-sm leading-relaxed">{children}</div>
+    <section className="border-line border-t py-8 first:border-t-0 first:pt-0">
+      <h2 className="text-fg mb-4 text-sm font-semibold tracking-[0.14em] uppercase">{heading}</h2>
+      <div className="text-fg-muted flex flex-col gap-4 text-sm leading-relaxed">{children}</div>
     </section>
   );
 }
@@ -55,8 +53,8 @@ export function PolicySection({ heading, children }: { heading: string; children
  */
 export function PendingNotice({ children }: { children: ReactNode }) {
   return (
-    <p className="border-ash text-bone border-l-2 py-1 pl-4 text-sm leading-relaxed">
-      <span className="text-dim mr-2 text-[0.68rem] font-semibold tracking-[0.16em] uppercase">
+    <p className="border-line text-fg-muted border-l-2 py-1 pl-4 text-sm leading-relaxed">
+      <span className="text-fg-faint mr-2 text-[0.68rem] font-semibold tracking-[0.16em] uppercase">
         Pending
       </span>
       {children}

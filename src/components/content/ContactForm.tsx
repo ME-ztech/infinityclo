@@ -54,7 +54,7 @@ export function ContactForm() {
         <div key={field.key}>
           <label
             htmlFor={`${baseId}-${field.key}`}
-            className="text-dim mb-2 block text-[0.68rem] font-semibold tracking-[0.16em] uppercase"
+            className="text-fg-faint mb-2 block text-[0.68rem] font-semibold tracking-[0.16em] uppercase"
           >
             {field.label}
           </label>
@@ -70,8 +70,8 @@ export function ContactForm() {
             aria-invalid={Boolean(errors[field.key])}
             aria-describedby={errors[field.key] ? `${baseId}-${field.key}-error` : undefined}
             className={cn(
-              'text-bone h-12 w-full border bg-transparent px-4 text-sm transition-colors outline-none',
-              errors[field.key] ? 'border-signal' : 'border-field focus:border-bone',
+              'text-fg-muted h-12 w-full border bg-transparent px-4 text-sm transition-colors outline-none',
+              errors[field.key] ? 'border-signal' : 'border-field focus:border-fg',
             )}
           />
           {errors[field.key] && (
@@ -89,7 +89,7 @@ export function ContactForm() {
       <div>
         <label
           htmlFor={`${baseId}-message`}
-          className="text-dim mb-2 block text-[0.68rem] font-semibold tracking-[0.16em] uppercase"
+          className="text-fg-faint mb-2 block text-[0.68rem] font-semibold tracking-[0.16em] uppercase"
         >
           Message
         </label>
@@ -104,8 +104,8 @@ export function ContactForm() {
           aria-invalid={Boolean(errors.message)}
           aria-describedby={errors.message ? `${baseId}-message-error` : undefined}
           className={cn(
-            'text-bone w-full resize-y border bg-transparent p-4 text-sm transition-colors outline-none',
-            errors.message ? 'border-signal' : 'border-field focus:border-bone',
+            'text-fg-muted w-full resize-y border bg-transparent p-4 text-sm transition-colors outline-none',
+            errors.message ? 'border-signal' : 'border-field focus:border-fg',
           )}
         />
         {errors.message && (
@@ -123,7 +123,7 @@ export function ContactForm() {
         <p
           role="status"
           data-testid="contact-blocked"
-          className="border-ash text-bone border-l-2 py-1 pl-4 text-sm leading-relaxed"
+          className="border-line text-fg-muted border-l-2 py-1 pl-4 text-sm leading-relaxed"
         >
           Your message was not sent. Messaging is not connected in this preview build, so there is
           nowhere for it to go yet — nothing has been stored.

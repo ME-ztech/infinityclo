@@ -54,7 +54,7 @@ const ENTRIES: Entry[] = [
     answer: (
       <>
         See{' '}
-        <Link href="/shipping" className="text-paper underline underline-offset-4">
+        <Link href="/shipping" className="text-fg underline underline-offset-4">
           shipping
         </Link>
         . Destinations and carriers are still being confirmed.
@@ -66,7 +66,7 @@ const ENTRIES: Entry[] = [
     answer: (
       <>
         See{' '}
-        <Link href="/returns" className="text-paper underline underline-offset-4">
+        <Link href="/returns" className="text-fg underline underline-offset-4">
           returns
         </Link>
         . The return window and process are still being confirmed.
@@ -84,7 +84,7 @@ const ENTRIES: Entry[] = [
     answer: (
       <>
         Submissions open with the next drop. Join the list from{' '}
-        <Link href="/troop" className="text-paper underline underline-offset-4">
+        <Link href="/troop" className="text-fg underline underline-offset-4">
           The Troop
         </Link>{' '}
         to hear first.
@@ -99,19 +99,19 @@ export default function FAQPage() {
       title="FAQ"
       intro="Straight answers. Where something is not settled yet, it says so."
     >
-      <div className="border-ash/50 border-t">
+      <div className="border-line border-t">
         {ENTRIES.map((entry) => (
-          <details key={entry.question} id={entry.id} className="border-ash/50 group border-b">
-            <summary className="text-bone hover:text-paper flex cursor-pointer list-none items-start justify-between gap-4 py-5 text-sm font-semibold [&::-webkit-details-marker]:hidden">
+          <details key={entry.question} id={entry.id} className="border-line group border-b">
+            <summary className="text-fg-muted hover:text-fg flex cursor-pointer list-none items-start justify-between gap-4 py-5 text-sm font-semibold [&::-webkit-details-marker]:hidden">
               {entry.question}
               <span
                 aria-hidden
-                className="text-dim mt-0.5 shrink-0 text-lg leading-none transition-transform duration-200 group-open:rotate-45"
+                className="text-fg-faint mt-0.5 shrink-0 text-lg leading-none transition-transform duration-200 group-open:rotate-45"
               >
                 +
               </span>
             </summary>
-            <div className="text-smoke pb-5 text-sm leading-relaxed">{entry.answer}</div>
+            <div className="text-fg-muted pb-5 text-sm leading-relaxed">{entry.answer}</div>
           </details>
         ))}
       </div>

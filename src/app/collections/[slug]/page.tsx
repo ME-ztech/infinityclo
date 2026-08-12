@@ -51,7 +51,7 @@ export default async function CollectionPage({ params }: { params: Promise<{ slu
   return (
     <div>
       {collection.heroMedia && (
-        <div className="relative aspect-[--aspect-campaign] max-h-[60svh] w-full overflow-hidden">
+        <div className="relative aspect-(--aspect-campaign) max-h-[60svh] w-full overflow-hidden">
           <Image
             src={collection.heroMedia.url}
             alt={collection.heroMedia.alt}
@@ -64,16 +64,16 @@ export default async function CollectionPage({ params }: { params: Promise<{ slu
         </div>
       )}
 
-      <div className="edge pt-24 pb-[--spacing-section] md:pt-28">
+      <div className="edge pt-10 pb-(--spacing-section) md:pt-14">
         <nav aria-label="Breadcrumb" className="mb-8">
-          <ol className="text-dim flex flex-wrap items-center gap-2 text-[0.7rem] tracking-[0.12em] uppercase">
+          <ol className="text-fg-faint flex flex-wrap items-center gap-2 text-[0.7rem] tracking-[0.12em] uppercase">
             <li>
-              <Link href="/collections" className="hover:text-bone">
+              <Link href="/collections" className="hover:text-fg-muted">
                 Collections
               </Link>
             </li>
             <li aria-hidden>/</li>
-            <li className="text-bone" aria-current="page">
+            <li className="text-fg-muted" aria-current="page">
               {collection.name}
             </li>
           </ol>
@@ -81,21 +81,21 @@ export default async function CollectionPage({ params }: { params: Promise<{ slu
 
         <header className="mb-12 max-w-2xl">
           {collection.dropLabel && (
-            <p className="text-dim mb-4 text-[0.68rem] font-semibold tracking-[0.24em] uppercase">
+            <p className="text-fg-faint mb-4 text-[0.68rem] font-semibold tracking-[0.24em] uppercase">
               {collection.dropLabel}
             </p>
           )}
-          <h1 className="font-display text-headline text-paper">{collection.name}</h1>
+          <h1 className="font-display text-headline text-fg">{collection.name}</h1>
           {collection.description && (
-            <p className="text-smoke mt-5 text-sm leading-relaxed">{collection.description}</p>
+            <p className="text-fg-muted mt-5 text-sm leading-relaxed">{collection.description}</p>
           )}
-          <p className="text-dim mt-4 text-[0.7rem] tracking-[0.14em] uppercase">
+          <p className="text-fg-faint mt-4 text-[0.7rem] tracking-[0.14em] uppercase">
             {products.length} {products.length === 1 ? 'piece' : 'pieces'}
           </p>
         </header>
 
         {products.length > 0 ? (
-          <ProductGrid products={products} density="comfortable" priorityCount={4} />
+          <ProductGrid products={products} density="showroom" priorityCount={4} />
         ) : (
           <EmptyState
             title="Nothing in this collection yet"

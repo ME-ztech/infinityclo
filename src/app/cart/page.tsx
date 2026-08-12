@@ -11,8 +11,8 @@ export const metadata: Metadata = {
 
 export default function CartPage() {
   return (
-    <div className="edge pt-28 pb-[--spacing-section] md:pt-36">
-      <h1 className="font-display text-headline text-paper mb-10">Cart</h1>
+    <div className="edge pt-14 pb-(--spacing-section) md:pt-20">
+      <h1 className="font-display text-headline text-fg mb-10">Cart</h1>
       <CartPageView />
     </div>
   );

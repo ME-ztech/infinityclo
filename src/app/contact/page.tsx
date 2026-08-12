@@ -11,11 +11,11 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <div className="edge pt-28 pb-[--spacing-section] md:pt-36">
+    <div className="edge pt-14 pb-(--spacing-section) md:pt-20">
       <div className="grid gap-12 md:grid-cols-2 md:gap-20">
         <div className="max-w-md">
-          <h1 className="font-display text-headline text-paper">Contact</h1>
-          <p className="text-smoke mt-5 text-sm leading-relaxed">
+          <h1 className="font-display text-headline text-fg">Contact</h1>
+          <p className="text-fg-muted mt-5 text-sm leading-relaxed">
             Questions about a piece, an order, or the label itself.
           </p>
 

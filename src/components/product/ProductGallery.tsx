@@ -3,22 +3,29 @@
 /**
  * Product gallery.
  *
- * One component, two behaviours by viewport:
- * - Mobile: a native scroll-snap carousel. Swiping is the platform gesture and
- *   costs no JavaScript; a counter reports position via an IntersectionObserver
- *   rather than scroll maths.
- * - Desktop: a thumbnail rail plus a main frame, with arrow-key navigation and
- *   a fullscreen zoom view.
+ * One component, two genuinely different compositions:
  *
- * Mixed aspect ratios are handled by fixing the frame ratio and letting images
- * cover it, so a portrait packshot and a landscape detail shot do not make the
- * page jump as the customer moves between them.
+ * - **Mobile** — a full-bleed scroll-snap carousel with the brand's own
+ *   `← ● ○ ○ ○ →` pagination beneath it. Swiping is the platform gesture and
+ *   costs no JavaScript; the arrows exist because the legacy product page had
+ *   them and because a customer who does not realise the image is swipeable
+ *   still needs a way through. Position is reported by an IntersectionObserver
+ *   rather than scroll arithmetic, which momentum scrolling and rubber-banding
+ *   would otherwise get wrong.
+ * - **Desktop** — every shot stacked and scrolled vertically, with the buy panel
+ *   sticky alongside. Thumbnails are a workaround for a single fixed frame; if
+ *   there is room to simply show the photographs, showing them is better.
+ *
+ * The frame ratio is fixed and images cover it, so a portrait packshot and a
+ * landscape detail shot occupy identical space and the page never jumps as the
+ * customer moves between them.
  */
-import Image from 'next/image';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
+import { MediaFrame } from '@/components/ui/MediaFrame';
 import type { ProductMedia } from '@/domain/types';
 import { cn } from '@/lib/cn';
+import { RACK, RACK_ITEM } from '@/lib/rack';
 import { useFocusTrap } from '@/lib/useFocusTrap';
 
 interface ProductGalleryProps {
@@ -31,14 +38,14 @@ interface ProductGalleryProps {
 export function ProductGallery({ media, productName, activeMediaId }: ProductGalleryProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [syncedMediaId, setSyncedMediaId] = useState<string | null>(null);
-  const [isZoomOpen, setIsZoomOpen] = useState(false);
+  const [zoomIndex, setZoomIndex] = useState<number | null>(null);
   const scrollerRef = useRef<HTMLDivElement | null>(null);
 
   /**
    * Selecting a colour swaps the gallery to that variant's shot. This adjusts
    * state during render — React's documented pattern for deriving state from a
-   * changed prop — rather than in an effect, which would paint the old image
-   * for a frame first.
+   * changed prop — rather than in an effect, which would paint the old image for
+   * a frame first.
    */
   if (activeMediaId && activeMediaId !== syncedMediaId) {
     setSyncedMediaId(activeMediaId);
@@ -46,24 +53,25 @@ export function ProductGallery({ media, productName, activeMediaId }: ProductGal
     if (index >= 0 && index !== activeIndex) setActiveIndex(index);
   }
 
-  /**
-   * Bring the mobile rail to the synced shot. Keyed on `syncedMediaId` so it
-   * fires once per variant change and never fights a customer's own swipe,
-   * which moves `activeIndex` without touching this.
-   */
-  useEffect(() => {
-    if (!syncedMediaId) return;
-    const index = media.findIndex((item) => item.id === syncedMediaId);
-    if (index < 0) return;
+  const scrollToIndex = useCallback((index: number) => {
     scrollerRef.current?.children[index]?.scrollIntoView({
       behavior: 'smooth',
       block: 'nearest',
       inline: 'start',
     });
-  }, [syncedMediaId, media]);
+  }, []);
 
-  // Mobile position tracking. An observer is more reliable than scroll offsets
-  // once momentum scrolling and rubber-banding are in play.
+  /**
+   * Bring the mobile rail to the synced shot. Keyed on `syncedMediaId` so it
+   * fires once per variant change and never fights a customer's own swipe, which
+   * moves `activeIndex` without touching this.
+   */
+  useEffect(() => {
+    if (!syncedMediaId) return;
+    const index = media.findIndex((item) => item.id === syncedMediaId);
+    if (index >= 0) scrollToIndex(index);
+  }, [syncedMediaId, media, scrollToIndex]);
+
   useEffect(() => {
     const scroller = scrollerRef.current;
     if (!scroller) return;
@@ -86,144 +94,155 @@ export function ProductGallery({ media, productName, activeMediaId }: ProductGal
 
   const go = useCallback(
     (delta: number) => {
-      setActiveIndex((current) => {
-        const next = (current + delta + media.length) % media.length;
-        return next;
-      });
+      const next = (activeIndex + delta + media.length) % media.length;
+      setActiveIndex(next);
+      scrollToIndex(next);
     },
-    [media.length],
+    [activeIndex, media.length, scrollToIndex],
   );
 
   if (media.length === 0) {
     return (
-      <div className="bg-carbon text-dim flex aspect-[--aspect-portrait] items-center justify-center">
-        <span className="font-display text-sm tracking-[0.14em]">{productName}</span>
+      <div data-surface="paper" className="bg-surface -mx-(--spacing-gutter) md:mx-0">
+        <MediaFrame
+          src={null}
+          alt={productName}
+          sizes="(min-width: 768px) 55vw, 100vw"
+          fallbackLabel={productName}
+          ratioClassName="aspect-(--aspect-portrait)"
+        />
       </div>
     );
   }
 
-  const active = media[activeIndex] ?? media[0]!;
-
   return (
     <>
-      {/* Mobile: swipeable rail */}
-      <div className="relative md:hidden">
+      {/* ── Mobile: full-bleed swipe rail ─────────────────────────── */}
+      <div className="md:hidden">
         <div
           ref={scrollerRef}
-          className="no-scrollbar flex snap-x snap-mandatory overflow-x-auto"
+          data-surface="paper"
+          className={cn(RACK, 'bg-surface -mx-(--spacing-gutter)')}
           role="group"
           aria-label={`${productName} images`}
+          data-testid="gallery-rail"
         >
           {media.map((item, index) => (
-            <div
-              key={item.id}
-              data-index={index}
-              className="aspect-[--aspect-portrait] w-full shrink-0 snap-start"
-            >
-              <div className="bg-carbon relative h-full w-full">
-                <Image
+            <div key={item.id} data-index={index} className={cn(RACK_ITEM, 'w-screen')}>
+              <button
+                type="button"
+                onClick={() => setZoomIndex(index)}
+                aria-label={`Open image ${index + 1} of ${media.length} fullscreen`}
+                className="block w-full"
+              >
+                <MediaFrame
                   src={item.url}
                   alt={item.alt}
-                  fill
                   sizes="100vw"
                   priority={index === 0}
-                  className="object-cover"
+                  fallbackLabel={productName}
+                  ratioClassName="aspect-(--aspect-portrait)"
                 />
-              </div>
+              </button>
             </div>
           ))}
         </div>
 
         {media.length > 1 && (
-          <div className="bg-void/70 text-paper absolute right-3 bottom-3 px-2.5 py-1 text-[0.68rem] tabular-nums backdrop-blur-sm">
-            {activeIndex + 1} / {media.length}
+          /* The legacy product page's own pagination: arrows flanking a dot
+             row. Kept because it is recognisable brand furniture, rebuilt with
+             44px targets so it is usable with a thumb. */
+          <div className="mt-5 flex items-center justify-center gap-5">
+            <PagerArrow direction="prev" onClick={() => go(-1)} />
+            <div className="flex items-center gap-2.5">
+              {media.map((item, index) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => {
+                    setActiveIndex(index);
+                    scrollToIndex(index);
+                  }}
+                  aria-label={`Go to image ${index + 1}`}
+                  aria-current={index === activeIndex}
+                  className="grid h-11 w-5 place-items-center"
+                >
+                  <span
+                    className={cn(
+                      'block h-2 w-2 rounded-full transition-colors duration-200',
+                      index === activeIndex ? 'bg-fg' : 'border-fg-faint border',
+                    )}
+                  />
+                </button>
+              ))}
+            </div>
+            <PagerArrow direction="next" onClick={() => go(1)} />
           </div>
         )}
       </div>
 
-      {/* Desktop: thumbnails + frame */}
-      <div className="hidden gap-4 md:flex">
-        {media.length > 1 && (
-          <div
-            className="no-scrollbar flex max-h-[70svh] shrink-0 flex-col gap-3 overflow-y-auto"
-            role="group"
-            aria-label="Choose image"
-          >
-            {media.map((item, index) => (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() => setActiveIndex(index)}
-                aria-label={`View image ${index + 1} of ${media.length}`}
-                aria-current={index === activeIndex}
-                className={cn(
-                  'bg-carbon relative h-24 w-[72px] shrink-0 overflow-hidden border transition-colors',
-                  index === activeIndex ? 'border-paper' : 'hover:border-ash border-transparent',
-                )}
-              >
-                <Image src={item.url} alt="" fill sizes="72px" className="object-cover" />
-              </button>
-            ))}
-          </div>
-        )}
-
-        <div
-          className="bg-carbon relative aspect-[--aspect-portrait] flex-1"
-          tabIndex={0}
-          role="group"
-          aria-label={`${productName} image ${activeIndex + 1} of ${media.length}`}
-          onKeyDown={(event) => {
-            if (event.key === 'ArrowRight') {
-              event.preventDefault();
-              go(1);
-            } else if (event.key === 'ArrowLeft') {
-              event.preventDefault();
-              go(-1);
-            } else if (event.key === 'Enter' || event.key === ' ') {
-              event.preventDefault();
-              setIsZoomOpen(true);
-            }
-          }}
-        >
-          <Image
-            src={active.url}
-            alt={active.alt}
-            fill
-            sizes="(min-width: 1280px) 45vw, 55vw"
-            priority
-            className="object-cover"
-          />
-
+      {/* ── Desktop: every shot, stacked ──────────────────────────── */}
+      <div data-surface="paper" className="hidden flex-col gap-3 md:flex">
+        {media.map((item, index) => (
           <button
+            key={item.id}
             type="button"
-            onClick={() => setIsZoomOpen(true)}
-            aria-label="Open fullscreen view"
-            className="bg-void/70 text-paper hover:bg-void absolute right-3 bottom-3 p-2.5 backdrop-blur-sm transition-colors"
+            onClick={() => setZoomIndex(index)}
+            aria-label={`Open ${productName} image ${index + 1} of ${media.length} fullscreen`}
+            className="group bg-surface relative block w-full cursor-zoom-in"
           >
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
-              <path
-                d="M6 1H1v5M10 15h5v-5M15 6V1h-5M1 10v5h5"
-                stroke="currentColor"
-                strokeWidth="1.5"
-              />
-            </svg>
+            <MediaFrame
+              src={item.url}
+              alt={item.alt}
+              sizes="(min-width: 1280px) 46vw, 55vw"
+              priority={index === 0}
+              fallbackLabel={productName}
+              ratioClassName="aspect-(--aspect-portrait)"
+              imageClassName="transition-transform duration-[900ms] ease-(--ease-brand) group-hover:scale-[1.02]"
+            />
           </button>
-        </div>
+        ))}
       </div>
 
-      {isZoomOpen && (
+      {zoomIndex !== null && (
         <GalleryZoom
           media={media}
-          index={activeIndex}
+          index={zoomIndex}
           productName={productName}
-          onIndexChange={setActiveIndex}
-          onClose={() => setIsZoomOpen(false)}
+          onIndexChange={setZoomIndex}
+          onClose={() => setZoomIndex(null)}
         />
       )}
     </>
   );
 }
 
+function PagerArrow({ direction, onClick }: { direction: 'prev' | 'next'; onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-label={direction === 'prev' ? 'Previous image' : 'Next image'}
+      className="text-fg hover:text-signal grid h-11 w-11 place-items-center transition-colors"
+    >
+      <svg width="22" height="14" viewBox="0 0 22 14" fill="none" aria-hidden>
+        <path
+          d={direction === 'prev' ? 'M21 7H1m0 0 6-6M1 7l6 6' : 'M1 7h20m0 0-6-6m6 6-6 6'}
+          stroke="currentColor"
+          strokeWidth="1.5"
+        />
+      </svg>
+    </button>
+  );
+}
+
+/**
+ * Fullscreen view.
+ *
+ * `object-contain` on void: at this size the customer is inspecting a garment,
+ * and cropping to fill the frame is exactly the wrong trade — better to letterbox
+ * than to hide a hem.
+ */
 function GalleryZoom({
   media,
   index,
@@ -256,17 +275,18 @@ function GalleryZoom({
       aria-modal="true"
       aria-label={`${productName} fullscreen gallery`}
       tabIndex={-1}
-      className="bg-void fixed inset-0 z-[95] flex flex-col"
+      data-surface="void"
+      className="bg-surface text-fg fixed inset-0 z-[95] flex animate-[fade-in_200ms_ease-out] flex-col"
     >
       <div className="flex h-14 shrink-0 items-center justify-between px-5">
-        <span className="text-smoke text-xs tabular-nums">
+        <span className="text-fg-faint text-xs tabular-nums">
           {index + 1} / {media.length}
         </span>
         <button
           type="button"
           onClick={onClose}
           aria-label="Close fullscreen view"
-          className="text-bone hover:text-paper -mr-2 p-3"
+          className="text-fg hover:text-signal -mr-2 p-3 transition-colors"
         >
           <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden>
             <path d="m4 4 12 12M16 4 4 16" stroke="currentColor" strokeWidth="1.5" />
@@ -275,27 +295,25 @@ function GalleryZoom({
       </div>
 
       <div className="relative flex-1">
-        <Image src={current.url} alt={current.alt} fill sizes="100vw" className="object-contain" />
+        <MediaFrame
+          src={current.url}
+          alt={current.alt}
+          sizes="100vw"
+          fit="contain"
+          priority
+          fallbackLabel={productName}
+          ratioClassName="absolute inset-0 h-full w-full"
+          className="!bg-transparent"
+        />
       </div>
 
       {media.length > 1 && (
-        <div className="flex h-20 shrink-0 items-center justify-center gap-4">
-          <button
-            type="button"
+        <div className="flex h-20 shrink-0 items-center justify-center gap-6">
+          <PagerArrow
+            direction="prev"
             onClick={() => onIndexChange((index - 1 + media.length) % media.length)}
-            aria-label="Previous image"
-            className="text-bone hover:text-paper p-3"
-          >
-            ←
-          </button>
-          <button
-            type="button"
-            onClick={() => onIndexChange((index + 1) % media.length)}
-            aria-label="Next image"
-            className="text-bone hover:text-paper p-3"
-          >
-            →
-          </button>
+          />
+          <PagerArrow direction="next" onClick={() => onIndexChange((index + 1) % media.length)} />
         </div>
       )}
     </div>

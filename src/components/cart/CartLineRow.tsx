@@ -20,7 +20,7 @@ export function CartLineRow({ line }: { line: CartLine }) {
     <li className="flex gap-4 py-5" data-testid="cart-line">
       <Link
         href={`/products/${line.productSlug}`}
-        className="bg-carbon relative h-28 w-22 shrink-0 overflow-hidden"
+        className="bg-surface-sunken relative h-28 w-22 shrink-0 overflow-hidden"
         tabIndex={-1}
         aria-hidden
       >
@@ -34,11 +34,11 @@ export function CartLineRow({ line }: { line: CartLine }) {
           <div className="min-w-0">
             <Link
               href={`/products/${line.productSlug}`}
-              className="text-paper hover:text-bone block truncate text-sm font-semibold"
+              className="text-fg hover:text-fg-muted block truncate text-sm font-semibold"
             >
               {line.productName}
             </Link>
-            <p className="text-dim mt-1 text-[0.7rem] tracking-[0.1em] uppercase">
+            <p className="text-fg-faint mt-1 text-[0.7rem] tracking-[0.1em] uppercase">
               {line.variantTitle}
             </p>
             {line.availability === 'sold_out' && (
@@ -54,7 +54,7 @@ export function CartLineRow({ line }: { line: CartLine }) {
             disabled={isPending}
             aria-label={`Remove ${line.productName}, ${line.variantTitle}, from cart`}
             data-testid="cart-remove"
-            className="text-dim hover:text-paper shrink-0 p-1 disabled:opacity-50"
+            className="text-fg-faint hover:text-fg shrink-0 p-1 disabled:opacity-50"
           >
             <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden>
               <path d="m4 4 12 12M16 4 4 16" stroke="currentColor" strokeWidth="1.75" />
@@ -63,14 +63,14 @@ export function CartLineRow({ line }: { line: CartLine }) {
         </div>
 
         <div className="mt-auto flex items-end justify-between gap-3 pt-3">
-          <div className="border-ash inline-flex items-center border">
+          <div className="border-line inline-flex items-center border">
             <button
               type="button"
               onClick={() => void updateQuantity(line.id, line.quantity - 1)}
               disabled={isPending}
               aria-label="Decrease quantity"
               data-testid="cart-decrease"
-              className="text-bone hover:text-paper hover:bg-carbon flex h-9 w-9 items-center justify-center text-lg leading-none disabled:opacity-50"
+              className="text-fg-muted hover:text-fg hover:bg-surface-sunken flex h-9 w-9 items-center justify-center text-lg leading-none disabled:opacity-50"
             >
               −
             </button>
@@ -87,7 +87,7 @@ export function CartLineRow({ line }: { line: CartLine }) {
               disabled={isPending || line.quantity >= MAX_QUANTITY_PER_LINE}
               aria-label="Increase quantity"
               data-testid="cart-increase"
-              className="text-bone hover:text-paper hover:bg-carbon flex h-9 w-9 items-center justify-center text-lg leading-none disabled:opacity-30"
+              className="text-fg-muted hover:text-fg hover:bg-surface-sunken flex h-9 w-9 items-center justify-center text-lg leading-none disabled:opacity-30"
             >
               +
             </button>
@@ -95,13 +95,11 @@ export function CartLineRow({ line }: { line: CartLine }) {
 
           <div className="text-right">
             {compareTotal && isDiscounted(lineTotal, compareTotal) && (
-              <p className="text-dim text-xs tabular-nums line-through">
+              <p className="text-fg-faint text-xs tabular-nums line-through">
                 {formatMoney(compareTotal)}
               </p>
             )}
-            <p className="text-paper text-sm font-semibold tabular-nums">
-              {formatMoney(lineTotal)}
-            </p>
+            <p className="text-fg text-sm font-semibold tabular-nums">{formatMoney(lineTotal)}</p>
           </div>
         </div>
       </div>

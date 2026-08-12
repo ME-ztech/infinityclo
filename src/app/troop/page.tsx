@@ -18,21 +18,24 @@ export default async function TroopPage() {
   const entries = await contentRepository.listUGC();
 
   return (
-    <div>
-      <section className="edge flex min-h-[55svh] items-end pt-28 pb-14 md:pt-36">
+    <div data-surface="paper" className="bg-surface text-fg">
+      <section
+        data-surface="bone"
+        className="bg-surface edge flex min-h-[48svh] items-end pt-20 pb-14 md:pt-24"
+      >
         <div>
-          <p className="text-dim mb-5 text-[0.7rem] font-semibold tracking-[0.3em] uppercase">
+          <p className="text-fg-faint mb-5 text-[0.7rem] font-semibold tracking-[0.3em] uppercase">
             Styled by you
           </p>
-          <h1 className="font-display text-statement text-paper">The Troop</h1>
-          <p className="text-smoke mt-7 max-w-lg text-sm leading-relaxed md:text-base">
+          <h1 className="font-display text-statement text-fg oblique">The Troop</h1>
+          <p className="text-fg-muted mt-7 max-w-lg text-sm leading-relaxed md:text-base">
             The people wearing it. Real fits, real customers — the clearest picture of what INFNITY
             actually looks like on.
           </p>
         </div>
       </section>
 
-      <div className="edge pb-[--spacing-section]">
+      <div className="edge pb-(--spacing-section)">
         {entries.length > 0 ? (
           <TroopGallery entries={entries} />
         ) : (
@@ -58,13 +61,13 @@ export default async function TroopPage() {
             rather than accepting uploads nothing can receive. */}
         <section
           aria-labelledby="submit-heading"
-          className="border-ash/50 mt-[--spacing-section] border p-8 md:p-14"
+          className="border-line mt-(--spacing-section) border p-8 md:p-14"
         >
           <div className="max-w-xl">
-            <h2 id="submit-heading" className="font-display text-headline text-paper">
+            <h2 id="submit-heading" className="font-display text-headline text-fg">
               Get featured
             </h2>
-            <p className="text-smoke mt-5 text-sm leading-relaxed">
+            <p className="text-fg-muted mt-5 text-sm leading-relaxed">
               Submissions open with the next drop. Join the list and you&apos;ll be first to know
               when the gallery opens up.
             </p>
