@@ -119,9 +119,13 @@ const warnings: string[] = [];
  * Fetch helpers
  * ------------------------------------------------------------------ */
 
+/** Per-request ceiling, so a hung connection cannot stall a deployment. */
+const REQUEST_TIMEOUT_MS = 20_000;
+
 async function fetchJson<T>(url: string): Promise<T> {
   const response = await fetch(url, {
     headers: { accept: 'application/json', 'user-agent': 'INFNITY-catalog-import/1.0' },
+    signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
   });
   if (!response.ok) {
     throw new Error(`GET ${url} -> HTTP ${response.status} ${response.statusText}`);
@@ -194,7 +198,9 @@ async function downloadAsset(
   const publicPath = `/assets/products/${filename}`;
 
   try {
-    const response = await fetch(sourceUrl);
+    const response = await fetch(sourceUrl, {
+      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+    });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     const buffer = Buffer.from(await response.arrayBuffer());
     await writeFile(destination, buffer);

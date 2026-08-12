@@ -7,9 +7,12 @@ deployable, with typed seams where the commerce backend will land.
 > **Preview build.** No payment provider is connected. Checkout is disabled, no
 > order can be placed, and the deployed site says so on every page.
 
-> **The catalog is empty.** The legacy store is blocked by this environment's
-> network egress policy, so no products have been imported — and none have been
-> invented to stand in for them. See [`docs/LEGACY_BRAND_AUDIT.md`](docs/LEGACY_BRAND_AUDIT.md).
+> **The committed catalog is empty.** The development environment cannot reach
+> the legacy store, so nothing could be imported there — and nothing was
+> invented to stand in for it. A `prebuild` step imports the real catalog and
+> photography during deployment, where the source _is_ reachable, and falls back
+> to honest empty states if it is not. See
+> [`docs/LEGACY_BRAND_AUDIT.md`](docs/LEGACY_BRAND_AUDIT.md).
 
 ## Quick start
 
