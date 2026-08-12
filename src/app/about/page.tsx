@@ -21,33 +21,36 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   return (
     <div>
-      <section className="edge flex min-h-[60svh] items-end pt-28 pb-16 md:pt-36">
+      <section
+        data-surface="bone"
+        className="bg-surface edge flex min-h-[54svh] items-end pt-20 pb-16 md:pt-24"
+      >
         <div>
-          <p className="text-dim mb-5 text-[0.7rem] font-semibold tracking-[0.3em] uppercase">
+          <p className="text-fg-faint mb-5 text-[0.7rem] font-semibold tracking-[0.3em] uppercase">
             The label
           </p>
-          <h1 className="font-display text-statement text-paper max-w-[14ch]">Be the Statement</h1>
+          <h1 className="font-display text-statement text-fg max-w-[14ch]">Be the Statement</h1>
         </div>
       </section>
 
-      <div className="edge pb-[--spacing-section]">
+      <div className="edge pb-(--spacing-section)">
         <div className="grid gap-12 md:grid-cols-[1fr_1.4fr] md:gap-20">
           <div>
-            <h2 className="text-dim text-[0.68rem] font-semibold tracking-[0.24em] uppercase">
+            <h2 className="text-fg-faint text-[0.68rem] font-semibold tracking-[0.24em] uppercase">
               What it is
             </h2>
           </div>
 
           <div className="max-w-2xl">
-            <p className="font-display text-title text-paper">
+            <p className="font-display text-title text-fg">
               Raw identity meets untouchable design.
             </p>
-            <p className="text-smoke mt-7 text-sm leading-relaxed md:text-base">
+            <p className="text-fg-muted mt-7 text-sm leading-relaxed md:text-base">
               INFNITY is a streetwear label built for people who don&apos;t fold, don&apos;t follow,
               and never settle. The pieces are made to be worn hard and to still read as a statement
               — heavyweight where it matters, quiet where it doesn&apos;t.
             </p>
-            <p className="text-smoke mt-5 text-sm leading-relaxed md:text-base">
+            <p className="text-fg-muted mt-5 text-sm leading-relaxed md:text-base">
               The name is the point. Infinity without the second <em>i</em> — the mark is
               deliberately incomplete, because the people wearing it are still becoming who they
               are.
@@ -55,16 +58,16 @@ export default function AboutPage() {
           </div>
         </div>
 
-        <div className="border-ash/50 mt-[--spacing-section] grid gap-12 border-t pt-16 md:grid-cols-[1fr_1.4fr] md:gap-20">
+        <div className="border-line mt-(--spacing-section) grid gap-12 border-t pt-16 md:grid-cols-[1fr_1.4fr] md:gap-20">
           <div>
-            <h2 className="text-dim text-[0.68rem] font-semibold tracking-[0.24em] uppercase">
+            <h2 className="text-fg-faint text-[0.68rem] font-semibold tracking-[0.24em] uppercase">
               The Troop
             </h2>
           </div>
 
           <div className="max-w-2xl">
-            <p className="font-display text-title text-paper">The label is the people.</p>
-            <p className="text-smoke mt-7 text-sm leading-relaxed md:text-base">
+            <p className="font-display text-title text-fg">The label is the people.</p>
+            <p className="text-fg-muted mt-7 text-sm leading-relaxed md:text-base">
               The Troop is the community around INFNITY — the customers who wear it and make it mean
               something. Their fits sit alongside the campaign imagery because they are the
               campaign.
@@ -77,10 +80,10 @@ export default function AboutPage() {
           </div>
         </div>
 
-        <div className="border-ash/50 mt-[--spacing-section] border-t pt-16">
+        <div className="border-line mt-(--spacing-section) border-t pt-16">
           <div className="max-w-xl">
-            <h2 className="font-display text-headline text-paper">Join the Troop</h2>
-            <p className="text-smoke mt-5 text-sm leading-relaxed">
+            <h2 className="font-display text-headline text-fg">Join the Troop</h2>
+            <p className="text-fg-muted mt-5 text-sm leading-relaxed">
               Early access. Private drops. Restocks. No noise.
             </p>
             <NewsletterForm source="about" className="mt-7" />

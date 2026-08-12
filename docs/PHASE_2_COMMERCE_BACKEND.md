@@ -16,7 +16,7 @@ implementations behind it.
 Nothing below matters until the storefront has real products.
 
 1. Allow `infinityclo.ca` and `cdn.shopify.com` for the build environment.
-2. Run `npm run import:legacy`.
+2. Run `npm run import:catalog`.
 3. Review the generated `ASSET_PROVENANCE.md` and the importer's warnings.
 4. Fill in the product specifications the brand supplies (`BRAND_STORY_INPUTS_NEEDED.md`
    Q11–Q16). These are `null` and render as omitted sections until then.

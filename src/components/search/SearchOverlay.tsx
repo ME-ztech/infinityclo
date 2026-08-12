@@ -138,11 +138,11 @@ export function SearchOverlay({ onClose }: { onClose: () => void }) {
         type="button"
         aria-label="Close search"
         onClick={onClose}
-        className="bg-void/80 absolute inset-0 -z-10 h-full w-full cursor-default backdrop-blur-sm"
+        className="bg-surface/80 absolute inset-0 -z-10 h-full w-full cursor-default backdrop-blur-sm"
         tabIndex={-1}
       />
 
-      <div className="bg-ink border-ash/60 border-b">
+      <div className="bg-surface-raised border-line border-b">
         <div className="edge mx-auto flex w-full max-w-4xl items-center gap-4 py-5">
           <form
             role="search"
@@ -164,39 +164,39 @@ export function SearchOverlay({ onClose }: { onClose: () => void }) {
               placeholder="Search"
               autoComplete="off"
               data-testid="search-input"
-              className="text-bone placeholder:text-dim font-display w-full bg-transparent text-2xl tracking-[0.04em] outline-none md:text-3xl"
+              className="text-fg-muted placeholder:text-fg-faint font-display w-full bg-transparent text-2xl tracking-[0.04em] outline-none md:text-3xl"
             />
           </form>
           <button
             type="button"
             onClick={onClose}
-            className="text-smoke hover:text-paper text-[0.7rem] font-semibold tracking-[0.16em] uppercase"
+            className="text-fg-muted hover:text-fg text-[0.7rem] font-semibold tracking-[0.16em] uppercase"
           >
             Close
           </button>
         </div>
       </div>
 
-      <div className="bg-ink/98 flex-1 overflow-y-auto">
+      <div className="bg-surface-raised/98 flex-1 overflow-y-auto">
         <div className="edge mx-auto w-full max-w-4xl py-6">
           {status === 'idle' && trimmed.length < MIN_TERM_LENGTH && (
-            <p className="text-dim text-sm">Type at least two characters.</p>
+            <p className="text-fg-faint text-sm">Type at least two characters.</p>
           )}
 
           {status === 'loading' && (
             <ul className="flex flex-col gap-3" aria-hidden>
               {Array.from({ length: 3 }).map((_, index) => (
-                <li key={index} className="bg-carbon h-20 animate-pulse" />
+                <li key={index} className="bg-surface-sunken h-20 animate-pulse" />
               ))}
             </ul>
           )}
 
           {showNoResults && (
             <div data-testid="search-empty" className="py-8">
-              <p className="font-display text-paper text-xl">Nothing matched “{trimmed}”.</p>
-              <p className="text-smoke mt-2 text-sm">
+              <p className="font-display text-fg text-xl">Nothing matched “{trimmed}”.</p>
+              <p className="text-fg-muted mt-2 text-sm">
                 Try a shorter term, or{' '}
-                <Link href="/shop" onClick={onClose} className="text-paper underline">
+                <Link href="/shop" onClick={onClose} className="text-fg underline">
                   browse everything
                 </Link>
                 .
@@ -214,11 +214,11 @@ export function SearchOverlay({ onClose }: { onClose: () => void }) {
                       onClick={onClose}
                       onMouseEnter={() => setHighlight(index)}
                       className={cn(
-                        'border-ash/30 flex items-center gap-4 border-b py-3 transition-colors',
-                        highlight === index ? 'bg-carbon' : 'hover:bg-carbon/60',
+                        'border-line flex items-center gap-4 border-b py-3 transition-colors',
+                        highlight === index ? 'bg-surface-sunken' : 'hover:bg-surface-sunken/60',
                       )}
                     >
-                      <div className="bg-carbon relative h-20 w-16 shrink-0 overflow-hidden">
+                      <div className="bg-surface-sunken relative h-20 w-16 shrink-0 overflow-hidden">
                         {result.image && (
                           <Image
                             src={result.image.url}
@@ -230,21 +230,21 @@ export function SearchOverlay({ onClose }: { onClose: () => void }) {
                         )}
                       </div>
                       <div className="min-w-0 flex-1">
-                        <p className="text-paper truncate text-sm font-semibold">{result.name}</p>
+                        <p className="text-fg truncate text-sm font-semibold">{result.name}</p>
                         {result.category && (
-                          <p className="text-dim mt-0.5 text-[0.7rem] tracking-[0.12em] uppercase">
+                          <p className="text-fg-faint mt-0.5 text-[0.7rem] tracking-[0.12em] uppercase">
                             {result.category}
                           </p>
                         )}
                       </div>
                       <div className="text-right">
                         {result.price && (
-                          <p className="text-bone text-sm tabular-nums">
+                          <p className="text-fg-muted text-sm tabular-nums">
                             {formatMoney(result.price)}
                           </p>
                         )}
                         {result.availability === 'sold_out' && (
-                          <p className="text-dim mt-0.5 text-[0.65rem] tracking-[0.12em] uppercase">
+                          <p className="text-fg-faint mt-0.5 text-[0.65rem] tracking-[0.12em] uppercase">
                             Sold out
                           </p>
                         )}
@@ -257,7 +257,7 @@ export function SearchOverlay({ onClose }: { onClose: () => void }) {
               <button
                 type="button"
                 onClick={submit}
-                className="text-paper mt-5 text-xs font-semibold tracking-[0.16em] uppercase underline underline-offset-4"
+                className="text-fg mt-5 text-xs font-semibold tracking-[0.16em] uppercase underline underline-offset-4"
               >
                 See all results
               </button>

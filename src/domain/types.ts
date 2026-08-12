@@ -94,6 +94,13 @@ export interface ProductSpecification {
   readonly construction: string | null;
   readonly weightGsm: number | null;
   readonly countryOfOrigin: string | null;
+  /**
+   * How the garment sits on the model in the photographs, e.g. "Model is 6'1\"
+   * and wears a size L". Only ever set from the brand's own product copy — a
+   * customer sizes an order against this, so a plausible-sounding guess here is
+   * the most expensive kind of invention on the whole record.
+   */
+  readonly modelInfo: string | null;
 }
 
 export interface Product {
@@ -109,6 +116,8 @@ export interface Product {
   readonly variants: readonly ProductVariant[];
   readonly media: readonly ProductMedia[];
   readonly specification: ProductSpecification;
+  /** Merchandising tags from the source catalogue. Feeds search, never display. */
+  readonly tags: readonly string[];
   readonly sizeGuideId: string | null;
   /** ISO-8601. Drives "newest" sorting and the NEW badge. */
   readonly publishedAt: string | null;

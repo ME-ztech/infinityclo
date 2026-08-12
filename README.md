@@ -21,17 +21,17 @@ npm ci
 npm run dev          # http://localhost:3000
 ```
 
-| Script                  | What it does                                         |
-| ----------------------- | ---------------------------------------------------- |
-| `npm run dev`           | Development server                                   |
-| `npm run build`         | Production build                                     |
-| `npm start`             | Serve the production build                           |
-| `npm run typecheck`     | `tsc --noEmit`                                       |
-| `npm run lint`          | ESLint                                               |
-| `npm test`              | Vitest unit and component tests                      |
-| `npm run e2e`           | Playwright, against a production build               |
-| `npm run format`        | Prettier                                             |
-| `npm run import:legacy` | Import the catalog and imagery from the legacy store |
+| Script                   | What it does                                             |
+| ------------------------ | -------------------------------------------------------- |
+| `npm run dev`            | Development server                                       |
+| `npm run build`          | Production build                                         |
+| `npm start`              | Serve the production build                               |
+| `npm run typecheck`      | `tsc --noEmit`                                           |
+| `npm run lint`           | ESLint                                                   |
+| `npm test`               | Vitest unit and component tests                          |
+| `npm run e2e`            | Playwright, against a production build                   |
+| `npm run format`         | Prettier                                                 |
+| `npm run import:catalog` | Import the catalogue and photography from infinityclo.ca |
 
 No environment variables are required to build or run. See
 [`docs/VERCEL_DEPLOYMENT.md`](docs/VERCEL_DEPLOYMENT.md) for the optional ones.
@@ -42,7 +42,7 @@ This is the one step that turns the storefront from a working shell into a
 working store.
 
 ```bash
-npm run import:legacy
+npm run import:catalog
 ```
 
 It reads the legacy store **once**, normalises the catalog into the domain

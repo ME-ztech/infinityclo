@@ -42,7 +42,7 @@ export default function ReturnsPage() {
       <PolicySection heading="Questions">
         <p>
           For anything not covered here, use the{' '}
-          <a href="/contact" className="text-paper underline underline-offset-4">
+          <a href="/contact" className="text-fg underline underline-offset-4">
             contact page
           </a>
           .

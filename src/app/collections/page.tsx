@@ -18,10 +18,10 @@ export default async function CollectionsPage() {
   const collections = await catalogRepository.listCollections();
 
   return (
-    <div className="edge pt-28 pb-[--spacing-section] md:pt-36">
+    <div className="edge pt-14 pb-(--spacing-section) md:pt-20">
       <header className="mb-12">
-        <h1 className="font-display text-headline text-paper">Collections</h1>
-        <p className="text-smoke mt-3 max-w-md text-sm leading-relaxed">
+        <h1 className="font-display text-headline text-fg">Collections</h1>
+        <p className="text-fg-muted mt-3 max-w-md text-sm leading-relaxed">
           Every drop, grouped as it was released.
         </p>
       </header>
@@ -32,19 +32,19 @@ export default async function CollectionsPage() {
             <li key={collection.slug}>
               <Link
                 href={`/collections/${collection.slug}`}
-                className="group border-ash/50 block border"
+                className="group border-line block border"
               >
-                <div className="bg-carbon relative aspect-[--aspect-editorial] overflow-hidden">
+                <div className="bg-surface-sunken relative aspect-(--aspect-editorial) overflow-hidden">
                   {collection.heroMedia ? (
                     <Image
                       src={collection.heroMedia.url}
                       alt={collection.heroMedia.alt}
                       fill
                       sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                      className="object-cover transition-transform duration-700 ease-[--ease-brand] group-hover:scale-105"
+                      className="object-cover transition-transform duration-700 ease-(--ease-brand) group-hover:scale-105"
                     />
                   ) : (
-                    <div className="text-dim absolute inset-0 flex items-center justify-center">
+                    <div className="text-fg-faint absolute inset-0 flex items-center justify-center">
                       <span className="font-display text-2xl tracking-[0.16em] opacity-25">
                         {collection.name}
                       </span>
@@ -54,14 +54,14 @@ export default async function CollectionsPage() {
 
                 <div className="p-5">
                   <div className="flex items-baseline justify-between gap-3">
-                    <h2 className="text-paper font-display text-lg">{collection.name}</h2>
+                    <h2 className="text-fg font-display text-lg">{collection.name}</h2>
                     {collection.dropLabel && (
-                      <span className="text-dim text-[0.68rem] tracking-[0.14em] uppercase">
+                      <span className="text-fg-faint text-[0.68rem] tracking-[0.14em] uppercase">
                         {collection.dropLabel}
                       </span>
                     )}
                   </div>
-                  <p className="text-dim mt-2 text-[0.7rem] tracking-[0.12em] uppercase">
+                  <p className="text-fg-faint mt-2 text-[0.7rem] tracking-[0.12em] uppercase">
                     {collection.productSlugs.length}{' '}
                     {collection.productSlugs.length === 1 ? 'piece' : 'pieces'}
                   </p>

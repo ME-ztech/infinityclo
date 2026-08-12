@@ -99,8 +99,8 @@ export function NewsletterForm({
           aria-describedby={message ? `${inputId}-message` : undefined}
           data-testid="newsletter-email"
           className={cn(
-            'text-bone placeholder:text-dim h-12 flex-1 border bg-transparent px-4 text-sm transition-colors outline-none',
-            status === 'error' ? 'border-signal' : 'border-field focus:border-bone',
+            'text-fg placeholder:text-fg-faint h-12 flex-1 border bg-transparent px-4 text-sm transition-colors outline-none',
+            status === 'error' ? 'border-signal' : 'border-field focus:border-fg',
           )}
         />
         <Button type="submit" disabled={status === 'submitting'} size="md">
@@ -113,7 +113,7 @@ export function NewsletterForm({
           id={`${inputId}-message`}
           role={status === 'error' ? 'alert' : 'status'}
           data-testid="newsletter-message"
-          className={cn('mt-3 text-xs', status === 'error' ? 'text-signal' : 'text-smoke')}
+          className={cn('mt-3 text-xs', status === 'error' ? 'text-signal' : 'text-fg-muted')}
         >
           {message}
         </p>

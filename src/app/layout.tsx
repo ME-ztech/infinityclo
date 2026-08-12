@@ -50,8 +50,10 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#050505',
-  colorScheme: 'dark',
+  // Matches the header's bone bar, so iOS tints its chrome to the same material
+  // the page starts on rather than to the black it used to start on.
+  themeColor: '#f6f3ed',
+  colorScheme: 'light',
   width: 'device-width',
   initialScale: 1,
 };
@@ -59,11 +61,23 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en-CA" className={`${archivo.variable} ${anton.variable}`}>
-      <body className="bg-void text-bone min-h-dvh antialiased">
+      {/* `data-surface` on the body is the root of the token cascade: every
+          section overrides it, and anything outside a section — drawers,
+          dialogs, the skip link — resolves against bone. */}
+      <head>
+        {/* Scroll reveals start at opacity 0 and are brought in by an
+            IntersectionObserver. With scripting off that observer never runs,
+            which would leave the manifesto and the campaign sections as blank
+            rectangles. The animation is an enhancement; the content is not. */}
+        <noscript>
+          <style>{'[data-reveal]{opacity:1!important;transform:none!important}'}</style>
+        </noscript>
+      </head>
+      <body data-surface="bone" className="bg-surface text-fg min-h-dvh antialiased">
         <CartProvider>
           <a
             href="#main"
-            className="sr-only-focusable bg-paper text-void focus:ring-paper absolute top-2 left-2 z-[100] px-4 py-2 text-sm font-semibold"
+            className="sr-only-focusable bg-signal text-paper absolute top-2 left-2 z-[100] px-4 py-2 text-sm font-semibold"
           >
             Skip to content
           </a>

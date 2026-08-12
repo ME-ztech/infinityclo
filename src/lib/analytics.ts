@@ -27,6 +27,9 @@ export type AnalyticsEvent =
   | { name: 'cart_view'; lineCount: number; subtotal: Money }
   | { name: 'checkout_started'; lineCount: number; subtotal: Money }
   | { name: 'newsletter_signup'; source: string }
+  | { name: 'wishlist_added'; productSlug: string }
+  | { name: 'wishlist_removed'; productSlug: string }
+  | { name: 'quick_add_opened'; productSlug: string }
   | { name: 'ugc_opened'; entryId: string };
 
 export type AnalyticsSink = (event: AnalyticsEvent) => void;

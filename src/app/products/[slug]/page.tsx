@@ -3,9 +3,9 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
 import { ProductDetailView } from '@/components/product/ProductDetailView';
-import { ProductDetails } from '@/components/product/ProductDetails';
-import { ProductGrid } from '@/components/product/ProductGrid';
-import { SectionHeading } from '@/components/home/SectionHeading';
+import { ProductRack } from '@/components/product/ProductRack';
+import { Section, SectionHeader } from '@/components/layout/Section';
+import { TextLink } from '@/components/ui/Button';
 import { TroopGallery } from '@/components/troop/TroopGallery';
 import { catalogRepository, contentRepository } from '@/data';
 import { fromPrice, primaryMedia, productAvailability, relatedProducts } from '@/domain/product';
@@ -89,57 +89,64 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   };
 
   return (
-    <div className="edge pt-24 pb-[--spacing-section] md:pt-32">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
-      />
+    <>
+      <Section surface="bone" spacing="none" className="pt-10 pb-(--spacing-section) md:pt-14">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+        />
 
-      <nav aria-label="Breadcrumb" className="mb-8">
-        <ol className="text-dim flex flex-wrap items-center gap-2 text-[0.7rem] tracking-[0.12em] uppercase">
-          <li>
-            <Link href="/" className="hover:text-bone">
-              Home
-            </Link>
-          </li>
-          <li aria-hidden>/</li>
-          <li>
-            <Link href="/shop" className="hover:text-bone">
-              Shop
-            </Link>
-          </li>
-          <li aria-hidden>/</li>
-          <li className="text-bone" aria-current="page">
-            {product.name}
-          </li>
-        </ol>
-      </nav>
+        <nav aria-label="Breadcrumb" className="mb-8">
+          <ol className="text-fg-faint flex flex-wrap items-center gap-2 text-[0.7rem] tracking-[0.12em] uppercase">
+            <li>
+              <Link href="/" className="hover:text-fg-muted">
+                Home
+              </Link>
+            </li>
+            <li aria-hidden>/</li>
+            <li>
+              <Link href="/shop" className="hover:text-fg-muted">
+                Shop
+              </Link>
+            </li>
+            <li aria-hidden>/</li>
+            <li className="text-fg-muted" aria-current="page">
+              {product.name}
+            </li>
+          </ol>
+        </nav>
 
-      <ProductDetailView product={product} sizeGuide={sizeGuide} />
-
-      <div className="mt-4 md:ml-auto md:max-w-[calc(50%-2rem)]">
-        <ProductDetails product={product} />
-      </div>
+        <ProductDetailView product={product} sizeGuide={sizeGuide} />
+      </Section>
 
       {ugc.length > 0 && (
-        <section className="pt-[--spacing-section]" aria-labelledby="worn-heading">
-          <SectionHeading
+        <Section surface="paper" aria-labelledby="worn-heading">
+          <SectionHeader
+            id="worn-heading"
             eyebrow="The Troop"
             title="Worn by the Troop"
-            href="/troop"
-            linkLabel="See more"
-            className="mb-10"
+            action={<TextLink href="/troop">See more</TextLink>}
+            className="mb-10 md:mb-14"
           />
           <TroopGallery entries={ugc} />
-        </section>
+        </Section>
       )}
 
       {related.length > 0 && (
-        <section className="pt-[--spacing-section]" aria-labelledby="related-heading">
-          <SectionHeading title="Complete the look" href="/shop" className="mb-10" />
-          <ProductGrid products={related} density="comfortable" priorityCount={0} />
-        </section>
+        <Section surface="concrete" aria-labelledby="related-heading">
+          <SectionHeader
+            id="related-heading"
+            eyebrow="Goes with"
+            title="Complete the look"
+            action={<TextLink href="/shop">Shop all</TextLink>}
+            className="mb-10 md:mb-14"
+          />
+          {/* The rack rather than the grid: four related pieces in a 2-up mobile
+              grid is exactly the cramped presentation 1.1 removed everywhere
+              else, and a rail reads better at the foot of a long page. */}
+          <ProductRack products={related} priorityCount={0} columns={4} />
+        </Section>
       )}
-    </div>
+    </>
   );
 }

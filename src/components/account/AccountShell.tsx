@@ -20,8 +20,8 @@ const ACCOUNT_NAV = [
 
 export function AccountShell({ title, description }: { title: string; description: string }) {
   return (
-    <div className="edge pt-28 pb-[--spacing-section] md:pt-36">
-      <h1 className="font-display text-headline text-paper mb-10">{title}</h1>
+    <div className="edge pt-14 pb-(--spacing-section) md:pt-20">
+      <h1 className="font-display text-headline text-fg mb-10">{title}</h1>
 
       <div className="grid gap-10 lg:grid-cols-[200px_1fr] lg:gap-16">
         <nav aria-label="Account">
@@ -30,7 +30,7 @@ export function AccountShell({ title, description }: { title: string; descriptio
               <li key={item.href}>
                 <Link
                   href={item.href}
-                  className="text-bone hover:text-paper text-[0.72rem] font-semibold tracking-[0.16em] uppercase"
+                  className="text-fg-muted hover:text-fg text-[0.72rem] font-semibold tracking-[0.16em] uppercase"
                 >
                   {item.label}
                 </Link>
@@ -39,10 +39,10 @@ export function AccountShell({ title, description }: { title: string; descriptio
           </ul>
         </nav>
 
-        <div className="border-ash/50 border p-8 md:p-12">
-          <p className="font-display text-paper text-2xl">Accounts are not open yet</p>
-          <p className="text-smoke mt-4 max-w-md text-sm leading-relaxed">{description}</p>
-          <p className="text-smoke mt-4 max-w-md text-sm leading-relaxed">
+        <div className="border-line border p-8 md:p-12">
+          <p className="font-display text-fg text-2xl">Accounts are not open yet</p>
+          <p className="text-fg-muted mt-4 max-w-md text-sm leading-relaxed">{description}</p>
+          <p className="text-fg-muted mt-4 max-w-md text-sm leading-relaxed">
             There is no sign-in yet — nothing here will ask you for a password until accounts
             genuinely work.
           </p>

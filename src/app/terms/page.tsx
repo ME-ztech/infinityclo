@@ -45,7 +45,7 @@ export default function TermsPage() {
       <PolicySection heading="Contact">
         <p>
           Questions about these terms can go through the{' '}
-          <a href="/contact" className="text-paper underline underline-offset-4">
+          <a href="/contact" className="text-fg underline underline-offset-4">
             contact page
           </a>
           .

@@ -30,7 +30,7 @@ export function SizeGuideDialog({
         type="button"
         aria-label="Close size guide"
         onClick={onClose}
-        className="bg-void/80 absolute inset-0 h-full w-full cursor-default"
+        className="bg-surface/80 absolute inset-0 h-full w-full cursor-default"
         tabIndex={-1}
       />
 
@@ -40,9 +40,9 @@ export function SizeGuideDialog({
         aria-modal="true"
         aria-labelledby="size-guide-title"
         tabIndex={-1}
-        className="bg-ink border-ash relative flex max-h-[85svh] w-full max-w-2xl flex-col border"
+        className="bg-surface-raised border-line relative flex max-h-[85svh] w-full max-w-2xl flex-col border"
       >
-        <div className="border-ash/50 flex shrink-0 items-center justify-between border-b px-6 py-4">
+        <div className="border-line flex shrink-0 items-center justify-between border-b px-6 py-4">
           <h2 id="size-guide-title" className="text-xs font-semibold tracking-[0.18em] uppercase">
             {guide.name}
           </h2>
@@ -50,7 +50,7 @@ export function SizeGuideDialog({
             type="button"
             onClick={onClose}
             aria-label="Close size guide"
-            className="text-bone hover:text-paper -mr-2 p-2"
+            className="text-fg-muted hover:text-fg -mr-2 p-2"
           >
             <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden>
               <path d="m4 4 12 12M16 4 4 16" stroke="currentColor" strokeWidth="1.5" />
@@ -60,7 +60,7 @@ export function SizeGuideDialog({
 
         <div className="flex-1 overflow-y-auto p-6">
           {guide.isPending && (
-            <p className="border-ash text-smoke mb-6 border px-4 py-3 text-xs leading-relaxed">
+            <p className="border-line text-fg-muted mb-6 border px-4 py-3 text-xs leading-relaxed">
               Measurements for this piece have not been confirmed yet. The rows below are shown so
               you can see what will be published — no estimated numbers have been filled in.
             </p>
@@ -72,10 +72,10 @@ export function SizeGuideDialog({
             <table className="w-full min-w-[420px] border-collapse text-sm">
               <caption className="sr-only">Garment measurements by size for {guide.name}</caption>
               <thead>
-                <tr className="border-ash border-b">
+                <tr className="border-line border-b">
                   <th
                     scope="col"
-                    className="text-dim py-3 pr-4 text-left text-[0.68rem] tracking-[0.16em] uppercase"
+                    className="text-fg-faint py-3 pr-4 text-left text-[0.68rem] tracking-[0.16em] uppercase"
                   >
                     Measurement
                   </th>
@@ -83,7 +83,7 @@ export function SizeGuideDialog({
                     <th
                       key={size}
                       scope="col"
-                      className="text-dim px-3 py-3 text-center text-[0.68rem] tracking-[0.16em] uppercase"
+                      className="text-fg-faint px-3 py-3 text-center text-[0.68rem] tracking-[0.16em] uppercase"
                     >
                       {size}
                     </th>
@@ -92,16 +92,16 @@ export function SizeGuideDialog({
               </thead>
               <tbody>
                 {guide.rows.map((row) => (
-                  <tr key={row.label} className="border-ash/40 border-b">
-                    <th scope="row" className="text-bone py-3 pr-4 text-left font-normal">
+                  <tr key={row.label} className="border-line border-b">
+                    <th scope="row" className="text-fg-muted py-3 pr-4 text-left font-normal">
                       {row.label}
-                      <span className="text-dim ml-1 text-xs">({row.unit})</span>
+                      <span className="text-fg-faint ml-1 text-xs">({row.unit})</span>
                     </th>
                     {guide.sizes.map((size) => {
                       const measurement = row.measurements.find((m) => m.size === size);
                       return (
-                        <td key={size} className="text-bone px-3 py-3 text-center tabular-nums">
-                          {measurement?.value ?? <span className="text-dim">—</span>}
+                        <td key={size} className="text-fg-muted px-3 py-3 text-center tabular-nums">
+                          {measurement?.value ?? <span className="text-fg-faint">—</span>}
                         </td>
                       );
                     })}
@@ -111,7 +111,9 @@ export function SizeGuideDialog({
             </table>
           </div>
 
-          {guide.notes && <p className="text-smoke mt-6 text-xs leading-relaxed">{guide.notes}</p>}
+          {guide.notes && (
+            <p className="text-fg-muted mt-6 text-xs leading-relaxed">{guide.notes}</p>
+          )}
         </div>
       </div>
     </div>

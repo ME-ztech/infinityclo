@@ -153,7 +153,7 @@ opens, and the checkout control is disabled with its notice.
 
 ## Caveats
 
-**The catalog is empty.** Until `npm run import:legacy` runs, every
+**The catalog is empty.** Until `npm run import:catalog` runs, every
 catalog-driven surface shows its empty state. The site deploys and works; it
 just has no products. See `LEGACY_BRAND_AUDIT.md`.
 

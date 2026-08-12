@@ -148,6 +148,9 @@ function searchScore(product: Product, term: string): number {
   if (product.tagline?.toLowerCase().includes(needle)) score += 10;
   if (product.description?.toLowerCase().includes(needle)) score += 5;
   if (colourValues(product).some((c) => c.toLowerCase().includes(needle))) score += 8;
+  // Tags are the brand's own merchandising vocabulary, so a tag hit is a real
+  // signal — but a weak one, below every field the customer can actually see.
+  if (product.tags.some((tag) => tag.toLowerCase().includes(needle))) score += 6;
 
   // Multi-word queries: award partial credit per term so "black hoodie" still
   // ranks a black hoodie above an unrelated exact-name match on either word.

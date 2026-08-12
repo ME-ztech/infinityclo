@@ -1,16 +1,17 @@
 import { expect, test, type Page } from '@playwright/test';
 
 /**
- * Catalog-dependent journeys.
+ * Catalogue-dependent journeys.
  *
- * Every test here skips while the catalog snapshot is empty, and runs for real
- * the moment `npm run import:legacy` populates it. That is deliberate: a suite
- * that seeded invented products to make itself green would be testing fiction,
- * and would report a passing add-to-cart flow that had never touched a real
- * INFNITY product.
+ * These run against whichever catalogue the build is serving — the imported
+ * snapshot when `npm run import:catalog` has populated it, otherwise the
+ * verified seed. Both carry real INFNITY product names and real prices, so a
+ * green add-to-bag here is a genuine claim about a real product.
  *
- * A skipped test is an honest "not proven yet". A green test over fake data is
- * a false claim.
+ * Tests still skip when a *capability* is absent rather than asserting against
+ * it: the seed has no size axis and no photography, so the size-selection and
+ * gallery assertions stand down instead of failing. A skipped test is an honest
+ * "not proven yet"; a rewritten assertion that passes on missing data is not.
  */
 
 async function hasProducts(page: Page): Promise<boolean> {
@@ -20,12 +21,12 @@ async function hasProducts(page: Page): Promise<boolean> {
 
 test.describe('catalog journeys', () => {
   test('shop lists products', async ({ page }) => {
-    test.skip(!(await hasProducts(page)), 'Catalog is empty — run npm run import:legacy');
+    test.skip(!(await hasProducts(page)), 'Catalogue is empty');
     await expect(page.getByTestId('product-card').first()).toBeVisible();
   });
 
   test('a product card opens its product page', async ({ page }) => {
-    test.skip(!(await hasProducts(page)), 'Catalog is empty — run npm run import:legacy');
+    test.skip(!(await hasProducts(page)), 'Catalogue is empty');
 
     await page.getByTestId('product-card').first().getByRole('link').first().click();
     await expect(page).toHaveURL(/\/products\//);
@@ -33,10 +34,14 @@ test.describe('catalog journeys', () => {
   });
 
   test('sorting by price reorders the grid', async ({ page }) => {
-    test.skip(!(await hasProducts(page)), 'Catalog is empty — run npm run import:legacy');
+    test.skip(!(await hasProducts(page)), 'Catalogue is empty');
 
     const before = await page.getByTestId('product-card').first().textContent();
-    await page.getByTestId('sort-select').selectOption('price_desc');
+
+    // Sorting moved out of an inline <select> and into the FILTER / SORT drawer.
+    await page.getByTestId('filter-open').click();
+    await expect(page.getByTestId('filter-drawer')).toBeVisible();
+    await page.getByTestId('sort-option').filter({ hasText: 'Price: High to Low' }).click();
     await page.waitForURL(/sort=price_desc/);
 
     const after = await page.getByTestId('product-card').first().textContent();
@@ -47,12 +52,18 @@ test.describe('catalog journeys', () => {
   });
 
   test('a filter narrows the grid and survives a reload', async ({ page }) => {
-    test.skip(!(await hasProducts(page)), 'Catalog is empty — run npm run import:legacy');
+    test.skip(!(await hasProducts(page)), 'Catalogue is empty');
 
-    const sizeFilter = page.getByRole('checkbox').nth(1);
-    test.skip((await sizeFilter.count()) === 0, 'No facets available');
+    await page.getByTestId('filter-open').click();
+    await expect(page.getByTestId('filter-drawer')).toBeVisible();
 
-    await sizeFilter.check();
+    // The real input is `sr-only` and the styled box is what a customer taps,
+    // so the label is the honest target — clicking the clipped input is
+    // something no user can do.
+    const facet = page.getByTestId('filter-drawer').locator('label').first();
+    test.skip((await facet.count()) === 0, 'No facets available');
+
+    await facet.click();
     await page.waitForURL(/[?&](size|colour|category|collection|available)=/);
 
     const url = page.url();
@@ -61,7 +72,7 @@ test.describe('catalog journeys', () => {
   });
 
   test('selecting a size and adding to cart updates the badge', async ({ page }) => {
-    test.skip(!(await hasProducts(page)), 'Catalog is empty — run npm run import:legacy');
+    test.skip(!(await hasProducts(page)), 'Catalogue is empty');
 
     await page.getByTestId('product-card').first().getByRole('link').first().click();
     await expect(page.getByTestId('add-to-cart')).toBeVisible();
@@ -77,7 +88,7 @@ test.describe('catalog journeys', () => {
   });
 
   test('quantity changes and removal work, and the cart survives a reload', async ({ page }) => {
-    test.skip(!(await hasProducts(page)), 'Catalog is empty — run npm run import:legacy');
+    test.skip(!(await hasProducts(page)), 'Catalogue is empty');
 
     await page.getByTestId('product-card').first().getByRole('link').first().click();
     const sizes = page.getByTestId('size-option');
@@ -98,7 +109,7 @@ test.describe('catalog journeys', () => {
   });
 
   test('checkout is disabled and says why', async ({ page }) => {
-    test.skip(!(await hasProducts(page)), 'Catalog is empty — run npm run import:legacy');
+    test.skip(!(await hasProducts(page)), 'Catalogue is empty');
 
     await page.getByTestId('product-card').first().getByRole('link').first().click();
     const sizes = page.getByTestId('size-option');
@@ -112,7 +123,7 @@ test.describe('catalog journeys', () => {
   });
 
   test('search finds a real product', async ({ page }) => {
-    test.skip(!(await hasProducts(page)), 'Catalog is empty — run npm run import:legacy');
+    test.skip(!(await hasProducts(page)), 'Catalogue is empty');
 
     const name = await page.getByTestId('product-card').first().locator('h3').textContent();
     test.skip(!name, 'No product name available');

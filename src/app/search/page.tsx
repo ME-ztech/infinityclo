@@ -24,11 +24,11 @@ export default async function SearchPage({
   const results = term ? await catalogRepository.searchProducts(term, 48) : [];
 
   return (
-    <div className="edge pt-28 pb-[--spacing-section] md:pt-36">
+    <div className="edge pt-14 pb-(--spacing-section) md:pt-20">
       <header className="mb-10">
-        <h1 className="font-display text-headline text-paper">Search</h1>
+        <h1 className="font-display text-headline text-fg">Search</h1>
         {term && (
-          <p className="text-smoke mt-3 text-sm">
+          <p className="text-fg-muted mt-3 text-sm">
             {results.length} {results.length === 1 ? 'result' : 'results'} for “{term}”
           </p>
         )}
@@ -45,7 +45,7 @@ export default async function SearchPage({
           }
         />
       ) : results.length > 0 ? (
-        <ProductGrid products={results} density="comfortable" priorityCount={4} />
+        <ProductGrid products={results} density="showroom" priorityCount={4} />
       ) : (
         <EmptyState
           title={`Nothing matched “${term}”`}

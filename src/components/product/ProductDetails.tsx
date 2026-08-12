@@ -40,8 +40,17 @@ export function ProductDetails({ product }: { product: Product }) {
     });
   }
 
-  if (spec.fit) {
-    sections.push({ id: 'fit', title: 'Fit', body: <p>{spec.fit}</p> });
+  if (spec.fit || spec.modelInfo) {
+    sections.push({
+      id: 'fit',
+      title: 'Fit',
+      body: (
+        <div className="flex flex-col gap-2">
+          {spec.fit && <p>{spec.fit}</p>}
+          {spec.modelInfo && <p className="text-fg">{spec.modelInfo}</p>}
+        </div>
+      ),
+    });
   }
 
   if (spec.materials || spec.weightGsm || spec.construction) {
@@ -69,11 +78,11 @@ export function ProductDetails({ product }: { product: Product }) {
     body: (
       <p>
         See{' '}
-        <Link href="/shipping" className="text-paper underline underline-offset-4">
+        <Link href="/shipping" className="text-fg underline underline-offset-4">
           shipping
         </Link>{' '}
         and{' '}
-        <Link href="/returns" className="text-paper underline underline-offset-4">
+        <Link href="/returns" className="text-fg underline underline-offset-4">
           returns
         </Link>{' '}
         for current terms.
@@ -82,23 +91,19 @@ export function ProductDetails({ product }: { product: Product }) {
   });
 
   return (
-    <div className="border-ash/60 mt-10 border-t">
+    <div className="border-line mt-10 border-t">
       {sections.map((section) => (
-        <details
-          key={section.id}
-          open={section.defaultOpen}
-          className="border-ash/60 group border-b"
-        >
-          <summary className="text-bone hover:text-paper flex cursor-pointer list-none items-center justify-between py-4 text-xs font-semibold tracking-[0.16em] uppercase [&::-webkit-details-marker]:hidden">
+        <details key={section.id} open={section.defaultOpen} className="border-line group border-b">
+          <summary className="text-fg-muted hover:text-fg flex cursor-pointer list-none items-center justify-between py-4 text-xs font-semibold tracking-[0.16em] uppercase [&::-webkit-details-marker]:hidden">
             {section.title}
             <span
               aria-hidden
-              className="text-dim ml-4 shrink-0 text-lg leading-none transition-transform duration-200 group-open:rotate-45"
+              className="text-fg-faint ml-4 shrink-0 text-lg leading-none transition-transform duration-200 group-open:rotate-45"
             >
               +
             </span>
           </summary>
-          <div className="text-smoke pb-5 text-sm leading-relaxed">{section.body}</div>
+          <div className="text-fg-muted pb-5 text-sm leading-relaxed">{section.body}</div>
         </details>
       ))}
     </div>
