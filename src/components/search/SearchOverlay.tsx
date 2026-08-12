@@ -34,9 +34,14 @@ interface SearchResult {
 const DEBOUNCE_MS = 180;
 const MIN_TERM_LENGTH = 2;
 
-export function SearchOverlay({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
+/**
+ * Mounted only while open — the parent conditionally renders it — so closing
+ * unmounts the component and its state resets naturally, with no teardown
+ * effect to keep in sync.
+ */
+export function SearchOverlay({ onClose }: { onClose: () => void }) {
   const router = useRouter();
-  const containerRef = useFocusTrap(isOpen, onClose);
+  const containerRef = useFocusTrap(true, onClose);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const requestSeq = useRef(0);
 
@@ -46,29 +51,31 @@ export function SearchOverlay({ isOpen, onClose }: { isOpen: boolean; onClose: (
   const [highlight, setHighlight] = useState(-1);
 
   useEffect(() => {
-    if (isOpen) {
-      // Slight delay so the focus trap's initial focus does not fight this one.
-      const timer = window.setTimeout(() => inputRef.current?.focus(), 30);
-      return () => window.clearTimeout(timer);
-    }
-    setTerm('');
-    setResults([]);
-    setStatus('idle');
-    setHighlight(-1);
-    return undefined;
-  }, [isOpen]);
+    // Slight delay so the focus trap's initial focus does not fight this one.
+    const timer = window.setTimeout(() => inputRef.current?.focus(), 30);
+    return () => window.clearTimeout(timer);
+  }, []);
 
+  /**
+   * Debounced query. Every state change happens inside the timer callback
+   * rather than in the effect body, so a fast typist never triggers a render
+   * per keystroke. Previous results stay on screen while the next query is in
+   * flight, which reads as continuity instead of a flicker to empty.
+   */
   useEffect(() => {
     const trimmed = term.trim();
-    if (trimmed.length < MIN_TERM_LENGTH) {
-      setResults([]);
-      setStatus('idle');
-      return undefined;
-    }
 
-    setStatus('loading');
     const timer = window.setTimeout(async () => {
+      if (trimmed.length < MIN_TERM_LENGTH) {
+        setResults([]);
+        setStatus('idle');
+        setHighlight(-1);
+        return;
+      }
+
       const seq = (requestSeq.current += 1);
+      setStatus('loading');
+
       try {
         const response = await fetch(`/api/search?q=${encodeURIComponent(trimmed)}`);
         const data = (await response.json()) as { results: SearchResult[] };
@@ -112,10 +119,9 @@ export function SearchOverlay({ isOpen, onClose }: { isOpen: boolean; onClose: (
     }
   }
 
-  if (!isOpen) return null;
-
   const trimmed = term.trim();
-  const showNoResults = status === 'done' && trimmed.length >= MIN_TERM_LENGTH && results.length === 0;
+  const showNoResults =
+    status === 'done' && trimmed.length >= MIN_TERM_LENGTH && results.length === 0;
 
   return (
     <div

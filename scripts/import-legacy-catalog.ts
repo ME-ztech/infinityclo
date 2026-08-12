@@ -163,7 +163,9 @@ async function fetchCollectionProductHandles(handle: string): Promise<string[]> 
     );
     return (body.products ?? []).map((product) => product.handle);
   } catch (error) {
-    warnings.push(`Could not read products for collection "${handle}": ${(error as Error).message}`);
+    warnings.push(
+      `Could not read products for collection "${handle}": ${(error as Error).message}`,
+    );
     return [];
   }
 }
@@ -386,8 +388,8 @@ async function writeProvenance(products: readonly Product[]): Promise<void> {
     `Assets migrated: ${downloaded.length}`,
     `Assets failed: ${failed.length}`,
     '',
-    'All imagery below originates from the brand\'s own storefront and is used',
-    'with the project owner\'s authorisation. Files are stored in the repository',
+    "All imagery below originates from the brand's own storefront and is used",
+    "with the project owner's authorisation. Files are stored in the repository",
     'rather than hotlinked, so the storefront has no runtime dependency on the',
     'legacy site. Images are resized and cropped for layout only; no edit alters',
     'how a garment or a person actually appears.',

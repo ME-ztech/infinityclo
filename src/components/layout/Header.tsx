@@ -72,7 +72,9 @@ export function Header() {
         data-testid="site-header"
         className={cn(
           'fixed inset-x-0 top-0 z-50 transition-[transform,background-color,border-color] duration-300 ease-[--ease-brand]',
-          isSolid ? 'bg-void/95 border-ash/60 border-b backdrop-blur-sm' : 'border-b border-transparent',
+          isSolid
+            ? 'bg-void/95 border-ash/60 border-b backdrop-blur-sm'
+            : 'border-b border-transparent',
           isHidden ? '-translate-y-full' : 'translate-y-0',
         )}
       >
@@ -112,7 +114,10 @@ export function Header() {
                     >
                       {item.label}
                       {isActive && (
-                        <span className="bg-paper absolute inset-x-0 -bottom-0.5 h-px" aria-hidden />
+                        <span
+                          className="bg-paper absolute inset-x-0 -bottom-0.5 h-px"
+                          aria-hidden
+                        />
                       )}
                     </Link>
                   </li>
@@ -142,9 +147,7 @@ export function Header() {
             <button
               type="button"
               onClick={openDrawer}
-              aria-label={
-                isHydrated && lineCount > 0 ? `Cart, ${lineCount} items` : 'Cart'
-              }
+              aria-label={isHydrated && lineCount > 0 ? `Cart, ${lineCount} items` : 'Cart'}
               data-testid="cart-button"
               className="text-bone hover:text-paper relative p-2"
             >
@@ -165,7 +168,7 @@ export function Header() {
       </header>
 
       <MobileNav isOpen={isMobileNavOpen} onClose={() => setIsMobileNavOpen(false)} />
-      <SearchOverlay isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
+      {isSearchOpen && <SearchOverlay onClose={() => setIsSearchOpen(false)} />}
     </>
   );
 }

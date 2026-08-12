@@ -23,9 +23,12 @@ export function CheckoutAction({ cart, disabled }: { cart: Cart; disabled?: bool
         <Button variant="primary" size="lg" fullWidth disabled aria-describedby="checkout-note">
           Checkout unavailable
         </Button>
-        <p id="checkout-note" className="text-smoke mt-3 text-center text-[0.72rem] leading-relaxed">
-          This is a preview build. Payments are not connected, so no order can be
-          placed and nothing will be charged.
+        <p
+          id="checkout-note"
+          className="text-smoke mt-3 text-center text-[0.72rem] leading-relaxed"
+        >
+          This is a preview build. Payments are not connected, so no order can be placed and nothing
+          will be charged.
         </p>
       </div>
     );

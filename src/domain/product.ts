@@ -5,13 +5,7 @@
  * the local JSON adapter today and a PostgreSQL-backed one in Phase 2.
  */
 import { isDiscounted } from './money';
-import type {
-  InventoryDisplayState,
-  Money,
-  Product,
-  ProductMedia,
-  ProductVariant,
-} from './types';
+import type { InventoryDisplayState, Money, Product, ProductMedia, ProductVariant } from './types';
 
 /** Days a product is badged NEW after publication. */
 const NEW_WINDOW_DAYS = 30;

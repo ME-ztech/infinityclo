@@ -25,13 +25,7 @@ export function CartLineRow({ line }: { line: CartLine }) {
         aria-hidden
       >
         {line.media && (
-          <Image
-            src={line.media.url}
-            alt=""
-            fill
-            sizes="88px"
-            className="object-cover"
-          />
+          <Image src={line.media.url} alt="" fill sizes="88px" className="object-cover" />
         )}
       </Link>
 
@@ -101,7 +95,7 @@ export function CartLineRow({ line }: { line: CartLine }) {
 
           <div className="text-right">
             {compareTotal && isDiscounted(lineTotal, compareTotal) && (
-              <p className="text-dim text-xs line-through tabular-nums">
+              <p className="text-dim text-xs tabular-nums line-through">
                 {formatMoney(compareTotal)}
               </p>
             )}

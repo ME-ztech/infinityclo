@@ -9,19 +9,15 @@
  * session for reviewing the design, but it returns on the next visit — a
  * one-time dismissal that silences a disclosure this important would defeat it.
  */
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { CHECKOUT_ENABLED } from '@/lib/site';
 
-const DISMISS_KEY = 'infnity.preview-notice.dismissed';
-
 export function PreviewNotice() {
-  const [isDismissed, setIsDismissed] = useState(true);
-
-  useEffect(() => {
-    if (CHECKOUT_ENABLED) return;
-    setIsDismissed(window.sessionStorage.getItem(DISMISS_KEY) === '1');
-  }, []);
+  // Dismissal is intentionally not persisted. It lasts for the current page
+  // session so the design can be reviewed unobstructed, and returns on the next
+  // load — a permanently dismissible disclosure this important defeats itself.
+  const [isDismissed, setIsDismissed] = useState(false);
 
   if (CHECKOUT_ENABLED || isDismissed) return null;
 
@@ -34,10 +30,7 @@ export function PreviewNotice() {
       <span>Preview build — checkout is not live and no orders can be placed.</span>
       <button
         type="button"
-        onClick={() => {
-          window.sessionStorage.setItem(DISMISS_KEY, '1');
-          setIsDismissed(true);
-        }}
+        onClick={() => setIsDismissed(true)}
         aria-label="Dismiss preview notice"
         className="ml-3 underline underline-offset-2"
       >

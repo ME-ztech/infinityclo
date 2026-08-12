@@ -52,7 +52,9 @@ export interface CheckoutGateway {
 export function checkoutAvailability(cart: Cart, isEnabled: boolean): CheckoutAvailability {
   if (!isEnabled) return { status: 'unavailable', reason: 'not_implemented' };
   if (cart.lines.length === 0) return { status: 'unavailable', reason: 'empty_cart' };
-  if (cart.lines.some((line) => line.availability === 'sold_out' || line.availability === 'archived')) {
+  if (
+    cart.lines.some((line) => line.availability === 'sold_out' || line.availability === 'archived')
+  ) {
     return { status: 'unavailable', reason: 'items_unavailable' };
   }
   return { status: 'available' };

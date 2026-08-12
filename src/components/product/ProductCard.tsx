@@ -148,7 +148,7 @@ export function ProductCard({
                   {formatMoney(price)}
                 </p>
                 {compareAt && (
-                  <p className="text-dim text-xs line-through tabular-nums">
+                  <p className="text-dim text-xs tabular-nums line-through">
                     {formatMoney(compareAt)}
                   </p>
                 )}

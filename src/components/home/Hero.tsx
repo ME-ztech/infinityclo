@@ -17,7 +17,10 @@ import type { ProductMedia } from '@/domain/types';
  */
 export function Hero({ media }: { media: ProductMedia | null }) {
   return (
-    <section className="relative flex min-h-[88svh] items-end overflow-hidden" aria-labelledby="hero-heading">
+    <section
+      className="relative flex min-h-[88svh] items-end overflow-hidden"
+      aria-labelledby="hero-heading"
+    >
       {media ? (
         <>
           <Image
@@ -57,8 +60,8 @@ export function Hero({ media }: { media: ProductMedia | null }) {
         </h1>
 
         <p className="text-bone/85 mt-6 max-w-md text-sm leading-relaxed md:text-base">
-          Raw identity, heavyweight construction. For the ones who don&apos;t fold and
-          don&apos;t follow.
+          Raw identity, heavyweight construction. For the ones who don&apos;t fold and don&apos;t
+          follow.
         </p>
 
         <div className="mt-9 flex flex-wrap gap-3">

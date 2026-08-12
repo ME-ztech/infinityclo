@@ -43,7 +43,7 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
       aria-label="Menu"
       data-testid="mobile-nav"
       tabIndex={-1}
-      className="bg-void animate-[fade-in_200ms_ease-out] fixed inset-0 z-[70] flex flex-col lg:hidden"
+      className="bg-void fixed inset-0 z-[70] flex animate-[fade-in_200ms_ease-out] flex-col lg:hidden"
     >
       <div className="edge flex h-16 shrink-0 items-center justify-between">
         <Wordmark className="text-lg" />

@@ -71,7 +71,12 @@ export function NewsletterForm({
   }
 
   return (
-    <form onSubmit={onSubmit} noValidate className={cn('w-full', className)} data-testid="newsletter-form">
+    <form
+      onSubmit={onSubmit}
+      noValidate
+      className={cn('w-full', className)}
+      data-testid="newsletter-form"
+    >
       <label htmlFor={inputId} className="sr-only">
         Email address
       </label>
@@ -94,7 +99,7 @@ export function NewsletterForm({
           aria-describedby={message ? `${inputId}-message` : undefined}
           data-testid="newsletter-email"
           className={cn(
-            'text-bone placeholder:text-dim h-12 flex-1 border bg-transparent px-4 text-sm outline-none transition-colors',
+            'text-bone placeholder:text-dim h-12 flex-1 border bg-transparent px-4 text-sm transition-colors outline-none',
             status === 'error' ? 'border-signal' : 'border-ash focus:border-bone',
           )}
         />

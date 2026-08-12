@@ -3,14 +3,14 @@
 /**
  * Cart state.
  *
- * Hydration safety is the main constraint here. The persisted cart lives in
- * localStorage, which the server cannot see, so the first client render must
- * match the server's empty cart exactly. `isHydrated` gates every count and
- * total until the stored cart has been read and priced — that is why the header
- * badge renders nothing rather than 0 on first paint.
+ * The persisted cart (slugs, variant ids, quantities) is read through
+ * `useSyncExternalStore` from `./store`, so localStorage is treated as the
+ * external system it is and hydration is exact: the server snapshot is an empty
+ * cart, and the first client render matches it before swapping to real data.
  *
- * Mutations update local state immediately and re-price against the server, so
- * the UI stays responsive while prices stay authoritative.
+ * Prices never come from storage. Whenever the persisted cart changes, it is
+ * re-priced server-side via `/api/cart/resolve`, so a tampered or stale
+ * localStorage value cannot influence what anything costs.
  */
 import {
   createContext,
@@ -20,19 +20,15 @@ import {
   useMemo,
   useRef,
   useState,
+  useSyncExternalStore,
   type ReactNode,
 } from 'react';
 
 import { money } from '@/domain/money';
 import type { Cart } from '@/domain/types';
 import { track } from '@/lib/analytics';
-import {
-  createEmptyPersistedCart,
-  readPersistedCart,
-  writePersistedCart,
-  type PersistedCart,
-  type PersistedLine,
-} from './storage';
+import { getServerSnapshot, getSnapshot, setPersistedCart, subscribe } from './store';
+import type { PersistedLine } from './storage';
 
 const EMPTY_CART: Cart = {
   id: 'pending',
@@ -63,11 +59,11 @@ export interface CartContextValue {
 
 const CartContext = createContext<CartContextValue | null>(null);
 
-async function priceCart(persisted: PersistedCart): Promise<Cart> {
+async function priceCart(lines: readonly PersistedLine[], id: string): Promise<Cart> {
   const response = await fetch('/api/cart/resolve', {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
-    body: JSON.stringify(persisted),
+    body: JSON.stringify({ id, lines }),
   });
   if (!response.ok) throw new Error(`Cart pricing failed: ${response.status}`);
   const data = (await response.json()) as { cart: Cart };
@@ -75,75 +71,69 @@ async function priceCart(persisted: PersistedCart): Promise<Cart> {
 }
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [persisted, setPersisted] = useState<PersistedCart | null>(null);
-  const [cart, setCart] = useState<Cart>(EMPTY_CART);
-  const [isHydrated, setIsHydrated] = useState(false);
-  const [isPending, setIsPending] = useState(false);
+  const persisted = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+
+  /**
+   * The priced cart, tagged with the `updatedAt` it was priced for. Tagging is
+   * what lets "pricing is in flight" be derived rather than tracked as its own
+   * state that can drift out of sync with the request.
+   */
+  const [priced, setPriced] = useState<{ cart: Cart; forUpdatedAt: string } | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  // Guards against an older in-flight pricing response overwriting a newer one.
+  // Guards against a slow earlier response overwriting a newer one.
   const requestSeq = useRef(0);
 
+  /**
+   * Re-price whenever the persisted cart changes — including changes made in
+   * another tab, which arrive through the store's `storage` listener. Every
+   * state update happens in an async callback, never in the effect body.
+   */
   useEffect(() => {
-    const stored = readPersistedCart() ?? createEmptyPersistedCart();
-    setPersisted(stored);
+    if (persisted.lines.length === 0) return;
 
-    if (stored.lines.length === 0) {
-      setCart({ ...EMPTY_CART, id: stored.id });
-      setIsHydrated(true);
-      return;
-    }
-
+    const seq = (requestSeq.current += 1);
     let cancelled = false;
-    void priceCart(stored)
-      .then((priced) => {
-        if (!cancelled) setCart(priced);
+
+    void priceCart(persisted.lines, persisted.id)
+      .then((next) => {
+        if (!cancelled && seq === requestSeq.current) {
+          setPriced({ cart: next, forUpdatedAt: persisted.updatedAt });
+        }
       })
       .catch(() => {
-        // Offline or a failed resolve: keep the cart empty rather than showing
-        // lines we cannot price. The stored identities survive for a retry.
-        if (!cancelled) setCart({ ...EMPTY_CART, id: stored.id });
-      })
-      .finally(() => {
-        if (!cancelled) setIsHydrated(true);
+        // Offline or a failed resolve. Keep whatever was last priced rather
+        // than showing lines we cannot price; the identities survive for a retry.
       });
 
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [persisted]);
 
-  const commit = useCallback(async (next: PersistedCart) => {
-    const seq = (requestSeq.current += 1);
-    setPersisted(next);
-    writePersistedCart(next);
-    setIsPending(true);
+  const emptyCart = useMemo<Cart>(() => ({ ...EMPTY_CART, id: persisted.id }), [persisted.id]);
 
-    try {
-      const priced = await priceCart(next);
-      if (seq === requestSeq.current) setCart(priced);
-    } catch {
-      if (seq === requestSeq.current) {
-        // Leave the previous priced cart in place; the mutation is persisted and
-        // will resolve on the next successful call.
-      }
-    } finally {
-      if (seq === requestSeq.current) setIsPending(false);
-    }
-  }, []);
+  /**
+   * Hydration is derived from the store itself: the server snapshot carries the
+   * sentinel id, so anything else means the real localStorage read has happened.
+   */
+  const isHydrated = persisted.id !== 'pending';
+
+  const cart = persisted.lines.length === 0 ? emptyCart : (priced?.cart ?? emptyCart);
+
+  const isPending = persisted.lines.length > 0 && priced?.forUpdatedAt !== persisted.updatedAt;
 
   const addLine = useCallback<CartContextValue['addLine']>(
     async ({ productSlug, variantId, quantity = 1, productName }) => {
-      const base = persisted ?? createEmptyPersistedCart();
-      const existing = base.lines.find(
+      const existing = persisted.lines.find(
         (line) => line.productSlug === productSlug && line.variantId === variantId,
       );
 
       const lines: PersistedLine[] = existing
-        ? base.lines.map((line) =>
+        ? persisted.lines.map((line) =>
             line === existing ? { ...line, quantity: line.quantity + quantity } : line,
           )
-        : [...base.lines, { productSlug, variantId, quantity }];
+        : [...persisted.lines, { productSlug, variantId, quantity }];
 
       track({
         name: 'product_added_to_cart',
@@ -152,40 +142,41 @@ export function CartProvider({ children }: { children: ReactNode }) {
         quantity,
       });
 
-      await commit({ ...base, lines, updatedAt: new Date().toISOString() });
+      setPersistedCart({ ...persisted, lines, updatedAt: new Date().toISOString() });
       setIsDrawerOpen(true);
     },
-    [commit, persisted],
+    [persisted],
   );
 
   const updateQuantity = useCallback<CartContextValue['updateQuantity']>(
     async (id, quantity) => {
-      if (!persisted) return;
       const target = cart.lines.find((line) => line.id === id);
       if (!target) return;
 
+      const matches = (line: PersistedLine) =>
+        line.productSlug === target.productSlug && line.variantId === target.variantId;
+
       if (quantity <= 0) {
-        const lines = persisted.lines.filter(
-          (line) =>
-            !(line.productSlug === target.productSlug && line.variantId === target.variantId),
-        );
         track({
           name: 'product_removed_from_cart',
           productSlug: target.productSlug,
           variantId: target.variantId,
         });
-        await commit({ ...persisted, lines, updatedAt: new Date().toISOString() });
+        setPersistedCart({
+          ...persisted,
+          lines: persisted.lines.filter((line) => !matches(line)),
+          updatedAt: new Date().toISOString(),
+        });
         return;
       }
 
-      const lines = persisted.lines.map((line) =>
-        line.productSlug === target.productSlug && line.variantId === target.variantId
-          ? { ...line, quantity }
-          : line,
-      );
-      await commit({ ...persisted, lines, updatedAt: new Date().toISOString() });
+      setPersistedCart({
+        ...persisted,
+        lines: persisted.lines.map((line) => (matches(line) ? { ...line, quantity } : line)),
+        updatedAt: new Date().toISOString(),
+      });
     },
-    [cart.lines, commit, persisted],
+    [cart.lines, persisted],
   );
 
   const removeLine = useCallback<CartContextValue['removeLine']>(
@@ -196,14 +187,21 @@ export function CartProvider({ children }: { children: ReactNode }) {
   );
 
   const clear = useCallback<CartContextValue['clear']>(async () => {
-    const base = persisted ?? createEmptyPersistedCart();
-    await commit({ ...base, lines: [], updatedAt: new Date().toISOString() });
-  }, [commit, persisted]);
+    setPersistedCart({ ...persisted, lines: [], updatedAt: new Date().toISOString() });
+  }, [persisted]);
 
+  /**
+   * Counted from the persisted cart, not the priced one, so the header badge is
+   * correct the moment the page hydrates instead of waiting on a round trip.
+   * Quantities are known locally; only money needs the server.
+   */
   const lineCount = useMemo(
-    () => cart.lines.reduce((total, line) => total + line.quantity, 0),
-    [cart.lines],
+    () => persisted.lines.reduce((total, line) => total + line.quantity, 0),
+    [persisted.lines],
   );
+
+  const openDrawer = useCallback(() => setIsDrawerOpen(true), []);
+  const closeDrawer = useCallback(() => setIsDrawerOpen(false), []);
 
   const value = useMemo<CartContextValue>(
     () => ({
@@ -212,14 +210,26 @@ export function CartProvider({ children }: { children: ReactNode }) {
       isHydrated,
       isPending,
       isDrawerOpen,
-      openDrawer: () => setIsDrawerOpen(true),
-      closeDrawer: () => setIsDrawerOpen(false),
+      openDrawer,
+      closeDrawer,
       addLine,
       updateQuantity,
       removeLine,
       clear,
     }),
-    [addLine, cart, clear, isDrawerOpen, isHydrated, isPending, lineCount, removeLine, updateQuantity],
+    [
+      addLine,
+      cart,
+      clear,
+      closeDrawer,
+      isDrawerOpen,
+      isHydrated,
+      isPending,
+      lineCount,
+      openDrawer,
+      removeLine,
+      updateQuantity,
+    ],
   );
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

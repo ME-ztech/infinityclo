@@ -23,8 +23,7 @@ export default async function HomePage() {
 
   // The hero uses a campaign asset when one exists, otherwise the newest
   // product's lead shot, otherwise pure type. Never a stock image.
-  const heroMedia =
-    campaigns[0]?.media[0] ?? (newest[0] ? primaryMedia(newest[0]) : null) ?? null;
+  const heroMedia = campaigns[0]?.media[0] ?? (newest[0] ? primaryMedia(newest[0]) : null) ?? null;
 
   const hasCatalog = newest.length > 0;
   const archivedCollections = collections.filter((collection) => collection.isArchived);
@@ -49,8 +48,8 @@ export default async function HomePage() {
             title="The catalog is not loaded"
             body={
               <>
-                Product data has not been imported into this build yet. No stand-in
-                products have been invented to fill the space.
+                Product data has not been imported into this build yet. No stand-in products have
+                been invented to fill the space.
               </>
             }
             action={
@@ -63,23 +62,23 @@ export default async function HomePage() {
       </section>
 
       {/* EDITORIAL --------------------------------------------------- */}
-      <section
-        className="edge pt-[--spacing-section]"
-        aria-labelledby="editorial-heading"
-      >
+      <section className="edge pt-[--spacing-section]" aria-labelledby="editorial-heading">
         <div className="border-ash/50 grid items-stretch gap-0 border md:grid-cols-2">
           <div className="flex flex-col justify-center px-6 py-14 md:px-12 md:py-20">
             <p className="text-dim mb-4 text-[0.68rem] font-semibold tracking-[0.24em] uppercase">
               The label
             </p>
-            <h2 id="editorial-heading" className="font-display text-headline text-paper text-balance">
+            <h2
+              id="editorial-heading"
+              className="font-display text-headline text-paper text-balance"
+            >
               Don&apos;t fold.
               <br />
               Don&apos;t follow.
             </h2>
             <p className="text-smoke mt-6 max-w-sm text-sm leading-relaxed">
-              INFNITY is built on raw identity and construction that holds its shape.
-              Every piece is made to be worn hard and to still read as a statement.
+              INFNITY is built on raw identity and construction that holds its shape. Every piece is
+              made to be worn hard and to still read as a statement.
             </p>
             <div className="mt-8">
               <ButtonLink href="/about" variant="secondary" size="md">
@@ -155,8 +154,8 @@ export default async function HomePage() {
             title="The gallery is waiting"
             body={
               <>
-                Customer fits have not been imported into this build. Real INFNITY
-                customers go here — nothing is being staged in the meantime.
+                Customer fits have not been imported into this build. Real INFNITY customers go here
+                — nothing is being staged in the meantime.
               </>
             }
             action={
