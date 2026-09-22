@@ -200,10 +200,27 @@
     box-sizing: border-box;
   }
 
+  /**
+   * The net, on both elements deliberately.
+   *
+   * Overflow set on `body` alone propagates to the viewport and `body` itself
+   * then behaves as `visible` — so the page stops scrolling sideways while the
+   * content is still laid out at its full rogue width. Desktop browsers hide
+   * that; iOS Safari reads the content width and zooms the whole document out
+   * to fit it, which is how a single overflowing rail turned the product page
+   * into a quarter-scale screenshot. Declaring it on `html` too means the
+   * viewport takes its overflow from `html` and `body` keeps its own, so a
+   * rogue child is actually clipped at the page edge.
+   *
+   * `clip` rather than `hidden`: `hidden` would make these scroll containers and
+   * break `position: sticky` on the header and the mobile purchase bar. And this
+   * remains a net — every rail on this site is sized so it never needs it.
+   */
   html {
     -webkit-text-size-adjust: 100%;
     scroll-behavior: smooth;
     background-color: var(--color-bone);
+    overflow-x: clip;
   }
 
   body {
@@ -214,7 +231,6 @@
     font-synthesis-weight: none;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
-    /* The one guard against a rogue wide child breaking the whole page. */
     overflow-x: clip;
   }
 

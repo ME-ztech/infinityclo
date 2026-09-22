@@ -122,13 +122,27 @@ export function ProductGallery({ media, productName, activeMediaId }: ProductGal
         <div
           ref={scrollerRef}
           data-surface="paper"
+          // No `RACK_GUTTER` here on purpose: this rail cancels the page gutter
+          // so the photography runs to both edges of the glass, and a snap
+          // offset would leave every swipe short by that gutter with a sliver of
+          // the previous shot still showing.
           className={cn(RACK, 'bg-surface -mx-(--spacing-gutter)')}
           role="group"
           aria-label={`${productName} images`}
           data-testid="gallery-rail"
         >
           {media.map((item, index) => (
-            <div key={item.id} data-index={index} className={cn(RACK_ITEM, 'w-screen')}>
+            /**
+             * `w-full` — one slide per rail, measured against the rail — and
+             * never `w-screen`. `100vw` on a `shrink-0` slide made each slide's
+             * minimum contribution a whole viewport, so a four-shot product
+             * reported a 4×100vw minimum up through the PDP grid and stretched
+             * the entire document to four screens wide. A percentage resolves
+             * against the rail at layout time and contributes nothing
+             * intrinsically, so the rail scrolls and the page does not. It also
+             * drops the `100vw`-vs-scrollbar mismatch on desktop browsers.
+             */
+            <div key={item.id} data-index={index} className={cn(RACK_ITEM, 'w-full')}>
               <button
                 type="button"
                 onClick={() => setZoomIndex(index)}

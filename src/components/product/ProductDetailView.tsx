@@ -12,6 +12,16 @@
  * panel lifts the selected variant's media id up here and the gallery consumes
  * it. Keeping it thin means the page itself stays a server component and the
  * catalogue never ships to the browser.
+ *
+ * Both columns carry `min-w-0`. A grid item defaults to `min-width: auto`, which
+ * means it refuses to be narrower than its content's minimum — and the gallery's
+ * content is a scroll rail holding one slide per photograph. On a phone that
+ * single-column grid sized its one track to the *whole* rail rather than to the
+ * viewport, so a four-shot product laid the page out four screens wide: the
+ * gallery and the buy panel ran off the right edge, everything measured in `vw`
+ * (the header, the breadcrumb, the recommendations) shrank into the left
+ * quarter, and iOS zoomed the whole document out to fit. The rail is meant to
+ * scroll inside its column; this is what holds the column to the viewport.
  */
 import { useCallback, useState } from 'react';
 
@@ -36,11 +46,11 @@ export function ProductDetailView({
 
   return (
     <div className="grid gap-10 md:grid-cols-[1.15fr_0.85fr] md:gap-12 lg:gap-20">
-      <div>
+      <div className="min-w-0">
         <ProductGallery media={media} productName={product.name} activeMediaId={activeMediaId} />
       </div>
 
-      <div className="md:sticky md:top-28 md:self-start">
+      <div className="min-w-0 md:sticky md:top-28 md:self-start">
         <ProductPurchasePanel
           product={product}
           sizeGuide={sizeGuide}
