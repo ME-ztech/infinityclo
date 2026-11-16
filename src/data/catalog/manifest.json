@@ -1,5 +1,5 @@
 {
-  "importedAt": "2026-11-16T21:43:37.491Z",
+  "importedAt": "2026-11-16T21:53:20.680Z",
   "source": "https://infinityclo.ca",
   "productCount": 33,
   "collectionCount": 1,
@@ -51,36 +51,28 @@
     {
       "slug": "infnitys-reversible-graphite-blank-sweatpants",
       "missing": [
-        "materials",
         "fit",
-        "care",
         "origin"
       ]
     },
     {
       "slug": "infnitys-obsidian-blank-sweatpants",
       "missing": [
-        "materials",
         "fit",
-        "care",
         "origin"
       ]
     },
     {
       "slug": "infnitys-reversible-hoodie",
       "missing": [
-        "materials",
         "fit",
-        "care",
         "origin"
       ]
     },
     {
       "slug": "infnitys-reversible-obsidian-blank-hoodie",
       "missing": [
-        "materials",
         "fit",
-        "care",
         "origin"
       ]
     },
@@ -140,7 +132,6 @@
     {
       "slug": "infnitys-cherry-blosson-wildcard-hoodie-2-1",
       "missing": [
-        "fit",
         "care",
         "origin",
         "model sizing"
@@ -149,7 +140,6 @@
     {
       "slug": "infnitys-cherry-blosson-wildcard-hoodie-2-0",
       "missing": [
-        "fit",
         "care",
         "origin",
         "model sizing"
@@ -229,7 +219,6 @@
     {
       "slug": "infnitys-mpnw-sleeved-shirt",
       "missing": [
-        "fit",
         "care",
         "origin"
       ]
@@ -237,7 +226,6 @@
     {
       "slug": "infni-tees-lecaptain-america",
       "missing": [
-        "fit",
         "care",
         "origin"
       ]
@@ -245,7 +233,6 @@
     {
       "slug": "infni-tees-chaos",
       "missing": [
-        "fit",
         "care",
         "origin"
       ]
@@ -254,7 +241,6 @@
       "slug": "infnitys-stellar-ops-camo-jorts-copy",
       "missing": [
         "materials",
-        "fit",
         "care",
         "weight",
         "origin"
@@ -264,7 +250,6 @@
       "slug": "infnitys-stellar-ops-camo-jorts",
       "missing": [
         "materials",
-        "fit",
         "care",
         "weight",
         "origin"
@@ -322,7 +307,6 @@
     {
       "slug": "infinity-cozy-cove-zip-sweatpants",
       "missing": [
-        "fit",
         "care",
         "origin",
         "model sizing"

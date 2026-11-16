@@ -44,6 +44,8 @@ export interface CartContextValue {
   readonly isHydrated: boolean;
   readonly isPending: boolean;
   readonly isDrawerOpen: boolean;
+  /** Identities only — what `/api/checkout` re-prices server-side. */
+  readonly persistedLines: readonly PersistedLine[];
   openDrawer(): void;
   closeDrawer(): void;
   addLine(input: {
@@ -210,6 +212,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       isHydrated,
       isPending,
       isDrawerOpen,
+      persistedLines: persisted.lines,
       openDrawer,
       closeDrawer,
       addLine,
@@ -227,6 +230,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       isPending,
       lineCount,
       openDrawer,
+      persisted.lines,
       removeLine,
       updateQuantity,
     ],

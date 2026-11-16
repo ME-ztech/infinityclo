@@ -1,8 +1,10 @@
 /**
- * Local catalog adapter — satisfies `CatalogRepository` from the imported
- * snapshot. All filtering, sorting, faceting and search run in-process over an
- * array, which is the right shape at this catalog size. Phase 2 replaces this
- * file with SQL; no consumer changes.
+ * In-memory catalog repository — satisfies `CatalogRepository` over an array of
+ * products supplied by a *source*: the imported snapshot (local adapter) or the
+ * live Shopify Storefront API (shopify adapter). Filtering, sorting, faceting
+ * and search run in-process, which is the right shape for a catalogue of tens
+ * of products; it keeps one implementation of the shop's behaviour whichever
+ * source is connected.
  */
 import {
   colourValues,
@@ -24,7 +26,15 @@ import type {
 } from '@/domain/types';
 import type { CatalogRepository } from '@/data/repositories';
 
-import { collections, products, sizeGuides } from './snapshot';
+import { collections as snapshotCollections, products as snapshotProducts, sizeGuides as snapshotSizeGuides } from './snapshot';
+
+export interface CatalogData {
+  readonly products: readonly Product[];
+  readonly collections: readonly Collection[];
+  readonly sizeGuides: readonly SizeGuide[];
+}
+
+export type CatalogSourceLoader = () => Promise<CatalogData>;
 
 function matchesFilters(product: Product, filters: ProductFilters | undefined): boolean {
   if (!filters) return true;
@@ -164,8 +174,11 @@ function searchScore(product: Product, term: string): number {
   return score;
 }
 
-export class LocalCatalogRepository implements CatalogRepository {
+export class InMemoryCatalogRepository implements CatalogRepository {
+  constructor(private readonly load: CatalogSourceLoader) {}
+
   async listProducts(query: ProductQuery = {}): Promise<ProductQueryResult> {
+    const { products } = await this.load();
     const matched = products.filter((product) => matchesFilters(product, query.filters));
     const sorted = [...matched].sort(compareProducts(query.sort ?? 'featured'));
 
@@ -183,10 +196,12 @@ export class LocalCatalogRepository implements CatalogRepository {
   }
 
   async getProductBySlug(slug: string): Promise<Product | null> {
+    const { products } = await this.load();
     return products.find((product) => product.slug === slug) ?? null;
   }
 
   async getProductsBySlugs(slugs: readonly string[]): Promise<readonly Product[]> {
+    const { products } = await this.load();
     const bySlug = new Map(products.map((product) => [product.slug, product]));
     return slugs
       .map((slug) => bySlug.get(slug))
@@ -194,6 +209,7 @@ export class LocalCatalogRepository implements CatalogRepository {
   }
 
   async listCollections(): Promise<readonly Collection[]> {
+    const { collections } = await this.load();
     return [...collections].sort((a, b) => {
       const at = a.releasedAt ? Date.parse(a.releasedAt) : 0;
       const bt = b.releasedAt ? Date.parse(b.releasedAt) : 0;
@@ -202,10 +218,12 @@ export class LocalCatalogRepository implements CatalogRepository {
   }
 
   async getCollectionBySlug(slug: string): Promise<Collection | null> {
+    const { collections } = await this.load();
     return collections.find((collection) => collection.slug === slug) ?? null;
   }
 
   async searchProducts(term: string, limit = 8): Promise<readonly Product[]> {
+    const { products } = await this.load();
     if (!term.trim()) return [];
     return products
       .map((product) => ({ product, score: searchScore(product, term) }))
@@ -216,15 +234,33 @@ export class LocalCatalogRepository implements CatalogRepository {
   }
 
   async getSizeGuide(id: string): Promise<SizeGuide | null> {
+    const { sizeGuides } = await this.load();
     return sizeGuides.find((guide) => guide.id === id) ?? null;
   }
 
   async listProductSlugs(): Promise<readonly string[]> {
+    const { products } = await this.load();
     return products.map((product) => product.slug);
   }
 
   async listCollectionSlugs(): Promise<readonly string[]> {
+    const { collections } = await this.load();
     return collections.map((collection) => collection.slug);
+  }
+}
+
+const snapshotData: CatalogData = {
+  products: snapshotProducts,
+  collections: snapshotCollections,
+  sizeGuides: snapshotSizeGuides,
+};
+
+export const loadSnapshotCatalog: CatalogSourceLoader = async () => snapshotData;
+
+/** The imported snapshot of the live store. */
+export class LocalCatalogRepository extends InMemoryCatalogRepository {
+  constructor() {
+    super(loadSnapshotCatalog);
   }
 }
 
