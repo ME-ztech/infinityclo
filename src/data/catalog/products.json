@@ -1,1 +1,5071 @@
-[]
+[
+  {
+    "id": "9452058542300",
+    "slug": "infnitys-iced-ivory-pearl-tank",
+    "name": "INFNITY'S ICED IVORY PEARL TANK",
+    "tagline": null,
+    "description": "• Pre-Made\n\n• Ribbed Tank Top\n\n• Rhinestone design on the front. \n\n• 220 gsm 100% cotton - basically comfy ASF. \n\n• The model is 4'10 wearing an XS\n\n• \nItem will ship within 3–5 business days after purchase.",
+    "category": null,
+    "collectionSlugs": [],
+    "options": [
+      {
+        "id": "infnitys-iced-ivory-pearl-tank-option-0",
+        "name": "Size",
+        "position": 1,
+        "values": [
+          "XS",
+          "S",
+          "M",
+          "L",
+          "XL"
+        ]
+      }
+    ],
+    "variants": [
+      {
+        "id": "51497122169052",
+        "sku": null,
+        "title": "XS",
+        "price": {
+          "amount": 2999,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 6000,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "XS"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "51496288223452",
+        "sku": null,
+        "title": "S",
+        "price": {
+          "amount": 2999,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 6000,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "S"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "51496288256220",
+        "sku": null,
+        "title": "M",
+        "price": {
+          "amount": 2999,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 6000,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "M"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "51496288288988",
+        "sku": null,
+        "title": "L",
+        "price": {
+          "amount": 2999,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 6000,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "L"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "51496288321756",
+        "sku": null,
+        "title": "XL",
+        "price": {
+          "amount": 2999,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 6000,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "XL"
+        },
+        "mediaId": null
+      }
+    ],
+    "media": [
+      {
+        "id": "infnitys-iced-ivory-pearl-tank-media-1",
+        "url": "/products/infnitys-iced-ivory-pearl-tank/01-424318c1.jpg",
+        "alt": "INFNITY'S ICED IVORY PEARL TANK — INFNITY",
+        "kind": "product",
+        "width": 1600,
+        "height": 1600,
+        "position": 1,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/SUM-1.jpg?v=1782065898"
+      },
+      {
+        "id": "infnitys-iced-ivory-pearl-tank-media-2",
+        "url": "/products/infnitys-iced-ivory-pearl-tank/02-40d03755.jpg",
+        "alt": "INFNITY'S ICED IVORY PEARL TANK — INFNITY, view 2",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 2,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/SUM-2.jpg?v=1782065898"
+      },
+      {
+        "id": "infnitys-iced-ivory-pearl-tank-media-3",
+        "url": "/products/infnitys-iced-ivory-pearl-tank/03-2412b57b.jpg",
+        "alt": "INFNITY'S ICED IVORY PEARL TANK — INFNITY, view 3",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 3,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/SUM-3.jpg?v=1782065898"
+      }
+    ],
+    "specification": {
+      "materials": "220 gsm 100% cotton - basically comfy ASF.",
+      "fit": null,
+      "care": null,
+      "construction": null,
+      "weightGsm": 220,
+      "countryOfOrigin": null,
+      "modelInfo": "The model is 4'10 wearing an XS"
+    },
+    "tags": [],
+    "sizeGuideId": null,
+    "publishedAt": "2026-06-29T17:25:36-05:00",
+    "legacyUrl": "https://infinityclo.ca/products/infnitys-iced-ivory-pearl-tank",
+    "featuredRank": null
+  },
+  {
+    "id": "9452044615900",
+    "slug": "infnitys-iced-raven-tank",
+    "name": "INFNITY'S ICED RAVEN TANK",
+    "tagline": null,
+    "description": "• Pre-Made\n\n• Ribbed Tank Top\n\n• Rhinestone design on the front. \n\n• 220 gsm 100% cotton - basically comfy ASF. \n\n• The model is 5'2 wearing an S\n\n• \nItem will ship within 3–5 business days after purchase.",
+    "category": null,
+    "collectionSlugs": [],
+    "options": [
+      {
+        "id": "infnitys-iced-raven-tank-option-0",
+        "name": "Size",
+        "position": 1,
+        "values": [
+          "XS",
+          "S",
+          "M",
+          "L",
+          "XL"
+        ]
+      }
+    ],
+    "variants": [
+      {
+        "id": "51696316776668",
+        "sku": null,
+        "title": "XS",
+        "price": {
+          "amount": 2999,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 6000,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "XS"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "51495300563164",
+        "sku": null,
+        "title": "S",
+        "price": {
+          "amount": 2999,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 6000,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "S"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "51495300595932",
+        "sku": null,
+        "title": "M",
+        "price": {
+          "amount": 2999,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 6000,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "M"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "51495300628700",
+        "sku": null,
+        "title": "L",
+        "price": {
+          "amount": 2999,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 6000,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "L"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "51495300661468",
+        "sku": null,
+        "title": "XL",
+        "price": {
+          "amount": 2999,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 6000,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "XL"
+        },
+        "mediaId": null
+      }
+    ],
+    "media": [
+      {
+        "id": "infnitys-iced-raven-tank-media-1",
+        "url": "/products/infnitys-iced-raven-tank/01-d517faf2.jpg",
+        "alt": "INFNITY'S ICED RAVEN TANK — INFNITY",
+        "kind": "product",
+        "width": 1600,
+        "height": 1600,
+        "position": 1,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/RIRI-1.jpg?v=1782064123"
+      },
+      {
+        "id": "infnitys-iced-raven-tank-media-2",
+        "url": "/products/infnitys-iced-raven-tank/02-fc990337.jpg",
+        "alt": "INFNITY'S ICED RAVEN TANK — INFNITY, view 2",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 2,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/RIRI-2.jpg?v=1782064124"
+      },
+      {
+        "id": "infnitys-iced-raven-tank-media-3",
+        "url": "/products/infnitys-iced-raven-tank/03-c8c46dbe.jpg",
+        "alt": "INFNITY'S ICED RAVEN TANK — INFNITY, view 3",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 3,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/RIRI-3.jpg?v=1782064123"
+      },
+      {
+        "id": "infnitys-iced-raven-tank-media-4",
+        "url": "/products/infnitys-iced-raven-tank/04-b91b1cba.jpg",
+        "alt": "INFNITY'S ICED RAVEN TANK — INFNITY, view 4",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 4,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/RIRI-4.jpg?v=1782064124"
+      }
+    ],
+    "specification": {
+      "materials": "220 gsm 100% cotton - basically comfy ASF.",
+      "fit": null,
+      "care": null,
+      "construction": null,
+      "weightGsm": 220,
+      "countryOfOrigin": null,
+      "modelInfo": "The model is 5'2 wearing an S"
+    },
+    "tags": [],
+    "sizeGuideId": null,
+    "publishedAt": "2026-06-29T17:25:27-05:00",
+    "legacyUrl": "https://infinityclo.ca/products/infnitys-iced-raven-tank",
+    "featuredRank": null
+  },
+  {
+    "id": "9452040585436",
+    "slug": "infnitys-iced-soft-blush-tank",
+    "name": "INFNITY'S ICED SOFT BLUSH TANK",
+    "tagline": null,
+    "description": "• Pre-Made\n\n• Ribbed Tank Top\n\n• Rhinestone design on the front. \n\n• 220 gsm 100% cotton - basically comfy ASF. \n\n• The model is 5'6 wearing an S\n\n• \nItem will ship within 3–5 business days after purchase.",
+    "category": null,
+    "collectionSlugs": [],
+    "options": [
+      {
+        "id": "infnitys-iced-soft-blush-tank-option-0",
+        "name": "Size",
+        "position": 1,
+        "values": [
+          "XS",
+          "S",
+          "M",
+          "L",
+          "XL"
+        ]
+      }
+    ],
+    "variants": [
+      {
+        "id": "51695957639388",
+        "sku": null,
+        "title": "XS",
+        "price": {
+          "amount": 2999,
+          "currency": "CAD"
+        },
+        "compareAtPrice": null,
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "XS"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "51494986285276",
+        "sku": null,
+        "title": "S",
+        "price": {
+          "amount": 2999,
+          "currency": "CAD"
+        },
+        "compareAtPrice": null,
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "S"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "51494986318044",
+        "sku": null,
+        "title": "M",
+        "price": {
+          "amount": 2999,
+          "currency": "CAD"
+        },
+        "compareAtPrice": null,
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "M"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "51494986350812",
+        "sku": null,
+        "title": "L",
+        "price": {
+          "amount": 2999,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 6000,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "L"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "51494986383580",
+        "sku": null,
+        "title": "XL",
+        "price": {
+          "amount": 2900,
+          "currency": "CAD"
+        },
+        "compareAtPrice": null,
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "XL"
+        },
+        "mediaId": null
+      }
+    ],
+    "media": [
+      {
+        "id": "infnitys-iced-soft-blush-tank-media-1",
+        "url": "/products/infnitys-iced-soft-blush-tank/01-fa15bc02.jpg",
+        "alt": "INFNITY'S ICED SOFT BLUSH TANK — INFNITY",
+        "kind": "product",
+        "width": 1600,
+        "height": 1600,
+        "position": 1,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/SHAN-1.jpg?v=1782062902"
+      },
+      {
+        "id": "infnitys-iced-soft-blush-tank-media-2",
+        "url": "/products/infnitys-iced-soft-blush-tank/02-a798f940.jpg",
+        "alt": "INFNITY'S ICED SOFT BLUSH TANK — INFNITY, view 2",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 2,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/SHAN-2.jpg?v=1782062901"
+      },
+      {
+        "id": "infnitys-iced-soft-blush-tank-media-3",
+        "url": "/products/infnitys-iced-soft-blush-tank/03-b9f9e2f7.jpg",
+        "alt": "INFNITY'S ICED SOFT BLUSH TANK — INFNITY, view 3",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 3,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/SHAN-3.jpg?v=1782062901"
+      },
+      {
+        "id": "infnitys-iced-soft-blush-tank-media-4",
+        "url": "/products/infnitys-iced-soft-blush-tank/04-80dde0e9.jpg",
+        "alt": "INFNITY'S ICED SOFT BLUSH TANK — INFNITY, view 4",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 4,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/SHAN-4.jpg?v=1782062902"
+      }
+    ],
+    "specification": {
+      "materials": "220 gsm 100% cotton - basically comfy ASF.",
+      "fit": null,
+      "care": null,
+      "construction": null,
+      "weightGsm": 220,
+      "countryOfOrigin": null,
+      "modelInfo": "The model is 5'6 wearing an S"
+    },
+    "tags": [],
+    "sizeGuideId": null,
+    "publishedAt": "2026-06-29T17:25:15-05:00",
+    "legacyUrl": "https://infinityclo.ca/products/infnitys-iced-soft-blush-tank",
+    "featuredRank": null
+  },
+  {
+    "id": "9115906834652",
+    "slug": "infnitys-reversible-graphite-blank-sweatpants",
+    "name": "INFNITY'S GRAPHITE BLANK SWEATPANTS",
+    "tagline": null,
+    "description": "• Premade\n\n• DO NOT WASH WITH HOT WATER \n\n• 450 gsm French Terry Cotton blend\n\n• Kangaroo pockets\n\n• Embroidery on the top of the hood \n\n• Screen printing in the interior of the hoodie\n\n• The Model is 5’6 wearing a M\n\n• Item will ship within 3–5 business days after purchase.",
+    "category": null,
+    "collectionSlugs": [],
+    "options": [
+      {
+        "id": "infnitys-reversible-graphite-blank-sweatpants-option-0",
+        "name": "Size",
+        "position": 1,
+        "values": [
+          "S",
+          "M",
+          "L",
+          "XL",
+          "2XL"
+        ]
+      }
+    ],
+    "variants": [
+      {
+        "id": "47590643531996",
+        "sku": null,
+        "title": "S",
+        "price": {
+          "amount": 6000,
+          "currency": "CAD"
+        },
+        "compareAtPrice": null,
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "S"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "47590643564764",
+        "sku": null,
+        "title": "M",
+        "price": {
+          "amount": 6000,
+          "currency": "CAD"
+        },
+        "compareAtPrice": null,
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "M"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "47590643597532",
+        "sku": null,
+        "title": "L",
+        "price": {
+          "amount": 6000,
+          "currency": "CAD"
+        },
+        "compareAtPrice": null,
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "L"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "47590643630300",
+        "sku": null,
+        "title": "XL",
+        "price": {
+          "amount": 6000,
+          "currency": "CAD"
+        },
+        "compareAtPrice": null,
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "XL"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "47590643663068",
+        "sku": null,
+        "title": "2XL",
+        "price": {
+          "amount": 6000,
+          "currency": "CAD"
+        },
+        "compareAtPrice": null,
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "2XL"
+        },
+        "mediaId": null
+      }
+    ],
+    "media": [
+      {
+        "id": "infnitys-reversible-graphite-blank-sweatpants-media-1",
+        "url": "/products/infnitys-reversible-graphite-blank-sweatpants/01-50c10572.jpg",
+        "alt": "INFNITY'S GRAPHITE BLANK SWEATPANTS — INFNITY",
+        "kind": "product",
+        "width": 1600,
+        "height": 1600,
+        "position": 1,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/grey-sweats-1.jpg?v=1771742277"
+      },
+      {
+        "id": "infnitys-reversible-graphite-blank-sweatpants-media-2",
+        "url": "/products/infnitys-reversible-graphite-blank-sweatpants/02-478948fe.jpg",
+        "alt": "INFNITY'S GRAPHITE BLANK SWEATPANTS — INFNITY, view 2",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 2,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/grey-sweats-2.jpg?v=1771742277"
+      },
+      {
+        "id": "infnitys-reversible-graphite-blank-sweatpants-media-3",
+        "url": "/products/infnitys-reversible-graphite-blank-sweatpants/03-fb22453a.jpg",
+        "alt": "INFNITY'S GRAPHITE BLANK SWEATPANTS — INFNITY, view 3",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 3,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/grey-sweats-3.jpg?v=1771742277"
+      }
+    ],
+    "specification": {
+      "materials": null,
+      "fit": null,
+      "care": null,
+      "construction": "450 gsm French Terry Cotton blend",
+      "weightGsm": 450,
+      "countryOfOrigin": null,
+      "modelInfo": "The Model is 5’6 wearing a M"
+    },
+    "tags": [],
+    "sizeGuideId": null,
+    "publishedAt": "2026-02-22T00:40:36-06:00",
+    "legacyUrl": "https://infinityclo.ca/products/infnitys-reversible-graphite-blank-sweatpants",
+    "featuredRank": null
+  },
+  {
+    "id": "9115910734044",
+    "slug": "infnitys-obsidian-blank-sweatpants",
+    "name": "INFNITY'S OBSIDIAN BLANK SWEATPANTS",
+    "tagline": null,
+    "description": "• Premade\n\n• The Model is 5'4 wearing a M\n\n• DO NOT WASH WITH HOT WATER \n\n• 450 gsm French Terry Cotton blend\n\n• Kangaroo pockets\n\n• Embroidery on the top of the hood \n\n• Screen printing in the interior of the hoodie\n\n• \nItem will ship within 3–5 business days after purchase.",
+    "category": null,
+    "collectionSlugs": [],
+    "options": [
+      {
+        "id": "infnitys-obsidian-blank-sweatpants-option-0",
+        "name": "Size",
+        "position": 1,
+        "values": [
+          "S",
+          "M",
+          "L",
+          "XL",
+          "2XL"
+        ]
+      }
+    ],
+    "variants": [
+      {
+        "id": "47590641762524",
+        "sku": null,
+        "title": "S",
+        "price": {
+          "amount": 6000,
+          "currency": "CAD"
+        },
+        "compareAtPrice": null,
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "S"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "47590641795292",
+        "sku": null,
+        "title": "M",
+        "price": {
+          "amount": 6000,
+          "currency": "CAD"
+        },
+        "compareAtPrice": null,
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "M"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "47590641828060",
+        "sku": null,
+        "title": "L",
+        "price": {
+          "amount": 6000,
+          "currency": "CAD"
+        },
+        "compareAtPrice": null,
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "L"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "47590641860828",
+        "sku": null,
+        "title": "XL",
+        "price": {
+          "amount": 6000,
+          "currency": "CAD"
+        },
+        "compareAtPrice": null,
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "XL"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "47590641893596",
+        "sku": null,
+        "title": "2XL",
+        "price": {
+          "amount": 6000,
+          "currency": "CAD"
+        },
+        "compareAtPrice": null,
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "2XL"
+        },
+        "mediaId": null
+      }
+    ],
+    "media": [
+      {
+        "id": "infnitys-obsidian-blank-sweatpants-media-1",
+        "url": "/products/infnitys-obsidian-blank-sweatpants/01-2be7089b.jpg",
+        "alt": "INFNITY'S OBSIDIAN BLANK SWEATPANTS — INFNITY",
+        "kind": "product",
+        "width": 1600,
+        "height": 1600,
+        "position": 1,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/black-sweats.jpg?v=1771742134"
+      },
+      {
+        "id": "infnitys-obsidian-blank-sweatpants-media-2",
+        "url": "/products/infnitys-obsidian-blank-sweatpants/02-7a939ee8.jpg",
+        "alt": "INFNITY'S OBSIDIAN BLANK SWEATPANTS — INFNITY, view 2",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 2,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/black-sweats-2.jpg?v=1771742134"
+      },
+      {
+        "id": "infnitys-obsidian-blank-sweatpants-media-3",
+        "url": "/products/infnitys-obsidian-blank-sweatpants/03-f45c2c85.jpg",
+        "alt": "INFNITY'S OBSIDIAN BLANK SWEATPANTS — INFNITY, view 3",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 3,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/black-sweats-3.jpg?v=1771742134"
+      }
+    ],
+    "specification": {
+      "materials": null,
+      "fit": null,
+      "care": null,
+      "construction": "450 gsm French Terry Cotton blend",
+      "weightGsm": 450,
+      "countryOfOrigin": null,
+      "modelInfo": "The Model is 5'4 wearing a M"
+    },
+    "tags": [],
+    "sizeGuideId": null,
+    "publishedAt": "2026-02-22T00:36:43-06:00",
+    "legacyUrl": "https://infinityclo.ca/products/infnitys-obsidian-blank-sweatpants",
+    "featuredRank": null
+  },
+  {
+    "id": "9115894546652",
+    "slug": "infnitys-reversible-hoodie",
+    "name": "INFNITY'S REVERSIBLE GRAPHITE BLANK HOODIE",
+    "tagline": null,
+    "description": "• Premade\n\n• DO NOT WASH WITH HOT WATER \n\n• 450 gsm French Terry Cotton blend\n\n• Kangaroo pockets\n\n• Embroidery on the top of the hood \n\n• Screen printing in the interior of the hoodie\n\n• The Model is 5’6 wearing a M\n\n• Item will ship within 3–5 business days after purchase.",
+    "category": null,
+    "collectionSlugs": [],
+    "options": [
+      {
+        "id": "infnitys-reversible-hoodie-option-0",
+        "name": "Size",
+        "position": 1,
+        "values": [
+          "S",
+          "M",
+          "L",
+          "XL",
+          "2XL"
+        ]
+      }
+    ],
+    "variants": [
+      {
+        "id": "47590644646108",
+        "sku": null,
+        "title": "S",
+        "price": {
+          "amount": 6000,
+          "currency": "CAD"
+        },
+        "compareAtPrice": null,
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "S"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "47590644678876",
+        "sku": null,
+        "title": "M",
+        "price": {
+          "amount": 6000,
+          "currency": "CAD"
+        },
+        "compareAtPrice": null,
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "M"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "47590644711644",
+        "sku": null,
+        "title": "L",
+        "price": {
+          "amount": 6000,
+          "currency": "CAD"
+        },
+        "compareAtPrice": null,
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "L"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "47590644744412",
+        "sku": null,
+        "title": "XL",
+        "price": {
+          "amount": 6000,
+          "currency": "CAD"
+        },
+        "compareAtPrice": null,
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "XL"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "47590644777180",
+        "sku": null,
+        "title": "2XL",
+        "price": {
+          "amount": 6000,
+          "currency": "CAD"
+        },
+        "compareAtPrice": null,
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "2XL"
+        },
+        "mediaId": null
+      }
+    ],
+    "media": [
+      {
+        "id": "infnitys-reversible-hoodie-media-1",
+        "url": "/products/infnitys-reversible-hoodie/01-30a6077d.jpg",
+        "alt": "INFNITY'S REVERSIBLE GRAPHITE BLANK HOODIE — INFNITY",
+        "kind": "product",
+        "width": 1600,
+        "height": 1600,
+        "position": 1,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/kalia-1_cc0be1e3-04d3-453b-a9f3-2b533b90989e.jpg?v=1771737094"
+      },
+      {
+        "id": "infnitys-reversible-hoodie-media-2",
+        "url": "/products/infnitys-reversible-hoodie/02-4fa12f06.jpg",
+        "alt": "INFNITY'S REVERSIBLE GRAPHITE BLANK HOODIE — INFNITY, view 2",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 2,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/kalia-2_4acc09c5-0ed0-4eaa-86fc-e515ea9b606a.jpg?v=1771737094"
+      },
+      {
+        "id": "infnitys-reversible-hoodie-media-3",
+        "url": "/products/infnitys-reversible-hoodie/03-079eaa48.jpg",
+        "alt": "INFNITY'S REVERSIBLE GRAPHITE BLANK HOODIE — INFNITY, view 3",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 3,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/kalia-3_b5d8d6f8-0872-4a66-87d5-128cdbd3dd04.jpg?v=1771737094"
+      },
+      {
+        "id": "infnitys-reversible-hoodie-media-4",
+        "url": "/products/infnitys-reversible-hoodie/04-8b4cfac1.jpg",
+        "alt": "INFNITY'S REVERSIBLE GRAPHITE BLANK HOODIE — INFNITY, view 4",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 4,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/kalia-4_6ae7113b-2a49-45b4-9f43-8a9e729a1dbe.jpg?v=1771735041"
+      },
+      {
+        "id": "infnitys-reversible-hoodie-media-5",
+        "url": "/products/infnitys-reversible-hoodie/05-d9d749bf.jpg",
+        "alt": "INFNITY'S REVERSIBLE GRAPHITE BLANK HOODIE — INFNITY, view 5",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 5,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/kalia-5_2ae1f91c-4b94-4c2b-8f7f-0b3dbe72b50b.jpg?v=1771735041"
+      },
+      {
+        "id": "infnitys-reversible-hoodie-media-6",
+        "url": "/products/infnitys-reversible-hoodie/06-b88e179d.jpg",
+        "alt": "INFNITY'S REVERSIBLE GRAPHITE BLANK HOODIE — INFNITY, view 6",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 6,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/kalia-6_96600ff0-3356-41bd-b42c-cc21deda33d3.jpg?v=1771735041"
+      }
+    ],
+    "specification": {
+      "materials": null,
+      "fit": null,
+      "care": null,
+      "construction": "450 gsm French Terry Cotton blend",
+      "weightGsm": 450,
+      "countryOfOrigin": null,
+      "modelInfo": "The Model is 5’6 wearing a M"
+    },
+    "tags": [],
+    "sizeGuideId": null,
+    "publishedAt": "2026-02-21T22:30:39-06:00",
+    "legacyUrl": "https://infinityclo.ca/products/infnitys-reversible-hoodie",
+    "featuredRank": null
+  },
+  {
+    "id": "9115916435676",
+    "slug": "infnitys-reversible-obsidian-blank-hoodie",
+    "name": "INFNITY'S REVERSIBLE OBSIDIAN BLANK HOODIE",
+    "tagline": null,
+    "description": "• Premade\n\n• DO NOT WASH WITH HOT WATER \n\n• 450 gsm French Terry Cotton blend\n\n• Kangaroo pockets\n\n• Embroidery on the top of the hood \n\n• Screen printing in the interior of the hoodie\n\n• The Model is 6‘1 wearing a L\n\n• Item will ship within 3–5 business days after purchase.",
+    "category": null,
+    "collectionSlugs": [],
+    "options": [
+      {
+        "id": "infnitys-reversible-obsidian-blank-hoodie-option-0",
+        "name": "Size",
+        "position": 1,
+        "values": [
+          "S",
+          "M",
+          "L",
+          "XL",
+          "2XL"
+        ]
+      }
+    ],
+    "variants": [
+      {
+        "id": "47590636945628",
+        "sku": null,
+        "title": "S",
+        "price": {
+          "amount": 6000,
+          "currency": "CAD"
+        },
+        "compareAtPrice": null,
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "S"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "47590636978396",
+        "sku": null,
+        "title": "M",
+        "price": {
+          "amount": 6000,
+          "currency": "CAD"
+        },
+        "compareAtPrice": null,
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "M"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "47590637011164",
+        "sku": null,
+        "title": "L",
+        "price": {
+          "amount": 6000,
+          "currency": "CAD"
+        },
+        "compareAtPrice": null,
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "L"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "47590637043932",
+        "sku": null,
+        "title": "XL",
+        "price": {
+          "amount": 6000,
+          "currency": "CAD"
+        },
+        "compareAtPrice": null,
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "XL"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "47590637076700",
+        "sku": null,
+        "title": "2XL",
+        "price": {
+          "amount": 6000,
+          "currency": "CAD"
+        },
+        "compareAtPrice": null,
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "2XL"
+        },
+        "mediaId": null
+      }
+    ],
+    "media": [
+      {
+        "id": "infnitys-reversible-obsidian-blank-hoodie-media-1",
+        "url": "/products/infnitys-reversible-obsidian-blank-hoodie/01-87e64a6f.jpg",
+        "alt": "INFNITY'S REVERSIBLE OBSIDIAN BLANK HOODIE — INFNITY",
+        "kind": "product",
+        "width": 1600,
+        "height": 1600,
+        "position": 1,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/fiji-1.jpg?v=1771732398"
+      },
+      {
+        "id": "infnitys-reversible-obsidian-blank-hoodie-media-2",
+        "url": "/products/infnitys-reversible-obsidian-blank-hoodie/02-4d606f6b.jpg",
+        "alt": "INFNITY'S REVERSIBLE OBSIDIAN BLANK HOODIE — INFNITY, view 2",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 2,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/fiji-2.jpg?v=1771732398"
+      },
+      {
+        "id": "infnitys-reversible-obsidian-blank-hoodie-media-3",
+        "url": "/products/infnitys-reversible-obsidian-blank-hoodie/03-1ae02360.jpg",
+        "alt": "INFNITY'S REVERSIBLE OBSIDIAN BLANK HOODIE — INFNITY, view 3",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 3,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/fiji-3.jpg?v=1771732398"
+      },
+      {
+        "id": "infnitys-reversible-obsidian-blank-hoodie-media-4",
+        "url": "/products/infnitys-reversible-obsidian-blank-hoodie/04-d81bddce.jpg",
+        "alt": "INFNITY'S REVERSIBLE OBSIDIAN BLANK HOODIE — INFNITY, view 4",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 4,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/fiji-4.jpg?v=1771732398"
+      },
+      {
+        "id": "infnitys-reversible-obsidian-blank-hoodie-media-5",
+        "url": "/products/infnitys-reversible-obsidian-blank-hoodie/05-d665b78d.jpg",
+        "alt": "INFNITY'S REVERSIBLE OBSIDIAN BLANK HOODIE — INFNITY, view 5",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 5,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/fiji-5.jpg?v=1771732398"
+      },
+      {
+        "id": "infnitys-reversible-obsidian-blank-hoodie-media-6",
+        "url": "/products/infnitys-reversible-obsidian-blank-hoodie/06-1ce6c699.jpg",
+        "alt": "INFNITY'S REVERSIBLE OBSIDIAN BLANK HOODIE — INFNITY, view 6",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 6,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/fiji-6.jpg?v=1771732398"
+      },
+      {
+        "id": "infnitys-reversible-obsidian-blank-hoodie-media-7",
+        "url": "/products/infnitys-reversible-obsidian-blank-hoodie/07-68eacdf3.jpg",
+        "alt": "INFNITY'S REVERSIBLE OBSIDIAN BLANK HOODIE — INFNITY, view 7",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 7,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/fiji-7.jpg?v=1771732398"
+      },
+      {
+        "id": "infnitys-reversible-obsidian-blank-hoodie-media-8",
+        "url": "/products/infnitys-reversible-obsidian-blank-hoodie/08-7b36a0d0.jpg",
+        "alt": "INFNITY'S REVERSIBLE OBSIDIAN BLANK HOODIE — INFNITY, view 8",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 8,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/fiji-8.jpg?v=1771732398"
+      }
+    ],
+    "specification": {
+      "materials": null,
+      "fit": null,
+      "care": null,
+      "construction": "450 gsm French Terry Cotton blend",
+      "weightGsm": 450,
+      "countryOfOrigin": null,
+      "modelInfo": "The Model is 6‘1 wearing a L"
+    },
+    "tags": [],
+    "sizeGuideId": null,
+    "publishedAt": "2026-02-21T21:54:34-06:00",
+    "legacyUrl": "https://infinityclo.ca/products/infnitys-reversible-obsidian-blank-hoodie",
+    "featuredRank": null
+  },
+  {
+    "id": "9114182353116",
+    "slug": "infnity-crew-socks",
+    "name": "INFNITY'S CREW SOCKS PACK",
+    "tagline": null,
+    "description": "• Pre-Made\n\n• Crew Socks\n\n• Jacquard-printed designs on the crew of the socks \n\n• COMFY ASF.\n\n• \nItem will ship within 3–5 business days after purchase.",
+    "category": null,
+    "collectionSlugs": [],
+    "options": [
+      {
+        "id": "infnity-crew-socks-option-0",
+        "name": "Accessory size",
+        "position": 1,
+        "values": [
+          "S",
+          "M",
+          "L",
+          "XL"
+        ]
+      }
+    ],
+    "variants": [
+      {
+        "id": "47082909761756",
+        "sku": null,
+        "title": "S",
+        "price": {
+          "amount": 999,
+          "currency": "CAD"
+        },
+        "compareAtPrice": null,
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Accessory size": "S"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "47082909794524",
+        "sku": null,
+        "title": "M",
+        "price": {
+          "amount": 999,
+          "currency": "CAD"
+        },
+        "compareAtPrice": null,
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Accessory size": "M"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "47082909827292",
+        "sku": null,
+        "title": "L",
+        "price": {
+          "amount": 999,
+          "currency": "CAD"
+        },
+        "compareAtPrice": null,
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Accessory size": "L"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "47082909860060",
+        "sku": null,
+        "title": "XL",
+        "price": {
+          "amount": 999,
+          "currency": "CAD"
+        },
+        "compareAtPrice": null,
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Accessory size": "XL"
+        },
+        "mediaId": null
+      }
+    ],
+    "media": [
+      {
+        "id": "infnity-crew-socks-media-1",
+        "url": "/products/infnity-crew-socks/01-61913864.jpg",
+        "alt": "INFNITY'S CREW SOCKS PACK — INFNITY",
+        "kind": "product",
+        "width": 1600,
+        "height": 1624,
+        "position": 1,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/SSS_fca0fffa-87c9-4e5e-aa83-0e0f78c14897.jpg?v=1771630370"
+      }
+    ],
+    "specification": {
+      "materials": null,
+      "fit": null,
+      "care": null,
+      "construction": null,
+      "weightGsm": null,
+      "countryOfOrigin": null,
+      "modelInfo": null
+    },
+    "tags": [],
+    "sizeGuideId": null,
+    "publishedAt": "2026-02-19T20:14:52-06:00",
+    "legacyUrl": "https://infinityclo.ca/products/infnity-crew-socks",
+    "featuredRank": null
+  },
+  {
+    "id": "9114191888604",
+    "slug": "infnitys-city-bridge-keychain",
+    "name": "INFNITY'S “ESPLANADE RIEL” KEYCHAIN",
+    "tagline": null,
+    "description": "• Pre Made Keychains\n\n• \nItem will ship within 3–5 business days after purchase.",
+    "category": null,
+    "collectionSlugs": [],
+    "options": [
+      {
+        "id": "infnitys-city-bridge-keychain-option-0",
+        "name": "KEYCHAIN",
+        "position": 1,
+        "values": [
+          "‎"
+        ]
+      }
+    ],
+    "variants": [
+      {
+        "id": "47082920837340",
+        "sku": null,
+        "title": "‎",
+        "price": {
+          "amount": 399,
+          "currency": "CAD"
+        },
+        "compareAtPrice": null,
+        "availability": "in_stock",
+        "selectedOptions": {
+          "KEYCHAIN": "‎"
+        },
+        "mediaId": null
+      }
+    ],
+    "media": [
+      {
+        "id": "infnitys-city-bridge-keychain-media-1",
+        "url": "/products/infnitys-city-bridge-keychain/01-db000474.jpg",
+        "alt": "INFNITY'S “ESPLANADE RIEL” KEYCHAIN — INFNITY",
+        "kind": "product",
+        "width": 1600,
+        "height": 1600,
+        "position": 1,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/keee.jpg?v=1771736011"
+      },
+      {
+        "id": "infnitys-city-bridge-keychain-media-2",
+        "url": "/products/infnitys-city-bridge-keychain/02-b2aceb91.jpg",
+        "alt": "INFNITY'S “ESPLANADE RIEL” KEYCHAIN — INFNITY, view 2",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 2,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/yes.jpg?v=1771737007"
+      }
+    ],
+    "specification": {
+      "materials": null,
+      "fit": null,
+      "care": null,
+      "construction": null,
+      "weightGsm": null,
+      "countryOfOrigin": null,
+      "modelInfo": null
+    },
+    "tags": [],
+    "sizeGuideId": null,
+    "publishedAt": "2026-02-19T19:07:46-06:00",
+    "legacyUrl": "https://infinityclo.ca/products/infnitys-city-bridge-keychain",
+    "featuredRank": null
+  },
+  {
+    "id": "9172102840540",
+    "slug": "lucki-star-infni-tee",
+    "name": "LUCKI STAR INFNI-TEE",
+    "tagline": null,
+    "description": "Introducing Our LUCKI STAR Tee\n\nStep into urban style with our Infinity's LUCKI STAR Tee. Crafted from high-quality 250 gsm fabric, this tee is designed to bring durability and a touch of street-inspired fashion to your wardrobe.\n\nFeatures:\n\n• \n250 gsm Fabric: Enjoy a substantial feel and long-lasting quality with our 250 gsm fabric, ensuring a tee that can keep up with your urban adventures.\n\n• \nHeavy Rib Knit Crewneck: The heavy rib knit crewneck adds a classic, rugged look, perfect for those who appreciate streetwear aesthetics.",
+    "category": null,
+    "collectionSlugs": [],
+    "options": [
+      {
+        "id": "lucki-star-infni-tee-option-0",
+        "name": "Size",
+        "position": 1,
+        "values": [
+          "Small",
+          "Medium",
+          "Large",
+          "X-Large",
+          "XX-Large"
+        ]
+      }
+    ],
+    "variants": [
+      {
+        "id": "47302204326108",
+        "sku": null,
+        "title": "Small",
+        "price": {
+          "amount": 4500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 4500,
+          "currency": "CAD"
+        },
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Size": "Small"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "47302204358876",
+        "sku": null,
+        "title": "Medium",
+        "price": {
+          "amount": 4500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 4500,
+          "currency": "CAD"
+        },
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Size": "Medium"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "47302204391644",
+        "sku": null,
+        "title": "Large",
+        "price": {
+          "amount": 4500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 4500,
+          "currency": "CAD"
+        },
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Size": "Large"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "47302204424412",
+        "sku": null,
+        "title": "X-Large",
+        "price": {
+          "amount": 4500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 4500,
+          "currency": "CAD"
+        },
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Size": "X-Large"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "47302204457180",
+        "sku": null,
+        "title": "XX-Large",
+        "price": {
+          "amount": 4500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 4500,
+          "currency": "CAD"
+        },
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Size": "XX-Large"
+        },
+        "mediaId": null
+      }
+    ],
+    "media": [
+      {
+        "id": "lucki-star-infni-tee-media-1",
+        "url": "/products/lucki-star-infni-tee/01-236aceea.png",
+        "alt": "LUCKI STAR INFNI-TEE — INFNITY",
+        "kind": "product",
+        "width": 1600,
+        "height": 1600,
+        "position": 1,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/LUCKIFRONT.png?v=1764311546"
+      },
+      {
+        "id": "lucki-star-infni-tee-media-2",
+        "url": "/products/lucki-star-infni-tee/02-bc4d55ba.png",
+        "alt": "LUCKI STAR INFNI-TEE — INFNITY, view 2",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 2,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/LUCKIBACK.png?v=1764311546"
+      }
+    ],
+    "specification": {
+      "materials": null,
+      "fit": null,
+      "care": null,
+      "construction": null,
+      "weightGsm": 250,
+      "countryOfOrigin": null,
+      "modelInfo": null
+    },
+    "tags": [],
+    "sizeGuideId": null,
+    "publishedAt": "2025-11-28T00:32:24-06:00",
+    "legacyUrl": "https://infinityclo.ca/products/lucki-star-infni-tee",
+    "featuredRank": null
+  },
+  {
+    "id": "9172085833948",
+    "slug": "lil-yachty-infni-tee-copy",
+    "name": "CLB INFNI-TEE",
+    "tagline": null,
+    "description": "Introducing Our Infinity's CLB Tee\n\nStep into urban style with our Infinity's CLB Tee. Crafted from high-quality 250 gsm fabric, this tee is designed to bring durability and a touch of street-inspired fashion to your wardrobe.\n\nFeatures:\n\n• \n250 gsm Fabric: Enjoy a substantial feel and long-lasting quality with our 250 gsm fabric, ensuring a tee that can keep up with your urban adventures.\n\n• \nHeavy Rib Knit Crewneck: The heavy rib knit crewneck adds a classic, rugged look, perfect for those who appreciate streetwear aesthetics.",
+    "category": null,
+    "collectionSlugs": [],
+    "options": [
+      {
+        "id": "lil-yachty-infni-tee-copy-option-0",
+        "name": "Size",
+        "position": 1,
+        "values": [
+          "Small",
+          "Medium",
+          "Large",
+          "X-Large",
+          "XX-Large"
+        ]
+      }
+    ],
+    "variants": [
+      {
+        "id": "47302107627740",
+        "sku": null,
+        "title": "Small",
+        "price": {
+          "amount": 4500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 4500,
+          "currency": "CAD"
+        },
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Size": "Small"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "47302107660508",
+        "sku": null,
+        "title": "Medium",
+        "price": {
+          "amount": 4500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 4500,
+          "currency": "CAD"
+        },
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Size": "Medium"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "47302107693276",
+        "sku": null,
+        "title": "Large",
+        "price": {
+          "amount": 4500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 4500,
+          "currency": "CAD"
+        },
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Size": "Large"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "47302107726044",
+        "sku": null,
+        "title": "X-Large",
+        "price": {
+          "amount": 4500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 4500,
+          "currency": "CAD"
+        },
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Size": "X-Large"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "47302107758812",
+        "sku": null,
+        "title": "XX-Large",
+        "price": {
+          "amount": 4500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 4500,
+          "currency": "CAD"
+        },
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Size": "XX-Large"
+        },
+        "mediaId": null
+      }
+    ],
+    "media": [
+      {
+        "id": "lil-yachty-infni-tee-copy-media-1",
+        "url": "/products/lil-yachty-infni-tee-copy/01-6aff8115.png",
+        "alt": "CLB INFNI-TEE — INFNITY",
+        "kind": "product",
+        "width": 1600,
+        "height": 1600,
+        "position": 1,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/DRAKEFRONT.png?v=1764311256"
+      },
+      {
+        "id": "lil-yachty-infni-tee-copy-media-2",
+        "url": "/products/lil-yachty-infni-tee-copy/02-aed43423.png",
+        "alt": "CLB INFNI-TEE — INFNITY, view 2",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 2,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/DRAKEBACK.png?v=1764311256"
+      }
+    ],
+    "specification": {
+      "materials": null,
+      "fit": null,
+      "care": null,
+      "construction": null,
+      "weightGsm": 250,
+      "countryOfOrigin": null,
+      "modelInfo": null
+    },
+    "tags": [],
+    "sizeGuideId": null,
+    "publishedAt": "2025-11-28T00:27:48-06:00",
+    "legacyUrl": "https://infinityclo.ca/products/lil-yachty-infni-tee-copy",
+    "featuredRank": null
+  },
+  {
+    "id": "9114182058204",
+    "slug": "infnitys-signature-beanie",
+    "name": "INFNITYS' SIGNATURE BEANIE",
+    "tagline": null,
+    "description": "The INFINITY'S SIGNATURE \"OBSIDIAN\" BEANIE is expertly crafted with a thick, knitted yarn material, perfect for braving the winter weather. The jacquard style logo adds a touch of sophistication, making it a must-have accessory for any wardrobe. Stay warm and stylish with this durable beanie.",
+    "category": "beanie",
+    "collectionSlugs": [],
+    "options": [
+      {
+        "id": "infnitys-signature-beanie-option-0",
+        "name": "Accessory size",
+        "position": 1,
+        "values": [
+          "One size"
+        ]
+      },
+      {
+        "id": "infnitys-signature-beanie-option-1",
+        "name": "Color",
+        "position": 2,
+        "values": [
+          "IVY-MOSS"
+        ]
+      }
+    ],
+    "variants": [
+      {
+        "id": "47082896785628",
+        "sku": null,
+        "title": "One size / IVY-MOSS",
+        "price": {
+          "amount": 2000,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 2000,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Accessory size": "One size",
+          "Color": "IVY-MOSS"
+        },
+        "mediaId": null
+      }
+    ],
+    "media": [
+      {
+        "id": "infnitys-signature-beanie-media-1",
+        "url": "/products/infnitys-signature-beanie/01-444ce9e5.png",
+        "alt": "INFNITYS' SIGNATURE BEANIE — INFNITY",
+        "kind": "product",
+        "width": 1600,
+        "height": 1600,
+        "position": 1,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/greenbeanie1.png?v=1724457340"
+      }
+    ],
+    "specification": {
+      "materials": null,
+      "fit": null,
+      "care": null,
+      "construction": null,
+      "weightGsm": null,
+      "countryOfOrigin": null,
+      "modelInfo": null
+    },
+    "tags": [],
+    "sizeGuideId": null,
+    "publishedAt": "2025-10-23T21:28:55-05:00",
+    "legacyUrl": "https://infinityclo.ca/products/infnitys-signature-beanie",
+    "featuredRank": null
+  },
+  {
+    "id": "9114181533916",
+    "slug": "infnitys-cherry-blosson-wildcard-hoodie-2-1",
+    "name": "INFNITY'S WILDCARD HOODIE 2.0",
+    "tagline": null,
+    "description": "Infinity's Wildcard Cherry Blossom and Scarlet Love Hoodies are now available, featuring a 100% cotton fleece fabric with a weight of 310gsm. The back and hood are adorned with the NEW INFNITY embroidered logo. This hoodie is true to size, but can also be sized up for an oversized look. It is fully cut and sewn for a high-quality finish.",
+    "category": "Hoodies",
+    "collectionSlugs": [],
+    "options": [
+      {
+        "id": "infnitys-cherry-blosson-wildcard-hoodie-2-1-option-0",
+        "name": "Size",
+        "position": 1,
+        "values": [
+          "S",
+          "M",
+          "L",
+          "XL",
+          "2XL"
+        ]
+      }
+    ],
+    "variants": [
+      {
+        "id": "47082896130268",
+        "sku": null,
+        "title": "S",
+        "price": {
+          "amount": 5999,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 7499,
+          "currency": "CAD"
+        },
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Size": "S"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "47082896163036",
+        "sku": null,
+        "title": "M",
+        "price": {
+          "amount": 5999,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 7499,
+          "currency": "CAD"
+        },
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Size": "M"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "47082896195804",
+        "sku": null,
+        "title": "L",
+        "price": {
+          "amount": 5999,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 7499,
+          "currency": "CAD"
+        },
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Size": "L"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "47082896228572",
+        "sku": null,
+        "title": "XL",
+        "price": {
+          "amount": 5999,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 7499,
+          "currency": "CAD"
+        },
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Size": "XL"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "47082896261340",
+        "sku": null,
+        "title": "2XL",
+        "price": {
+          "amount": 5999,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 7499,
+          "currency": "CAD"
+        },
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Size": "2XL"
+        },
+        "mediaId": null
+      }
+    ],
+    "media": [
+      {
+        "id": "infnitys-cherry-blosson-wildcard-hoodie-2-1-media-1",
+        "url": "/products/infnitys-cherry-blosson-wildcard-hoodie-2-1/01-a4c80fb4.jpg",
+        "alt": "INFNITY'S WILDCARD HOODIE 2.0 — INFNITY",
+        "kind": "product",
+        "width": 1600,
+        "height": 1600,
+        "position": 1,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/pink-front_731f36de-cf64-4b4b-8c77-250ac516bd50.jpg?v=1761272313"
+      },
+      {
+        "id": "infnitys-cherry-blosson-wildcard-hoodie-2-1-media-2",
+        "url": "/products/infnitys-cherry-blosson-wildcard-hoodie-2-1/02-28434dec.jpg",
+        "alt": "INFNITY'S WILDCARD HOODIE 2.0 — INFNITY, view 2",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 2,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/pink-back_469ab859-feef-416f-9768-7ae18a09a9c1.jpg?v=1761272328"
+      }
+    ],
+    "specification": {
+      "materials": "Infinity's Wildcard Cherry Blossom and Scarlet Love Hoodies are now available, featuring a 100% cotton fleece fabric with a weight of 310gsm. The back and hood are adorned with the NEW INFNITY embroidered logo. This hoodie is true to size, but can also be sized up for an oversized look. It is fully cut and sewn for a high-quality finish.",
+      "fit": null,
+      "care": null,
+      "construction": null,
+      "weightGsm": 310,
+      "countryOfOrigin": null,
+      "modelInfo": null
+    },
+    "tags": [],
+    "sizeGuideId": null,
+    "publishedAt": "2025-10-23T21:22:29-05:00",
+    "legacyUrl": "https://infinityclo.ca/products/infnitys-cherry-blosson-wildcard-hoodie-2-1",
+    "featuredRank": null
+  },
+  {
+    "id": "9114181140700",
+    "slug": "infnitys-cherry-blosson-wildcard-hoodie-2-0",
+    "name": "INFNITY'S WILDCARD HOODIE 2.0",
+    "tagline": null,
+    "description": "Infinity's Wildcard  Scarlet Love Hoodie IS now available, featuring a 100% cotton fleece fabric with a weight of 310gsm. The back and hood are adorned with the NEW INFNITY embroidered logo. This hoodie is true to size, but can also be sized up for an oversized look. It is fully cut and sewn for a high-quality finish.",
+    "category": "Hoodies",
+    "collectionSlugs": [],
+    "options": [
+      {
+        "id": "infnitys-cherry-blosson-wildcard-hoodie-2-0-option-0",
+        "name": "Size",
+        "position": 1,
+        "values": [
+          "S",
+          "M",
+          "L",
+          "XL",
+          "2XL"
+        ]
+      }
+    ],
+    "variants": [
+      {
+        "id": "47082895507676",
+        "sku": null,
+        "title": "S",
+        "price": {
+          "amount": 5999,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 7499,
+          "currency": "CAD"
+        },
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Size": "S"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "47082895900892",
+        "sku": null,
+        "title": "M",
+        "price": {
+          "amount": 5999,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 7499,
+          "currency": "CAD"
+        },
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Size": "M"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "47082895933660",
+        "sku": null,
+        "title": "L",
+        "price": {
+          "amount": 5999,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 7499,
+          "currency": "CAD"
+        },
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Size": "L"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "47082895966428",
+        "sku": null,
+        "title": "XL",
+        "price": {
+          "amount": 5999,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 7499,
+          "currency": "CAD"
+        },
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Size": "XL"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "47082895999196",
+        "sku": null,
+        "title": "2XL",
+        "price": {
+          "amount": 5999,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 7499,
+          "currency": "CAD"
+        },
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Size": "2XL"
+        },
+        "mediaId": null
+      }
+    ],
+    "media": [
+      {
+        "id": "infnitys-cherry-blosson-wildcard-hoodie-2-0-media-1",
+        "url": "/products/infnitys-cherry-blosson-wildcard-hoodie-2-0/01-11a2ace1.jpg",
+        "alt": "INFNITY'S WILDCARD HOODIE 2.0 — INFNITY",
+        "kind": "product",
+        "width": 1600,
+        "height": 1600,
+        "position": 1,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/RED-FRONT_916adde4-a4b3-4ec4-8eaf-f786fdf80a2c.jpg?v=1761272406"
+      },
+      {
+        "id": "infnitys-cherry-blosson-wildcard-hoodie-2-0-media-2",
+        "url": "/products/infnitys-cherry-blosson-wildcard-hoodie-2-0/02-3b79b03c.jpg",
+        "alt": "INFNITY'S WILDCARD HOODIE 2.0 — INFNITY, view 2",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 2,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/RED-BACL.jpg?v=1761272417"
+      }
+    ],
+    "specification": {
+      "materials": "Infinity's Wildcard  Scarlet Love Hoodie IS now available, featuring a 100% cotton fleece fabric with a weight of 310gsm. The back and hood are adorned with the NEW INFNITY embroidered logo. This hoodie is true to size, but can also be sized up for an oversized look. It is fully cut and sewn for a high-quality finish.",
+      "fit": null,
+      "care": null,
+      "construction": null,
+      "weightGsm": 310,
+      "countryOfOrigin": null,
+      "modelInfo": null
+    },
+    "tags": [],
+    "sizeGuideId": null,
+    "publishedAt": "2025-10-23T21:19:37-05:00",
+    "legacyUrl": "https://infinityclo.ca/products/infnitys-cherry-blosson-wildcard-hoodie-2-0",
+    "featuredRank": null
+  },
+  {
+    "id": "9114177994972",
+    "slug": "infnitys-signature-ivy-moss-patchwork-hoodie",
+    "name": "INFNITY'S SIGNATURE IVY-MOSS PATCHWORK HOODIE",
+    "tagline": null,
+    "description": "Introducing our premium hoodies crafted with attention to detail:\n\n• \nMaterial: Made from high-quality 400gsm French terry cotton for a soft and comfortable feel.\n\n• \nDesign: Features kangaroo pockets for added convenience and a stylish look.\n\n• \nCuffs: Designed with heavy rib knit cuffs to keep you warm and cozy.\n\n• \nZipper: Boasts a flawless zipper for easy wear and a sleek finish.\n\n• \nStyle: Perfect for lounging, outdoor activities, or casual everyday wear. Elevate your wardrobe with our meticulously crafted hoodies that combine comfort, style, and durability.\n\n• \nItem will ship within 3–5 business days after purchase.",
+    "category": "Hoodies",
+    "collectionSlugs": [],
+    "options": [
+      {
+        "id": "infnitys-signature-ivy-moss-patchwork-hoodie-option-0",
+        "name": "Size",
+        "position": 1,
+        "values": [
+          "S",
+          "M",
+          "L",
+          "XL",
+          "2XL"
+        ]
+      },
+      {
+        "id": "infnitys-signature-ivy-moss-patchwork-hoodie-option-1",
+        "name": "Color",
+        "position": 2,
+        "values": [
+          "IVY-MOSS"
+        ]
+      }
+    ],
+    "variants": [
+      {
+        "id": "47082870997212",
+        "sku": null,
+        "title": "S / IVY-MOSS",
+        "price": {
+          "amount": 7500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 8500,
+          "currency": "CAD"
+        },
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Size": "S",
+          "Color": "IVY-MOSS"
+        },
+        "mediaId": "infnitys-signature-ivy-moss-patchwork-hoodie-media-1"
+      },
+      {
+        "id": "47082871062748",
+        "sku": null,
+        "title": "M / IVY-MOSS",
+        "price": {
+          "amount": 7500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 8500,
+          "currency": "CAD"
+        },
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Size": "M",
+          "Color": "IVY-MOSS"
+        },
+        "mediaId": "infnitys-signature-ivy-moss-patchwork-hoodie-media-1"
+      },
+      {
+        "id": "47082871128284",
+        "sku": null,
+        "title": "L / IVY-MOSS",
+        "price": {
+          "amount": 7500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 8500,
+          "currency": "CAD"
+        },
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Size": "L",
+          "Color": "IVY-MOSS"
+        },
+        "mediaId": "infnitys-signature-ivy-moss-patchwork-hoodie-media-1"
+      },
+      {
+        "id": "47082871193820",
+        "sku": null,
+        "title": "XL / IVY-MOSS",
+        "price": {
+          "amount": 7500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 8500,
+          "currency": "CAD"
+        },
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Size": "XL",
+          "Color": "IVY-MOSS"
+        },
+        "mediaId": "infnitys-signature-ivy-moss-patchwork-hoodie-media-1"
+      },
+      {
+        "id": "47082871259356",
+        "sku": null,
+        "title": "2XL / IVY-MOSS",
+        "price": {
+          "amount": 7500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 8500,
+          "currency": "CAD"
+        },
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Size": "2XL",
+          "Color": "IVY-MOSS"
+        },
+        "mediaId": "infnitys-signature-ivy-moss-patchwork-hoodie-media-1"
+      }
+    ],
+    "media": [
+      {
+        "id": "infnitys-signature-ivy-moss-patchwork-hoodie-media-1",
+        "url": "/products/infnitys-signature-ivy-moss-patchwork-hoodie/01-c94f9519.jpg",
+        "alt": "INFNITY'S SIGNATURE IVY-MOSS PATCHWORK HOODIE — INFNITY",
+        "kind": "product",
+        "width": 1290,
+        "height": 1278,
+        "position": 1,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/greenfront.jpg?v=1725517017"
+      },
+      {
+        "id": "infnitys-signature-ivy-moss-patchwork-hoodie-media-2",
+        "url": "/products/infnitys-signature-ivy-moss-patchwork-hoodie/02-a81adac3.jpg",
+        "alt": "INFNITY'S SIGNATURE IVY-MOSS PATCHWORK HOODIE — INFNITY, view 2",
+        "kind": "model",
+        "width": 1290,
+        "height": 1278,
+        "position": 2,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/greenback.jpg?v=1725517017"
+      }
+    ],
+    "specification": {
+      "materials": "Material: Made from high-quality 400gsm French terry cotton for a soft and comfortable feel.",
+      "fit": null,
+      "care": null,
+      "construction": "Material: Made from high-quality 400gsm French terry cotton for a soft and comfortable feel.",
+      "weightGsm": 400,
+      "countryOfOrigin": null,
+      "modelInfo": null
+    },
+    "tags": [
+      "Hoodies"
+    ],
+    "sizeGuideId": null,
+    "publishedAt": "2025-10-23T21:03:26-05:00",
+    "legacyUrl": "https://infinityclo.ca/products/infnitys-signature-ivy-moss-patchwork-hoodie",
+    "featuredRank": null
+  },
+  {
+    "id": "9114177929436",
+    "slug": "infnitys-signature-obsidian-patchwork-hoodie",
+    "name": "INFNITY'S SIGNATURE OBSIDIAN PATCHWORK HOODIE",
+    "tagline": null,
+    "description": "Introducing our premium hoodies crafted with attention to detail:\n\n• \nMaterial: Made from high-quality 400gsm French terry cotton for a soft and comfortable feel.\n\n• \nDesign: Features kangaroo pockets for added convenience and a stylish look.\n\n• \nCuffs: Designed with heavy rib knit cuffs to keep you warm and cozy.\n\n• \nZipper: Boasts a flawless zipper for easy wear and a sleek finish.\n\n• \nStyle: Perfect for lounging, outdoor activities, or casual everyday wear. Elevate your wardrobe with our meticulously crafted hoodies that combine comfort, style, and durability.\n\n• \nItem will ship within 3–5 business days after purchase.",
+    "category": "Hoodies",
+    "collectionSlugs": [],
+    "options": [
+      {
+        "id": "infnitys-signature-obsidian-patchwork-hoodie-option-0",
+        "name": "Size",
+        "position": 1,
+        "values": [
+          "S",
+          "M",
+          "L",
+          "XL",
+          "2XL"
+        ]
+      },
+      {
+        "id": "infnitys-signature-obsidian-patchwork-hoodie-option-1",
+        "name": "Color",
+        "position": 2,
+        "values": [
+          "OBSIDIAN"
+        ]
+      }
+    ],
+    "variants": [
+      {
+        "id": "47082870571228",
+        "sku": null,
+        "title": "S / OBSIDIAN",
+        "price": {
+          "amount": 7500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 8500,
+          "currency": "CAD"
+        },
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Size": "S",
+          "Color": "OBSIDIAN"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "47082870636764",
+        "sku": null,
+        "title": "M / OBSIDIAN",
+        "price": {
+          "amount": 7500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 8500,
+          "currency": "CAD"
+        },
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Size": "M",
+          "Color": "OBSIDIAN"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "47082870702300",
+        "sku": null,
+        "title": "L / OBSIDIAN",
+        "price": {
+          "amount": 7500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 8500,
+          "currency": "CAD"
+        },
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Size": "L",
+          "Color": "OBSIDIAN"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "47082870767836",
+        "sku": null,
+        "title": "XL / OBSIDIAN",
+        "price": {
+          "amount": 7500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 8500,
+          "currency": "CAD"
+        },
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Size": "XL",
+          "Color": "OBSIDIAN"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "47082870833372",
+        "sku": null,
+        "title": "2XL / OBSIDIAN",
+        "price": {
+          "amount": 7500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 8500,
+          "currency": "CAD"
+        },
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Size": "2XL",
+          "Color": "OBSIDIAN"
+        },
+        "mediaId": null
+      }
+    ],
+    "media": [
+      {
+        "id": "infnitys-signature-obsidian-patchwork-hoodie-media-1",
+        "url": "/products/infnitys-signature-obsidian-patchwork-hoodie/01-4cb0c62d.jpg",
+        "alt": "INFNITY'S SIGNATURE OBSIDIAN PATCHWORK HOODIE — INFNITY",
+        "kind": "product",
+        "width": 1290,
+        "height": 1278,
+        "position": 1,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/black-front_ec0d4c6b-3aa2-4d1c-9ee2-f31260f0c6a6.jpg?v=1764470820"
+      },
+      {
+        "id": "infnitys-signature-obsidian-patchwork-hoodie-media-2",
+        "url": "/products/infnitys-signature-obsidian-patchwork-hoodie/02-00340765.jpg",
+        "alt": "INFNITY'S SIGNATURE OBSIDIAN PATCHWORK HOODIE — INFNITY, view 2",
+        "kind": "model",
+        "width": 1290,
+        "height": 1278,
+        "position": 2,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/blackback_13622c46-7b2c-4acf-aa2d-c9002c0afe6e.jpg?v=1764470827"
+      }
+    ],
+    "specification": {
+      "materials": "Material: Made from high-quality 400gsm French terry cotton for a soft and comfortable feel.",
+      "fit": null,
+      "care": null,
+      "construction": "Material: Made from high-quality 400gsm French terry cotton for a soft and comfortable feel.",
+      "weightGsm": 400,
+      "countryOfOrigin": null,
+      "modelInfo": null
+    },
+    "tags": [
+      "Hoodies"
+    ],
+    "sizeGuideId": null,
+    "publishedAt": "2025-10-23T21:02:30-05:00",
+    "legacyUrl": "https://infinityclo.ca/products/infnitys-signature-obsidian-patchwork-hoodie",
+    "featuredRank": null
+  },
+  {
+    "id": "9114177732828",
+    "slug": "infnitys-signature-ivy-moss-patchwork-sweatpants",
+    "name": "INFNITY'S SIGNATURE IVY-MOSS PATCHWORK SWEATPANTS",
+    "tagline": null,
+    "description": "Introducing our premium sweatpants crafted with the finest details:\n\n• \nMaterial: Constructed from luxurious 400gsm French terry cotton for a soft and cozy feel.\n\n• \nDesign: Features a front pocket and back pockets for storing essentials and adding a touch of functionality.\n\n• \nFit: Designed with straight-legged bottoms for a classic and comfortable fit.\n\n• \nVersatility: Perfect for lounging at home, running errands, or casual outings.\n\n• \nQuality: The perfect blend of style, comfort, and durability, making them a versatile addition to your wardrobe. Upgrade your leisurewear collection with our meticulously designed sweatpants that combine luxury, practicality, and style.",
+    "category": "Sweatpants",
+    "collectionSlugs": [],
+    "options": [
+      {
+        "id": "infnitys-signature-ivy-moss-patchwork-sweatpants-option-0",
+        "name": "Size",
+        "position": 1,
+        "values": [
+          "S",
+          "M",
+          "L",
+          "XL",
+          "2XL"
+        ]
+      },
+      {
+        "id": "infnitys-signature-ivy-moss-patchwork-sweatpants-option-1",
+        "name": "Color",
+        "position": 2,
+        "values": [
+          "IVY-MOSS"
+        ]
+      }
+    ],
+    "variants": [
+      {
+        "id": "47082870145244",
+        "sku": null,
+        "title": "S / IVY-MOSS",
+        "price": {
+          "amount": 6500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": null,
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Size": "S",
+          "Color": "IVY-MOSS"
+        },
+        "mediaId": "infnitys-signature-ivy-moss-patchwork-sweatpants-media-1"
+      },
+      {
+        "id": "47082870210780",
+        "sku": null,
+        "title": "M / IVY-MOSS",
+        "price": {
+          "amount": 6500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": null,
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Size": "M",
+          "Color": "IVY-MOSS"
+        },
+        "mediaId": "infnitys-signature-ivy-moss-patchwork-sweatpants-media-1"
+      },
+      {
+        "id": "47082870276316",
+        "sku": null,
+        "title": "L / IVY-MOSS",
+        "price": {
+          "amount": 6500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": null,
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Size": "L",
+          "Color": "IVY-MOSS"
+        },
+        "mediaId": "infnitys-signature-ivy-moss-patchwork-sweatpants-media-1"
+      },
+      {
+        "id": "47082870341852",
+        "sku": null,
+        "title": "XL / IVY-MOSS",
+        "price": {
+          "amount": 6500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": null,
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Size": "XL",
+          "Color": "IVY-MOSS"
+        },
+        "mediaId": "infnitys-signature-ivy-moss-patchwork-sweatpants-media-1"
+      },
+      {
+        "id": "47082870407388",
+        "sku": null,
+        "title": "2XL / IVY-MOSS",
+        "price": {
+          "amount": 6500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": null,
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Size": "2XL",
+          "Color": "IVY-MOSS"
+        },
+        "mediaId": "infnitys-signature-ivy-moss-patchwork-sweatpants-media-1"
+      }
+    ],
+    "media": [
+      {
+        "id": "infnitys-signature-ivy-moss-patchwork-sweatpants-media-1",
+        "url": "/products/infnitys-signature-ivy-moss-patchwork-sweatpants/01-be3c4778.jpg",
+        "alt": "INFNITY'S SIGNATURE IVY-MOSS PATCHWORK SWEATPANTS — INFNITY",
+        "kind": "product",
+        "width": 1290,
+        "height": 1278,
+        "position": 1,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/green-pants.jpg?v=1725517038"
+      }
+    ],
+    "specification": {
+      "materials": "Material: Constructed from luxurious 400gsm French terry cotton for a soft and cozy feel.",
+      "fit": "Fit: Designed with straight-legged bottoms for a classic and comfortable fit.",
+      "care": null,
+      "construction": "Material: Constructed from luxurious 400gsm French terry cotton for a soft and cozy feel.",
+      "weightGsm": 400,
+      "countryOfOrigin": null,
+      "modelInfo": null
+    },
+    "tags": [
+      "sweatpants"
+    ],
+    "sizeGuideId": null,
+    "publishedAt": "2025-10-23T21:01:03-05:00",
+    "legacyUrl": "https://infinityclo.ca/products/infnitys-signature-ivy-moss-patchwork-sweatpants",
+    "featuredRank": null
+  },
+  {
+    "id": "9114177536220",
+    "slug": "infnitys-signature-patchwork-sweatpants-copy",
+    "name": "INFNITY'S SIGNATURE OBSIDIAN PATCHWORK SWEATPANTS",
+    "tagline": null,
+    "description": "Introducing our premium sweatpants crafted with the finest details:\n\n• \nMaterial: Constructed from luxurious 400gsm French terry cotton for a soft and cozy feel.\n\n• \nDesign: Features a front pocket and back pockets for storing essentials and adding a touch of functionality.\n\n• \nFit: Designed with straight-legged bottoms for a classic and comfortable fit.\n\n• \nVersatility: Perfect for lounging at home, running errands, or casual outings.\n\n• \nQuality: The perfect blend of style, comfort, and durability, making them a versatile addition to your wardrobe. Upgrade your leisurewear collection with our meticulously designed sweatpants that combine luxury, practicality, and style.",
+    "category": "Sweatpants",
+    "collectionSlugs": [],
+    "options": [
+      {
+        "id": "infnitys-signature-patchwork-sweatpants-copy-option-0",
+        "name": "Size",
+        "position": 1,
+        "values": [
+          "S",
+          "M",
+          "L",
+          "XL",
+          "2XL"
+        ]
+      },
+      {
+        "id": "infnitys-signature-patchwork-sweatpants-copy-option-1",
+        "name": "Color",
+        "position": 2,
+        "values": [
+          "OBSIDIAN"
+        ]
+      }
+    ],
+    "variants": [
+      {
+        "id": "47082868670684",
+        "sku": null,
+        "title": "S / OBSIDIAN",
+        "price": {
+          "amount": 6500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": null,
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Size": "S",
+          "Color": "OBSIDIAN"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "47082868736220",
+        "sku": null,
+        "title": "M / OBSIDIAN",
+        "price": {
+          "amount": 6500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": null,
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Size": "M",
+          "Color": "OBSIDIAN"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "47082868801756",
+        "sku": null,
+        "title": "L / OBSIDIAN",
+        "price": {
+          "amount": 6500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": null,
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Size": "L",
+          "Color": "OBSIDIAN"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "47082868867292",
+        "sku": null,
+        "title": "XL / OBSIDIAN",
+        "price": {
+          "amount": 6500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": null,
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Size": "XL",
+          "Color": "OBSIDIAN"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "47082868932828",
+        "sku": null,
+        "title": "2XL / OBSIDIAN",
+        "price": {
+          "amount": 6500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": null,
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Size": "2XL",
+          "Color": "OBSIDIAN"
+        },
+        "mediaId": null
+      }
+    ],
+    "media": [
+      {
+        "id": "infnitys-signature-patchwork-sweatpants-copy-media-1",
+        "url": "/products/infnitys-signature-patchwork-sweatpants-copy/01-13deb959.jpg",
+        "alt": "INFNITY'S SIGNATURE OBSIDIAN PATCHWORK SWEATPANTS — INFNITY",
+        "kind": "product",
+        "width": 1290,
+        "height": 1278,
+        "position": 1,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/black-pantscopy.jpg?v=1770947369"
+      }
+    ],
+    "specification": {
+      "materials": "Material: Constructed from luxurious 400gsm French terry cotton for a soft and cozy feel.",
+      "fit": "Fit: Designed with straight-legged bottoms for a classic and comfortable fit.",
+      "care": null,
+      "construction": "Material: Constructed from luxurious 400gsm French terry cotton for a soft and cozy feel.",
+      "weightGsm": 400,
+      "countryOfOrigin": null,
+      "modelInfo": null
+    },
+    "tags": [
+      "sweatpants"
+    ],
+    "sizeGuideId": null,
+    "publishedAt": "2025-10-23T21:00:01-05:00",
+    "legacyUrl": "https://infinityclo.ca/products/infnitys-signature-patchwork-sweatpants-copy",
+    "featuredRank": null
+  },
+  {
+    "id": "9114177405148",
+    "slug": "infnitys-ashen-grey-varsity-hoodie",
+    "name": "INFNITY'S VARSITY HOODIE",
+    "tagline": null,
+    "description": "Introducing our premium hoodies crafted with attention to detail:\n\n• \nMaterial: Made from high-quality 350gsm Cotton Fleece for a soft and comfortable feel.\n\n• \nDesign: Features kangaroo pockets for added convenience and a stylish look.\n\n• \nCuffs: Designed with heavy rib knit cuffs to keep you warm and cozy.\n\n• \nStyle: Perfect for lounging, outdoor activities, or casual everyday wear. Elevate your wardrobe with our meticulously crafted hoodies that combine comfort, style, and durability.",
+    "category": "Hoodies",
+    "collectionSlugs": [],
+    "options": [
+      {
+        "id": "infnitys-ashen-grey-varsity-hoodie-option-0",
+        "name": "Size",
+        "position": 1,
+        "values": [
+          "S",
+          "M",
+          "L",
+          "XL",
+          "2XL",
+          "3XL"
+        ]
+      },
+      {
+        "id": "infnitys-ashen-grey-varsity-hoodie-option-1",
+        "name": "Color",
+        "position": 2,
+        "values": [
+          "ASHEN GREY"
+        ]
+      }
+    ],
+    "variants": [
+      {
+        "id": "47082868179164",
+        "sku": null,
+        "title": "S / ASHEN GREY",
+        "price": {
+          "amount": 4598,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 6998,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "S",
+          "Color": "ASHEN GREY"
+        },
+        "mediaId": "infnitys-ashen-grey-varsity-hoodie-media-1"
+      },
+      {
+        "id": "47082868211932",
+        "sku": null,
+        "title": "M / ASHEN GREY",
+        "price": {
+          "amount": 4598,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 6998,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "M",
+          "Color": "ASHEN GREY"
+        },
+        "mediaId": "infnitys-ashen-grey-varsity-hoodie-media-1"
+      },
+      {
+        "id": "47082868244700",
+        "sku": null,
+        "title": "L / ASHEN GREY",
+        "price": {
+          "amount": 4598,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 6998,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "L",
+          "Color": "ASHEN GREY"
+        },
+        "mediaId": "infnitys-ashen-grey-varsity-hoodie-media-1"
+      },
+      {
+        "id": "47082868277468",
+        "sku": null,
+        "title": "XL / ASHEN GREY",
+        "price": {
+          "amount": 4598,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 6998,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "XL",
+          "Color": "ASHEN GREY"
+        },
+        "mediaId": "infnitys-ashen-grey-varsity-hoodie-media-1"
+      },
+      {
+        "id": "47082868310236",
+        "sku": null,
+        "title": "2XL / ASHEN GREY",
+        "price": {
+          "amount": 4598,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 6998,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "2XL",
+          "Color": "ASHEN GREY"
+        },
+        "mediaId": "infnitys-ashen-grey-varsity-hoodie-media-1"
+      },
+      {
+        "id": "47082868343004",
+        "sku": null,
+        "title": "3XL / ASHEN GREY",
+        "price": {
+          "amount": 4598,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 6998,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "3XL",
+          "Color": "ASHEN GREY"
+        },
+        "mediaId": "infnitys-ashen-grey-varsity-hoodie-media-1"
+      }
+    ],
+    "media": [
+      {
+        "id": "infnitys-ashen-grey-varsity-hoodie-media-1",
+        "url": "/products/infnitys-ashen-grey-varsity-hoodie/01-1ac421f7.jpg",
+        "alt": "INFNITY'S VARSITY HOODIE — INFNITY",
+        "kind": "product",
+        "width": 1600,
+        "height": 1600,
+        "position": 1,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/grey.jpg?v=1735018660"
+      }
+    ],
+    "specification": {
+      "materials": "Material: Made from high-quality 350gsm Cotton Fleece for a soft and comfortable feel.",
+      "fit": null,
+      "care": null,
+      "construction": null,
+      "weightGsm": 350,
+      "countryOfOrigin": null,
+      "modelInfo": null
+    },
+    "tags": [],
+    "sizeGuideId": null,
+    "publishedAt": "2025-10-23T20:57:55-05:00",
+    "legacyUrl": "https://infinityclo.ca/products/infnitys-ashen-grey-varsity-hoodie",
+    "featuredRank": null
+  },
+  {
+    "id": "9114176815324",
+    "slug": "infnitys-albastar-varsity-hoodie",
+    "name": "INFNITY'S VARSITY HOODIE",
+    "tagline": null,
+    "description": "Introducing our premium hoodies crafted with attention to detail:\n\n• \nMaterial: Made from high-quality 350gsm Cotton Fleece for a soft and comfortable feel.\n\n• \nDesign: Features kangaroo pockets for added convenience and a stylish look.\n\n• \nCuffs: Designed with heavy rib knit cuffs to keep you warm and cozy.\n\n• \nStyle: Perfect for lounging, outdoor activities, or casual everyday wear. Elevate your wardrobe with our meticulously crafted hoodies that combine comfort, style, and durability.",
+    "category": "Hoodies",
+    "collectionSlugs": [],
+    "options": [
+      {
+        "id": "infnitys-albastar-varsity-hoodie-option-0",
+        "name": "Size",
+        "position": 1,
+        "values": [
+          "S",
+          "M",
+          "L",
+          "XL",
+          "2XL",
+          "3XL"
+        ]
+      },
+      {
+        "id": "infnitys-albastar-varsity-hoodie-option-1",
+        "name": "Color",
+        "position": 2,
+        "values": [
+          "ALABASTER"
+        ]
+      }
+    ],
+    "variants": [
+      {
+        "id": "47082864214236",
+        "sku": null,
+        "title": "S / ALABASTER",
+        "price": {
+          "amount": 4598,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 6998,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "S",
+          "Color": "ALABASTER"
+        },
+        "mediaId": "infnitys-albastar-varsity-hoodie-media-1"
+      },
+      {
+        "id": "47082864312540",
+        "sku": null,
+        "title": "M / ALABASTER",
+        "price": {
+          "amount": 4598,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 6998,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "M",
+          "Color": "ALABASTER"
+        },
+        "mediaId": "infnitys-albastar-varsity-hoodie-media-1"
+      },
+      {
+        "id": "47082864410844",
+        "sku": null,
+        "title": "L / ALABASTER",
+        "price": {
+          "amount": 4598,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 6998,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "L",
+          "Color": "ALABASTER"
+        },
+        "mediaId": "infnitys-albastar-varsity-hoodie-media-1"
+      },
+      {
+        "id": "47082864509148",
+        "sku": null,
+        "title": "XL / ALABASTER",
+        "price": {
+          "amount": 4598,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 6998,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "XL",
+          "Color": "ALABASTER"
+        },
+        "mediaId": "infnitys-albastar-varsity-hoodie-media-1"
+      },
+      {
+        "id": "47082864607452",
+        "sku": null,
+        "title": "2XL / ALABASTER",
+        "price": {
+          "amount": 4598,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 6998,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "2XL",
+          "Color": "ALABASTER"
+        },
+        "mediaId": "infnitys-albastar-varsity-hoodie-media-1"
+      },
+      {
+        "id": "47082864705756",
+        "sku": null,
+        "title": "3XL / ALABASTER",
+        "price": {
+          "amount": 4598,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 6998,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "3XL",
+          "Color": "ALABASTER"
+        },
+        "mediaId": "infnitys-albastar-varsity-hoodie-media-1"
+      }
+    ],
+    "media": [
+      {
+        "id": "infnitys-albastar-varsity-hoodie-media-1",
+        "url": "/products/infnitys-albastar-varsity-hoodie/01-22183851.jpg",
+        "alt": "INFNITY'S VARSITY HOODIE — INFNITY",
+        "kind": "product",
+        "width": 1600,
+        "height": 1600,
+        "position": 1,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/cream.jpg?v=1735018660"
+      }
+    ],
+    "specification": {
+      "materials": "Material: Made from high-quality 350gsm Cotton Fleece for a soft and comfortable feel.",
+      "fit": null,
+      "care": null,
+      "construction": null,
+      "weightGsm": 350,
+      "countryOfOrigin": null,
+      "modelInfo": null
+    },
+    "tags": [],
+    "sizeGuideId": null,
+    "publishedAt": "2025-10-23T20:57:24-05:00",
+    "legacyUrl": "https://infinityclo.ca/products/infnitys-albastar-varsity-hoodie",
+    "featuredRank": null
+  },
+  {
+    "id": "9114176585948",
+    "slug": "infnitys-black-varsity-hoodie",
+    "name": "INFNITY'S VARSITY HOODIE",
+    "tagline": null,
+    "description": "Introducing our premium hoodies crafted with attention to detail:\n\n• \nMaterial: Made from high-quality 350gsm Cotton Fleece for a soft and comfortable feel.\n\n• \nDesign: Features kangaroo pockets for added convenience and a stylish look.\n\n• \nCuffs: Designed with heavy rib knit cuffs to keep you warm and cozy.\n\n• \nStyle: Perfect for lounging, outdoor activities, or casual everyday wear. Elevate your wardrobe with our meticulously crafted hoodies that combine comfort, style, and durability.",
+    "category": "Hoodies",
+    "collectionSlugs": [],
+    "options": [
+      {
+        "id": "infnitys-black-varsity-hoodie-option-0",
+        "name": "Size",
+        "position": 1,
+        "values": [
+          "S",
+          "M",
+          "L",
+          "XL",
+          "2XL",
+          "3XL"
+        ]
+      },
+      {
+        "id": "infnitys-black-varsity-hoodie-option-1",
+        "name": "Color",
+        "position": 2,
+        "values": [
+          "OBSIDIAN"
+        ]
+      }
+    ],
+    "variants": [
+      {
+        "id": "47082862674140",
+        "sku": null,
+        "title": "S / OBSIDIAN",
+        "price": {
+          "amount": 4598,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 6998,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "S",
+          "Color": "OBSIDIAN"
+        },
+        "mediaId": "infnitys-black-varsity-hoodie-media-1"
+      },
+      {
+        "id": "47082862772444",
+        "sku": null,
+        "title": "M / OBSIDIAN",
+        "price": {
+          "amount": 4598,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 6998,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "M",
+          "Color": "OBSIDIAN"
+        },
+        "mediaId": "infnitys-black-varsity-hoodie-media-1"
+      },
+      {
+        "id": "47082862870748",
+        "sku": null,
+        "title": "L / OBSIDIAN",
+        "price": {
+          "amount": 4598,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 6998,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "L",
+          "Color": "OBSIDIAN"
+        },
+        "mediaId": "infnitys-black-varsity-hoodie-media-1"
+      },
+      {
+        "id": "47082862969052",
+        "sku": null,
+        "title": "XL / OBSIDIAN",
+        "price": {
+          "amount": 4598,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 6998,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "XL",
+          "Color": "OBSIDIAN"
+        },
+        "mediaId": "infnitys-black-varsity-hoodie-media-1"
+      },
+      {
+        "id": "47082863067356",
+        "sku": null,
+        "title": "2XL / OBSIDIAN",
+        "price": {
+          "amount": 4598,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 6998,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "2XL",
+          "Color": "OBSIDIAN"
+        },
+        "mediaId": "infnitys-black-varsity-hoodie-media-1"
+      },
+      {
+        "id": "47082863165660",
+        "sku": null,
+        "title": "3XL / OBSIDIAN",
+        "price": {
+          "amount": 4598,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 6998,
+          "currency": "CAD"
+        },
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Size": "3XL",
+          "Color": "OBSIDIAN"
+        },
+        "mediaId": "infnitys-black-varsity-hoodie-media-1"
+      }
+    ],
+    "media": [
+      {
+        "id": "infnitys-black-varsity-hoodie-media-1",
+        "url": "/products/infnitys-black-varsity-hoodie/01-4bf521d9.jpg",
+        "alt": "INFNITY'S VARSITY HOODIE — INFNITY",
+        "kind": "product",
+        "width": 1600,
+        "height": 1600,
+        "position": 1,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/obisidian.jpg?v=1735018660"
+      }
+    ],
+    "specification": {
+      "materials": "Material: Made from high-quality 350gsm Cotton Fleece for a soft and comfortable feel.",
+      "fit": null,
+      "care": null,
+      "construction": null,
+      "weightGsm": 350,
+      "countryOfOrigin": null,
+      "modelInfo": null
+    },
+    "tags": [],
+    "sizeGuideId": null,
+    "publishedAt": "2025-10-23T20:56:50-05:00",
+    "legacyUrl": "https://infinityclo.ca/products/infnitys-black-varsity-hoodie",
+    "featuredRank": null
+  },
+  {
+    "id": "9011536167132",
+    "slug": "thrill-seekers-and-money-maker-infni-tee",
+    "name": "TS&MM INFNI-TEE'S",
+    "tagline": null,
+    "description": "Introducing Our Infinity's Concrete Boy Tee\n\nStep into urban style with our Infinity's Concrete Boy Tee. Crafted from high-quality 250 gsm fabric, this tee is designed to bring durability and a touch of street-inspired fashion to your wardrobe.\n\nFeatures:\n\n• \n250 gsm Fabric: Enjoy a substantial feel and long-lasting quality with our 250 gsm fabric, ensuring a tee that can keep up with your urban adventures.\n\n• \nHeavy Rib Knit Crewneck: The heavy rib knit crewneck adds a classic, rugged look, perfect for those who appreciate streetwear aesthetics.\n\nWhether you're navigating city streets or expressing your urban flair, the Infinity's Concrete Boy Tee is your go-to choice for style and durability.",
+    "category": null,
+    "collectionSlugs": [],
+    "options": [
+      {
+        "id": "thrill-seekers-and-money-maker-infni-tee-option-0",
+        "name": "Size",
+        "position": 1,
+        "values": [
+          "Small",
+          "Medium",
+          "Large",
+          "X-Large",
+          "XX-Large"
+        ]
+      }
+    ],
+    "variants": [
+      {
+        "id": "46750495604956",
+        "sku": null,
+        "title": "Small",
+        "price": {
+          "amount": 3000,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 4500,
+          "currency": "CAD"
+        },
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Size": "Small"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "46750495637724",
+        "sku": null,
+        "title": "Medium",
+        "price": {
+          "amount": 3000,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 4500,
+          "currency": "CAD"
+        },
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Size": "Medium"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "46750495670492",
+        "sku": null,
+        "title": "Large",
+        "price": {
+          "amount": 3000,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 4500,
+          "currency": "CAD"
+        },
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Size": "Large"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "46750495703260",
+        "sku": null,
+        "title": "X-Large",
+        "price": {
+          "amount": 3000,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 4500,
+          "currency": "CAD"
+        },
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Size": "X-Large"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "46750495736028",
+        "sku": null,
+        "title": "XX-Large",
+        "price": {
+          "amount": 3000,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 4500,
+          "currency": "CAD"
+        },
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Size": "XX-Large"
+        },
+        "mediaId": null
+      }
+    ],
+    "media": [
+      {
+        "id": "thrill-seekers-and-money-maker-infni-tee-media-1",
+        "url": "/products/thrill-seekers-and-money-maker-infni-tee/01-150b4804.png",
+        "alt": "TS&MM INFNI-TEE'S — INFNITY",
+        "kind": "product",
+        "width": 1600,
+        "height": 1600,
+        "position": 1,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/Tee_Front_Templatecopy.png?v=1764269265"
+      },
+      {
+        "id": "thrill-seekers-and-money-maker-infni-tee-media-2",
+        "url": "/products/thrill-seekers-and-money-maker-infni-tee/02-05072dc7.png",
+        "alt": "TS&MM INFNI-TEE'S — INFNITY, view 2",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 2,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/Tee_Front_Template2copy.png?v=1764269265"
+      }
+    ],
+    "specification": {
+      "materials": null,
+      "fit": null,
+      "care": null,
+      "construction": null,
+      "weightGsm": 250,
+      "countryOfOrigin": null,
+      "modelInfo": null
+    },
+    "tags": [],
+    "sizeGuideId": null,
+    "publishedAt": "2025-07-16T17:56:19-05:00",
+    "legacyUrl": "https://infinityclo.ca/products/thrill-seekers-and-money-maker-infni-tee",
+    "featuredRank": null
+  },
+  {
+    "id": "8999370195164",
+    "slug": "infnitys-mpnw-sleeved-shirt",
+    "name": "INFNITY'S MPNW SLEEVED SHIRT",
+    "tagline": null,
+    "description": "• Pre Made\n\n• Baggy fitted long-sleeve tee\n\n• Screen-printed hand drawn designs on the front and back\n\n• 250 gsm 100% cotton with 150 gsm merino wool sleeves- BASICALLY COMFY ASF.\n\n• The Model is 6'2 wearing a XL\n\n• \nItem will ship within 3–5 business days after purchase.",
+    "category": null,
+    "collectionSlugs": [],
+    "options": [
+      {
+        "id": "infnitys-mpnw-sleeved-shirt-option-0",
+        "name": "Size",
+        "position": 1,
+        "values": [
+          "S",
+          "M",
+          "L",
+          "XL",
+          "2XL"
+        ]
+      }
+    ],
+    "variants": [
+      {
+        "id": "46708135231708",
+        "sku": null,
+        "title": "S",
+        "price": {
+          "amount": 6000,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 8000,
+          "currency": "CAD"
+        },
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Size": "S"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "46708135264476",
+        "sku": null,
+        "title": "M",
+        "price": {
+          "amount": 6000,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 8000,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "M"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "46708135297244",
+        "sku": null,
+        "title": "L",
+        "price": {
+          "amount": 6000,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 8000,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "L"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "46708135330012",
+        "sku": null,
+        "title": "XL",
+        "price": {
+          "amount": 6000,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 8000,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "XL"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "46708135362780",
+        "sku": null,
+        "title": "2XL",
+        "price": {
+          "amount": 6000,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 8000,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "2XL"
+        },
+        "mediaId": null
+      }
+    ],
+    "media": [
+      {
+        "id": "infnitys-mpnw-sleeved-shirt-media-1",
+        "url": "/products/infnitys-mpnw-sleeved-shirt/01-1c001b80.jpg",
+        "alt": "INFNITY'S MPNW SLEEVED SHIRT — INFNITY",
+        "kind": "product",
+        "width": 1600,
+        "height": 1600,
+        "position": 1,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/mpnw-1.jpg?v=1752263444"
+      },
+      {
+        "id": "infnitys-mpnw-sleeved-shirt-media-2",
+        "url": "/products/infnitys-mpnw-sleeved-shirt/02-91925e14.jpg",
+        "alt": "INFNITY'S MPNW SLEEVED SHIRT — INFNITY, view 2",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 2,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/mpnw-2.jpg?v=1752263443"
+      },
+      {
+        "id": "infnitys-mpnw-sleeved-shirt-media-3",
+        "url": "/products/infnitys-mpnw-sleeved-shirt/03-49bc93cd.jpg",
+        "alt": "INFNITY'S MPNW SLEEVED SHIRT — INFNITY, view 3",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 3,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/mpnw-3.jpg?v=1752263443"
+      },
+      {
+        "id": "infnitys-mpnw-sleeved-shirt-media-4",
+        "url": "/products/infnitys-mpnw-sleeved-shirt/04-fe276961.jpg",
+        "alt": "INFNITY'S MPNW SLEEVED SHIRT — INFNITY, view 4",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 4,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/mpnw-4.jpg?v=1752263457"
+      }
+    ],
+    "specification": {
+      "materials": "250 gsm 100% cotton with 150 gsm merino wool sleeves- BASICALLY COMFY ASF.",
+      "fit": null,
+      "care": null,
+      "construction": null,
+      "weightGsm": 250,
+      "countryOfOrigin": null,
+      "modelInfo": "The Model is 6'2 wearing a XL"
+    },
+    "tags": [],
+    "sizeGuideId": null,
+    "publishedAt": "2025-07-04T06:40:53-05:00",
+    "legacyUrl": "https://infinityclo.ca/products/infnitys-mpnw-sleeved-shirt",
+    "featuredRank": null
+  },
+  {
+    "id": "8999367213276",
+    "slug": "infni-tees-lecaptain-america",
+    "name": "INFNI-TEE'S LECAPTAIN AMERICA",
+    "tagline": null,
+    "description": "• Pre Made\n\n• Baggy fitted tee\n\n•  Screen-printed design on the front and back. \n\n• 250 gsm 100% cotton - basically comfy ASF. \n\n• The model is 6'1 wearing an XL \n\n• \nItem will ship within 3–5 business days after purchase.",
+    "category": null,
+    "collectionSlugs": [],
+    "options": [
+      {
+        "id": "infni-tees-lecaptain-america-option-0",
+        "name": "Size",
+        "position": 1,
+        "values": [
+          "S",
+          "M",
+          "L",
+          "XL",
+          "2XL"
+        ]
+      }
+    ],
+    "variants": [
+      {
+        "id": "46708124057820",
+        "sku": null,
+        "title": "S",
+        "price": {
+          "amount": 4500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 6000,
+          "currency": "CAD"
+        },
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Size": "S"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "46708124090588",
+        "sku": null,
+        "title": "M",
+        "price": {
+          "amount": 4501,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 6000,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "M"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "46708124123356",
+        "sku": null,
+        "title": "L",
+        "price": {
+          "amount": 4500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 6000,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "L"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "46708124156124",
+        "sku": null,
+        "title": "XL",
+        "price": {
+          "amount": 4500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 6000,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "XL"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "46708124188892",
+        "sku": null,
+        "title": "2XL",
+        "price": {
+          "amount": 4500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 6000,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "2XL"
+        },
+        "mediaId": null
+      }
+    ],
+    "media": [
+      {
+        "id": "infni-tees-lecaptain-america-media-1",
+        "url": "/products/infni-tees-lecaptain-america/01-01608ffb.jpg",
+        "alt": "INFNI-TEE'S LECAPTAIN AMERICA — INFNITY",
+        "kind": "product",
+        "width": 1600,
+        "height": 1600,
+        "position": 1,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/tyson-1_065aaaf1-27b7-4e72-8886-da5e4ed8bf91.jpg?v=1752263410"
+      },
+      {
+        "id": "infni-tees-lecaptain-america-media-2",
+        "url": "/products/infni-tees-lecaptain-america/02-fe15e804.jpg",
+        "alt": "INFNI-TEE'S LECAPTAIN AMERICA — INFNITY, view 2",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 2,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/tyson-2.jpg?v=1752263410"
+      },
+      {
+        "id": "infni-tees-lecaptain-america-media-3",
+        "url": "/products/infni-tees-lecaptain-america/03-36a4effd.jpg",
+        "alt": "INFNI-TEE'S LECAPTAIN AMERICA — INFNITY, view 3",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 3,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/tyson-3_470164fd-f7eb-4b65-9b4d-5130d142cf75.jpg?v=1752263409"
+      },
+      {
+        "id": "infni-tees-lecaptain-america-media-4",
+        "url": "/products/infni-tees-lecaptain-america/04-488ba008.jpg",
+        "alt": "INFNI-TEE'S LECAPTAIN AMERICA — INFNITY, view 4",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 4,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/tyson-4_97d125a7-949d-4619-90df-e686096d04e1.jpg?v=1752263410"
+      }
+    ],
+    "specification": {
+      "materials": "250 gsm 100% cotton - basically comfy ASF.",
+      "fit": null,
+      "care": null,
+      "construction": null,
+      "weightGsm": 250,
+      "countryOfOrigin": null,
+      "modelInfo": "The model is 6'1 wearing an XL"
+    },
+    "tags": [],
+    "sizeGuideId": null,
+    "publishedAt": "2025-07-04T06:26:19-05:00",
+    "legacyUrl": "https://infinityclo.ca/products/infni-tees-lecaptain-america",
+    "featuredRank": null
+  },
+  {
+    "id": "8999365869788",
+    "slug": "infni-tees-chaos",
+    "name": "INFNI-TEE'S CHAOS",
+    "tagline": null,
+    "description": "• Pre Made\n\n• Baggy fitted tee\n\n• Chaotic design screen-printed on the the front\n\n• Infnity logo screen-printed on the back  \n\n• 250 gsm 100% cotton - BASICALLY COMFY ASF. \n\n• The Model is 6'0 wearing a M\n\n• \nItem will ship within 3–5 business days after purchase.",
+    "category": null,
+    "collectionSlugs": [],
+    "options": [
+      {
+        "id": "infni-tees-chaos-option-0",
+        "name": "Size",
+        "position": 1,
+        "values": [
+          "S",
+          "M",
+          "L",
+          "XL",
+          "2XL"
+        ]
+      }
+    ],
+    "variants": [
+      {
+        "id": "46708110819548",
+        "sku": null,
+        "title": "S",
+        "price": {
+          "amount": 4500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 6000,
+          "currency": "CAD"
+        },
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Size": "S"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "46708110852316",
+        "sku": null,
+        "title": "M",
+        "price": {
+          "amount": 4500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 6000,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "M"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "46708110885084",
+        "sku": null,
+        "title": "L",
+        "price": {
+          "amount": 4500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 6000,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "L"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "46708110917852",
+        "sku": null,
+        "title": "XL",
+        "price": {
+          "amount": 4500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 6000,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "XL"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "46708110950620",
+        "sku": null,
+        "title": "2XL",
+        "price": {
+          "amount": 4500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 6000,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "2XL"
+        },
+        "mediaId": null
+      }
+    ],
+    "media": [
+      {
+        "id": "infni-tees-chaos-media-1",
+        "url": "/products/infni-tees-chaos/01-99cfec6b.jpg",
+        "alt": "INFNI-TEE'S CHAOS — INFNITY",
+        "kind": "product",
+        "width": 1600,
+        "height": 1600,
+        "position": 1,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/dein-1.jpg?v=1752263501"
+      },
+      {
+        "id": "infni-tees-chaos-media-2",
+        "url": "/products/infni-tees-chaos/02-7e66bc96.jpg",
+        "alt": "INFNI-TEE'S CHAOS — INFNITY, view 2",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 2,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/dein-2.jpg?v=1752263501"
+      },
+      {
+        "id": "infni-tees-chaos-media-3",
+        "url": "/products/infni-tees-chaos/03-de385945.jpg",
+        "alt": "INFNI-TEE'S CHAOS — INFNITY, view 3",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 3,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/dein-3.jpg?v=1752263501"
+      },
+      {
+        "id": "infni-tees-chaos-media-4",
+        "url": "/products/infni-tees-chaos/04-02946e69.jpg",
+        "alt": "INFNI-TEE'S CHAOS — INFNITY, view 4",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 4,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/dein-4.jpg?v=1752263501"
+      }
+    ],
+    "specification": {
+      "materials": "250 gsm 100% cotton - BASICALLY COMFY ASF.",
+      "fit": null,
+      "care": null,
+      "construction": null,
+      "weightGsm": 250,
+      "countryOfOrigin": null,
+      "modelInfo": "The Model is 6'0 wearing a M"
+    },
+    "tags": [],
+    "sizeGuideId": null,
+    "publishedAt": "2025-07-04T06:17:40-05:00",
+    "legacyUrl": "https://infinityclo.ca/products/infni-tees-chaos",
+    "featuredRank": null
+  },
+  {
+    "id": "8999365345500",
+    "slug": "infnitys-stellar-ops-camo-jorts-copy",
+    "name": "INFNITY'S NIGHT OPS JORTS",
+    "tagline": null,
+    "description": "• Premade \n\n• Straight leg baggy fit short\n\n• Camo denim\n\n• Embroidery on right pocket and back\n\n• Two carpenter-style pockets in front\n\n• Size up for a baggier fit \n\n• The Model is 5'4 wearing a M\n\n• \nItem will ship within 3–5 business days after purchase.",
+    "category": null,
+    "collectionSlugs": [],
+    "options": [
+      {
+        "id": "infnitys-stellar-ops-camo-jorts-copy-option-0",
+        "name": "Size",
+        "position": 1,
+        "values": [
+          "S / [W28]",
+          "M / [W30]",
+          "L / [W32]",
+          "XL / [W34]",
+          "2XL / [W36]"
+        ]
+      }
+    ],
+    "variants": [
+      {
+        "id": "46708107968732",
+        "sku": null,
+        "title": "S / [W28]",
+        "price": {
+          "amount": 5500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 7334,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "S / [W28]"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "46708108001500",
+        "sku": null,
+        "title": "M / [W30]",
+        "price": {
+          "amount": 5500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 7334,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "M / [W30]"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "46708108034268",
+        "sku": null,
+        "title": "L / [W32]",
+        "price": {
+          "amount": 5500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 7334,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "L / [W32]"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "46708108067036",
+        "sku": null,
+        "title": "XL / [W34]",
+        "price": {
+          "amount": 5500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 7334,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "XL / [W34]"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "46708108099804",
+        "sku": null,
+        "title": "2XL / [W36]",
+        "price": {
+          "amount": 5500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 7334,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "2XL / [W36]"
+        },
+        "mediaId": null
+      }
+    ],
+    "media": [
+      {
+        "id": "infnitys-stellar-ops-camo-jorts-copy-media-1",
+        "url": "/products/infnitys-stellar-ops-camo-jorts-copy/01-4dc57cb1.jpg",
+        "alt": "INFNITY'S NIGHT OPS JORTS — INFNITY",
+        "kind": "product",
+        "width": 1600,
+        "height": 1600,
+        "position": 1,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/night-1.jpg?v=1752263543"
+      },
+      {
+        "id": "infnitys-stellar-ops-camo-jorts-copy-media-2",
+        "url": "/products/infnitys-stellar-ops-camo-jorts-copy/02-6ed75bbc.jpg",
+        "alt": "INFNITY'S NIGHT OPS JORTS — INFNITY, view 2",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 2,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/night-2.jpg?v=1752263543"
+      },
+      {
+        "id": "infnitys-stellar-ops-camo-jorts-copy-media-3",
+        "url": "/products/infnitys-stellar-ops-camo-jorts-copy/03-8894ac3c.jpg",
+        "alt": "INFNITY'S NIGHT OPS JORTS — INFNITY, view 3",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 3,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/night-3.jpg?v=1752263543"
+      },
+      {
+        "id": "infnitys-stellar-ops-camo-jorts-copy-media-4",
+        "url": "/products/infnitys-stellar-ops-camo-jorts-copy/04-28733128.jpg",
+        "alt": "INFNITY'S NIGHT OPS JORTS — INFNITY, view 4",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 4,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/night-4.jpg?v=1752263543"
+      }
+    ],
+    "specification": {
+      "materials": null,
+      "fit": null,
+      "care": null,
+      "construction": null,
+      "weightGsm": null,
+      "countryOfOrigin": null,
+      "modelInfo": "The Model is 5'4 wearing a M"
+    },
+    "tags": [],
+    "sizeGuideId": null,
+    "publishedAt": "2025-07-04T06:13:56-05:00",
+    "legacyUrl": "https://infinityclo.ca/products/infnitys-stellar-ops-camo-jorts-copy",
+    "featuredRank": null
+  },
+  {
+    "id": "8999362003164",
+    "slug": "infnitys-stellar-ops-camo-jorts",
+    "name": "INFNITY'S RECON OPS JORTS",
+    "tagline": null,
+    "description": "• Premade \n\n• Straight leg baggy fit short\n\n• Camo denim\n\n• Embroidery on right pocket and back\n\n• Two carpenter-style pockets in front\n\n• Size up for a baggier fit\n\n• The Model is 6'1 wearing a 2XL (wanted it baggier)\n\n• \nItem will ship within 3–5 business days after purchase.",
+    "category": null,
+    "collectionSlugs": [],
+    "options": [
+      {
+        "id": "infnitys-stellar-ops-camo-jorts-option-0",
+        "name": "Size",
+        "position": 1,
+        "values": [
+          "S / [W28]",
+          "M / [W30]",
+          "L / [W32]",
+          "XL / [W34]",
+          "2XL / [W36]"
+        ]
+      }
+    ],
+    "variants": [
+      {
+        "id": "46708107641052",
+        "sku": null,
+        "title": "S / [W28]",
+        "price": {
+          "amount": 5500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 7334,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "S / [W28]"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "46708107673820",
+        "sku": null,
+        "title": "M / [W30]",
+        "price": {
+          "amount": 5500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 7334,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "M / [W30]"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "46708107706588",
+        "sku": null,
+        "title": "L / [W32]",
+        "price": {
+          "amount": 5500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 7334,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "L / [W32]"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "46708107739356",
+        "sku": null,
+        "title": "XL / [W34]",
+        "price": {
+          "amount": 5500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 7334,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "XL / [W34]"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "46708107772124",
+        "sku": null,
+        "title": "2XL / [W36]",
+        "price": {
+          "amount": 5500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 7334,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "2XL / [W36]"
+        },
+        "mediaId": null
+      }
+    ],
+    "media": [
+      {
+        "id": "infnitys-stellar-ops-camo-jorts-media-1",
+        "url": "/products/infnitys-stellar-ops-camo-jorts/01-bd2a7e39.jpg",
+        "alt": "INFNITY'S RECON OPS JORTS — INFNITY",
+        "kind": "product",
+        "width": 1600,
+        "height": 1600,
+        "position": 1,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/camo-1_914b6df5-5613-4c6d-aad6-3907c28514c1.jpg?v=1752263588"
+      },
+      {
+        "id": "infnitys-stellar-ops-camo-jorts-media-2",
+        "url": "/products/infnitys-stellar-ops-camo-jorts/02-3c829474.jpg",
+        "alt": "INFNITY'S RECON OPS JORTS — INFNITY, view 2",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 2,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/camo-2_b779160b-7d9f-4e33-b715-0209f306216b.jpg?v=1752263587"
+      },
+      {
+        "id": "infnitys-stellar-ops-camo-jorts-media-3",
+        "url": "/products/infnitys-stellar-ops-camo-jorts/03-c69ce8bf.jpg",
+        "alt": "INFNITY'S RECON OPS JORTS — INFNITY, view 3",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 3,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/camo-3_20a42ec7-a960-418a-af33-eab62e50dadb.jpg?v=1752263587"
+      },
+      {
+        "id": "infnitys-stellar-ops-camo-jorts-media-4",
+        "url": "/products/infnitys-stellar-ops-camo-jorts/04-23339ccd.jpg",
+        "alt": "INFNITY'S RECON OPS JORTS — INFNITY, view 4",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 4,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/camo-4_5121bb24-9303-4c34-8c37-b9985f193f22.jpg?v=1752263587"
+      }
+    ],
+    "specification": {
+      "materials": null,
+      "fit": null,
+      "care": null,
+      "construction": null,
+      "weightGsm": null,
+      "countryOfOrigin": null,
+      "modelInfo": "The Model is 6'1 wearing a 2XL (wanted it baggier)"
+    },
+    "tags": [],
+    "sizeGuideId": null,
+    "publishedAt": "2025-07-04T06:02:26-05:00",
+    "legacyUrl": "https://infinityclo.ca/products/infnitys-stellar-ops-camo-jorts",
+    "featuredRank": null
+  },
+  {
+    "id": "8999360954588",
+    "slug": "infnitys-obsidian-jersey",
+    "name": "INFNITY'S JET-BLACK JERSEY",
+    "tagline": null,
+    "description": "• Premade\n\n• 100% poly mesh 260 gsm\n\n• Two chest embroideries \n\n• Blurry \" INFINITY ATHLETICS \" screen-printed on the chest\n\n• Boxed \"INFINITY\" text screen-printed on the back \n\n• \" 44 \" screen-printed on the back \n\n• The Model is 5'6 wearing a M\n\n• \nItem will ship within 3–5 business days after purchase.",
+    "category": null,
+    "collectionSlugs": [],
+    "options": [
+      {
+        "id": "infnitys-obsidian-jersey-option-0",
+        "name": "sizes",
+        "position": 1,
+        "values": [
+          "S",
+          "M",
+          "L",
+          "XL",
+          "2XL"
+        ]
+      }
+    ],
+    "variants": [
+      {
+        "id": "46708085194972",
+        "sku": null,
+        "title": "S",
+        "price": {
+          "amount": 5000,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 7067,
+          "currency": "CAD"
+        },
+        "availability": "sold_out",
+        "selectedOptions": {
+          "sizes": "S"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "46708085227740",
+        "sku": null,
+        "title": "M",
+        "price": {
+          "amount": 5000,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 7067,
+          "currency": "CAD"
+        },
+        "availability": "sold_out",
+        "selectedOptions": {
+          "sizes": "M"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "46708085260508",
+        "sku": null,
+        "title": "L",
+        "price": {
+          "amount": 5000,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 7067,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "sizes": "L"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "46708085293276",
+        "sku": null,
+        "title": "XL",
+        "price": {
+          "amount": 5000,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 7067,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "sizes": "XL"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "46708085326044",
+        "sku": null,
+        "title": "2XL",
+        "price": {
+          "amount": 5000,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 7067,
+          "currency": "CAD"
+        },
+        "availability": "sold_out",
+        "selectedOptions": {
+          "sizes": "2XL"
+        },
+        "mediaId": null
+      }
+    ],
+    "media": [
+      {
+        "id": "infnitys-obsidian-jersey-media-1",
+        "url": "/products/infnitys-obsidian-jersey/01-af91ed6f.jpg",
+        "alt": "INFNITY'S JET-BLACK JERSEY — INFNITY",
+        "kind": "product",
+        "width": 1600,
+        "height": 1600,
+        "position": 1,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/jet-black-1_38fec8a7-9ba8-423d-95b0-29ccae7331c6.jpg?v=1752262156"
+      },
+      {
+        "id": "infnitys-obsidian-jersey-media-2",
+        "url": "/products/infnitys-obsidian-jersey/02-27674208.jpg",
+        "alt": "INFNITY'S JET-BLACK JERSEY — INFNITY, view 2",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 2,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/jet-black-2_abbb039b-98dc-49c8-8c3e-7e0f09e92c35.jpg?v=1752262156"
+      },
+      {
+        "id": "infnitys-obsidian-jersey-media-3",
+        "url": "/products/infnitys-obsidian-jersey/03-eeec6701.jpg",
+        "alt": "INFNITY'S JET-BLACK JERSEY — INFNITY, view 3",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 3,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/jet-black-3.jpg?v=1752262156"
+      },
+      {
+        "id": "infnitys-obsidian-jersey-media-4",
+        "url": "/products/infnitys-obsidian-jersey/04-ff4bec2a.jpg",
+        "alt": "INFNITY'S JET-BLACK JERSEY — INFNITY, view 4",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 4,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/jet-black-4_ff6389a7-d953-42c9-8c0e-26361a3e0993.jpg?v=1752262156"
+      }
+    ],
+    "specification": {
+      "materials": null,
+      "fit": null,
+      "care": null,
+      "construction": null,
+      "weightGsm": 260,
+      "countryOfOrigin": null,
+      "modelInfo": "The Model is 5'6 wearing a M"
+    },
+    "tags": [],
+    "sizeGuideId": null,
+    "publishedAt": "2025-07-04T05:59:11-05:00",
+    "legacyUrl": "https://infinityclo.ca/products/infnitys-obsidian-jersey",
+    "featuredRank": null
+  },
+  {
+    "id": "8999360397532",
+    "slug": "infnitys-crimson-static-jersey-copy",
+    "name": "INFNITY'S IVY MOSS JERSEY",
+    "tagline": null,
+    "description": "• Premade\n\n• 100% poly mesh 260 gsm\n\n• Two chest embroideries \n\n• Blurry \" INFINITY ATHLETICS \" screen-printed on the chest\n\n• Boxed \"INFINITY\" text screen-printed on the back \n\n• \" 44 \" screen-printed on the back \n\n• The Model is 5'5 wearing a S\n\n• \nItem will ship within 3–5 business days after purchase.",
+    "category": null,
+    "collectionSlugs": [],
+    "options": [
+      {
+        "id": "infnitys-crimson-static-jersey-copy-option-0",
+        "name": "sizes",
+        "position": 1,
+        "values": [
+          "S",
+          "M",
+          "L",
+          "XL",
+          "2XL"
+        ]
+      }
+    ],
+    "variants": [
+      {
+        "id": "46708083687644",
+        "sku": null,
+        "title": "S",
+        "price": {
+          "amount": 5000,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 7067,
+          "currency": "CAD"
+        },
+        "availability": "sold_out",
+        "selectedOptions": {
+          "sizes": "S"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "46708083720412",
+        "sku": null,
+        "title": "M",
+        "price": {
+          "amount": 5000,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 7067,
+          "currency": "CAD"
+        },
+        "availability": "sold_out",
+        "selectedOptions": {
+          "sizes": "M"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "46708083753180",
+        "sku": null,
+        "title": "L",
+        "price": {
+          "amount": 5000,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 7067,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "sizes": "L"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "46708083785948",
+        "sku": null,
+        "title": "XL",
+        "price": {
+          "amount": 5000,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 7067,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "sizes": "XL"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "46708083818716",
+        "sku": null,
+        "title": "2XL",
+        "price": {
+          "amount": 5000,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 7067,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "sizes": "2XL"
+        },
+        "mediaId": null
+      }
+    ],
+    "media": [
+      {
+        "id": "infnitys-crimson-static-jersey-copy-media-1",
+        "url": "/products/infnitys-crimson-static-jersey-copy/01-318de7f6.jpg",
+        "alt": "INFNITY'S IVY MOSS JERSEY — INFNITY",
+        "kind": "product",
+        "width": 1600,
+        "height": 1600,
+        "position": 1,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/ivy-moss-1.jpg?v=1752262099"
+      },
+      {
+        "id": "infnitys-crimson-static-jersey-copy-media-2",
+        "url": "/products/infnitys-crimson-static-jersey-copy/02-050ca86d.jpg",
+        "alt": "INFNITY'S IVY MOSS JERSEY — INFNITY, view 2",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 2,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/ivy-moss-2.jpg?v=1752262099"
+      },
+      {
+        "id": "infnitys-crimson-static-jersey-copy-media-3",
+        "url": "/products/infnitys-crimson-static-jersey-copy/03-ae589c43.jpg",
+        "alt": "INFNITY'S IVY MOSS JERSEY — INFNITY, view 3",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 3,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/ivy-moss-3.jpg?v=1752262099"
+      },
+      {
+        "id": "infnitys-crimson-static-jersey-copy-media-4",
+        "url": "/products/infnitys-crimson-static-jersey-copy/04-5b7dc4e3.jpg",
+        "alt": "INFNITY'S IVY MOSS JERSEY — INFNITY, view 4",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 4,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/ivy-moss-4.jpg?v=1752262099"
+      }
+    ],
+    "specification": {
+      "materials": null,
+      "fit": null,
+      "care": null,
+      "construction": null,
+      "weightGsm": 260,
+      "countryOfOrigin": null,
+      "modelInfo": "The Model is 5'5 wearing a S"
+    },
+    "tags": [],
+    "sizeGuideId": null,
+    "publishedAt": "2025-07-04T05:56:42-05:00",
+    "legacyUrl": "https://infinityclo.ca/products/infnitys-crimson-static-jersey-copy",
+    "featuredRank": null
+  },
+  {
+    "id": "8999360299228",
+    "slug": "infnitys-crimson-static-jersey",
+    "name": "INFNITY'S CRIMSON STATIC JERSEY",
+    "tagline": null,
+    "description": "• Premade \n\n• 100% poly mesh 260 gs\n\n• Two chest embroideries \n\n• Blurry \" INFINITY ATHLETICS \" screen-printed on the chest\n\n• Boxed \"INFINITY\" text screen-printed on the back \n\n• \" 44 \" screen-printed on the back \n\n• The Model is 5'4 wearing a M\n\n• \nItem will ship within 3–5 business days after purchase.",
+    "category": null,
+    "collectionSlugs": [],
+    "options": [
+      {
+        "id": "infnitys-crimson-static-jersey-option-0",
+        "name": "sizes",
+        "position": 1,
+        "values": [
+          "S",
+          "M",
+          "L",
+          "XL",
+          "2XL"
+        ]
+      }
+    ],
+    "variants": [
+      {
+        "id": "46708083359964",
+        "sku": null,
+        "title": "S",
+        "price": {
+          "amount": 5000,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 7067,
+          "currency": "CAD"
+        },
+        "availability": "sold_out",
+        "selectedOptions": {
+          "sizes": "S"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "46708083392732",
+        "sku": null,
+        "title": "M",
+        "price": {
+          "amount": 5000,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 7067,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "sizes": "M"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "46708083425500",
+        "sku": null,
+        "title": "L",
+        "price": {
+          "amount": 5000,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 7067,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "sizes": "L"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "46708083458268",
+        "sku": null,
+        "title": "XL",
+        "price": {
+          "amount": 5000,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 7067,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "sizes": "XL"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "46708083491036",
+        "sku": null,
+        "title": "2XL",
+        "price": {
+          "amount": 5000,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 7067,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "sizes": "2XL"
+        },
+        "mediaId": null
+      }
+    ],
+    "media": [
+      {
+        "id": "infnitys-crimson-static-jersey-media-1",
+        "url": "/products/infnitys-crimson-static-jersey/01-600c658d.jpg",
+        "alt": "INFNITY'S CRIMSON STATIC JERSEY — INFNITY",
+        "kind": "product",
+        "width": 1600,
+        "height": 1600,
+        "position": 1,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/crimson-1.jpg?v=1752262051"
+      },
+      {
+        "id": "infnitys-crimson-static-jersey-media-2",
+        "url": "/products/infnitys-crimson-static-jersey/02-b2c00761.jpg",
+        "alt": "INFNITY'S CRIMSON STATIC JERSEY — INFNITY, view 2",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 2,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/crimson-2.jpg?v=1752262051"
+      },
+      {
+        "id": "infnitys-crimson-static-jersey-media-3",
+        "url": "/products/infnitys-crimson-static-jersey/03-ac2bf844.jpg",
+        "alt": "INFNITY'S CRIMSON STATIC JERSEY — INFNITY, view 3",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 3,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/crimson-3.jpg?v=1752262051"
+      },
+      {
+        "id": "infnitys-crimson-static-jersey-media-4",
+        "url": "/products/infnitys-crimson-static-jersey/04-c2e72c57.jpg",
+        "alt": "INFNITY'S CRIMSON STATIC JERSEY — INFNITY, view 4",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 4,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/crimson-4.jpg?v=1752262051"
+      }
+    ],
+    "specification": {
+      "materials": null,
+      "fit": null,
+      "care": null,
+      "construction": null,
+      "weightGsm": null,
+      "countryOfOrigin": null,
+      "modelInfo": "The Model is 5'4 wearing a M"
+    },
+    "tags": [],
+    "sizeGuideId": null,
+    "publishedAt": "2025-07-04T05:56:20-05:00",
+    "legacyUrl": "https://infinityclo.ca/products/infnitys-crimson-static-jersey",
+    "featuredRank": null
+  },
+  {
+    "id": "8712724971740",
+    "slug": "infinitys-signature-ivy-moss-beanie-copy-1",
+    "name": "INFNITYS' SIGNATURE BEANIE",
+    "tagline": null,
+    "description": "The INFINITY'S SIGNATURE \"OBSIDIAN\" BEANIE is expertly crafted with a thick, knitted yarn material, perfect for braving the winter weather. The jacquard style logo adds a touch of sophistication, making it a must-have accessory for any wardrobe. Stay warm and stylish with this durable beanie.",
+    "category": "beanie",
+    "collectionSlugs": [],
+    "options": [
+      {
+        "id": "infinitys-signature-ivy-moss-beanie-copy-1-option-0",
+        "name": "Accessory size",
+        "position": 1,
+        "values": [
+          "One size"
+        ]
+      },
+      {
+        "id": "infinitys-signature-ivy-moss-beanie-copy-1-option-1",
+        "name": "Color",
+        "position": 2,
+        "values": [
+          "OBSIDIAN"
+        ]
+      }
+    ],
+    "variants": [
+      {
+        "id": "45792816693468",
+        "sku": null,
+        "title": "One size / OBSIDIAN",
+        "price": {
+          "amount": 2000,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 2000,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Accessory size": "One size",
+          "Color": "OBSIDIAN"
+        },
+        "mediaId": null
+      }
+    ],
+    "media": [
+      {
+        "id": "infinitys-signature-ivy-moss-beanie-copy-1-media-1",
+        "url": "/products/infinitys-signature-ivy-moss-beanie-copy-1/01-8917c31b.png",
+        "alt": "INFNITYS' SIGNATURE BEANIE — INFNITY",
+        "kind": "product",
+        "width": 1600,
+        "height": 1600,
+        "position": 1,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/blackbeanie1.png?v=1724458294"
+      }
+    ],
+    "specification": {
+      "materials": null,
+      "fit": null,
+      "care": null,
+      "construction": null,
+      "weightGsm": null,
+      "countryOfOrigin": null,
+      "modelInfo": null
+    },
+    "tags": [],
+    "sizeGuideId": null,
+    "publishedAt": "2024-08-23T19:25:38-05:00",
+    "legacyUrl": "https://infinityclo.ca/products/infinitys-signature-ivy-moss-beanie-copy-1",
+    "featuredRank": null
+  },
+  {
+    "id": "8334122942684",
+    "slug": "infinitys-concrete-boy-tee",
+    "name": "LIL YACHTY INFNI-TEE",
+    "tagline": null,
+    "description": "Introducing Our Infinity's Concrete Boy Tee\n\nStep into urban style with our Infinity's Concrete Boy Tee. Crafted from high-quality 250 gsm fabric, this tee is designed to bring durability and a touch of street-inspired fashion to your wardrobe.\n\nFeatures:\n\n• \n250 gsm Fabric: Enjoy a substantial feel and long-lasting quality with our 250 gsm fabric, ensuring a tee that can keep up with your urban adventures.\n\n• \nHeavy Rib Knit Crewneck: The heavy rib knit crewneck adds a classic, rugged look, perfect for those who appreciate streetwear aesthetics.\n\nWhether you're navigating city streets or expressing your urban flair, the Infinity's Concrete Boy Tee is your go-to choice for style and durability.",
+    "category": null,
+    "collectionSlugs": [],
+    "options": [
+      {
+        "id": "infinitys-concrete-boy-tee-option-0",
+        "name": "Size",
+        "position": 1,
+        "values": [
+          "Small",
+          "Medium",
+          "Large",
+          "X-Large",
+          "XX-Large"
+        ]
+      }
+    ],
+    "variants": [
+      {
+        "id": "44623714812124",
+        "sku": null,
+        "title": "Small",
+        "price": {
+          "amount": 3000,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 4500,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "Small"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "44623714844892",
+        "sku": null,
+        "title": "Medium",
+        "price": {
+          "amount": 3000,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 4500,
+          "currency": "CAD"
+        },
+        "availability": "in_stock",
+        "selectedOptions": {
+          "Size": "Medium"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "44623714877660",
+        "sku": null,
+        "title": "Large",
+        "price": {
+          "amount": 3000,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 4500,
+          "currency": "CAD"
+        },
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Size": "Large"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "44623714910428",
+        "sku": null,
+        "title": "X-Large",
+        "price": {
+          "amount": 3000,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 4500,
+          "currency": "CAD"
+        },
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Size": "X-Large"
+        },
+        "mediaId": null
+      },
+      {
+        "id": "44623714943196",
+        "sku": null,
+        "title": "XX-Large",
+        "price": {
+          "amount": 3000,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 4500,
+          "currency": "CAD"
+        },
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Size": "XX-Large"
+        },
+        "mediaId": null
+      }
+    ],
+    "media": [
+      {
+        "id": "infinitys-concrete-boy-tee-media-1",
+        "url": "/products/infinitys-concrete-boy-tee/01-898c211c.png",
+        "alt": "LIL YACHTY INFNI-TEE — INFNITY",
+        "kind": "product",
+        "width": 1600,
+        "height": 1600,
+        "position": 1,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/INFINITY_WHITE_9.png?v=1710029589"
+      },
+      {
+        "id": "infinitys-concrete-boy-tee-media-2",
+        "url": "/products/infinitys-concrete-boy-tee/02-bc8d4244.png",
+        "alt": "LIL YACHTY INFNI-TEE — INFNITY, view 2",
+        "kind": "model",
+        "width": 1600,
+        "height": 1600,
+        "position": 2,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/INFINITY_WHITE_5.png?v=1710029589"
+      }
+    ],
+    "specification": {
+      "materials": null,
+      "fit": null,
+      "care": null,
+      "construction": null,
+      "weightGsm": 250,
+      "countryOfOrigin": null,
+      "modelInfo": null
+    },
+    "tags": [],
+    "sizeGuideId": null,
+    "publishedAt": "2024-03-09T18:13:07-06:00",
+    "legacyUrl": "https://infinityclo.ca/products/infinitys-concrete-boy-tee",
+    "featuredRank": null
+  },
+  {
+    "id": "8238488092892",
+    "slug": "infinity-cozy-cove-zip-sweatpants",
+    "name": "ZIP- UPS NAVY ECLIPSE SWEATPANTS",
+    "tagline": null,
+    "description": "- Infinity Cozy Cove Zip Sweatpants LIVE NOW !!- 310gsm 100% Cotton Fleece.- True to size but if you want an oversize look get a size up.- FULLY cut n' sew",
+    "category": null,
+    "collectionSlugs": [],
+    "options": [
+      {
+        "id": "infinity-cozy-cove-zip-sweatpants-option-0",
+        "name": "Color",
+        "position": 1,
+        "values": [
+          "Navy Eclipse"
+        ]
+      },
+      {
+        "id": "infinity-cozy-cove-zip-sweatpants-option-1",
+        "name": "Size",
+        "position": 2,
+        "values": [
+          "small",
+          "medium",
+          "large",
+          "xl",
+          "xxl",
+          "xxxl"
+        ]
+      }
+    ],
+    "variants": [
+      {
+        "id": "44309765357788",
+        "sku": null,
+        "title": "Navy Eclipse / small",
+        "price": {
+          "amount": 3500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 7500,
+          "currency": "CAD"
+        },
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Color": "Navy Eclipse",
+          "Size": "small"
+        },
+        "mediaId": "infinity-cozy-cove-zip-sweatpants-media-1"
+      },
+      {
+        "id": "44309765390556",
+        "sku": null,
+        "title": "Navy Eclipse / medium",
+        "price": {
+          "amount": 3500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 7500,
+          "currency": "CAD"
+        },
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Color": "Navy Eclipse",
+          "Size": "medium"
+        },
+        "mediaId": "infinity-cozy-cove-zip-sweatpants-media-1"
+      },
+      {
+        "id": "44309765423324",
+        "sku": null,
+        "title": "Navy Eclipse / large",
+        "price": {
+          "amount": 3500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 7500,
+          "currency": "CAD"
+        },
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Color": "Navy Eclipse",
+          "Size": "large"
+        },
+        "mediaId": "infinity-cozy-cove-zip-sweatpants-media-1"
+      },
+      {
+        "id": "44309765456092",
+        "sku": null,
+        "title": "Navy Eclipse / xl",
+        "price": {
+          "amount": 3500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 7500,
+          "currency": "CAD"
+        },
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Color": "Navy Eclipse",
+          "Size": "xl"
+        },
+        "mediaId": "infinity-cozy-cove-zip-sweatpants-media-1"
+      },
+      {
+        "id": "44309765488860",
+        "sku": null,
+        "title": "Navy Eclipse / xxl",
+        "price": {
+          "amount": 3500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 7500,
+          "currency": "CAD"
+        },
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Color": "Navy Eclipse",
+          "Size": "xxl"
+        },
+        "mediaId": "infinity-cozy-cove-zip-sweatpants-media-1"
+      },
+      {
+        "id": "44764880634076",
+        "sku": null,
+        "title": "Navy Eclipse / xxxl",
+        "price": {
+          "amount": 3500,
+          "currency": "CAD"
+        },
+        "compareAtPrice": {
+          "amount": 7500,
+          "currency": "CAD"
+        },
+        "availability": "sold_out",
+        "selectedOptions": {
+          "Color": "Navy Eclipse",
+          "Size": "xxxl"
+        },
+        "mediaId": null
+      }
+    ],
+    "media": [
+      {
+        "id": "infinity-cozy-cove-zip-sweatpants-media-1",
+        "url": "/products/infinity-cozy-cove-zip-sweatpants/01-be5ee994.png",
+        "alt": "ZIP- UPS NAVY ECLIPSE SWEATPANTS — INFNITY",
+        "kind": "product",
+        "width": 1600,
+        "height": 1649,
+        "position": 1,
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_4040.png?v=1710024485"
+      }
+    ],
+    "specification": {
+      "materials": "Infinity Cozy Cove Zip Sweatpants LIVE NOW !!- 310gsm 100% Cotton Fleece.- True to size but if you want an oversize look get a size up.- FULLY cut n' sew",
+      "fit": null,
+      "care": null,
+      "construction": null,
+      "weightGsm": 310,
+      "countryOfOrigin": null,
+      "modelInfo": null
+    },
+    "tags": [],
+    "sizeGuideId": null,
+    "publishedAt": "2024-01-31T21:24:28-06:00",
+    "legacyUrl": "https://infinityclo.ca/products/infinity-cozy-cove-zip-sweatpants",
+    "featuredRank": null
+  }
+]

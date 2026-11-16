@@ -143,10 +143,31 @@ const factGaps: Array<{ slug: string; missing: string[] }> = [];
  * Fetch helpers
  * ------------------------------------------------------------------ */
 
+/**
+ * The storefront rate-limits bursts with HTTP 429. That is a request to slow
+ * down, not a refusal, so it is honoured: wait for `Retry-After` (or an
+ * increasing pause) and try again a bounded number of times.
+ */
+const RATE_LIMIT_RETRIES = 5;
+
+async function fetchWithBackoff(url: string, init: RequestInit = {}): Promise<Response> {
+  for (let attempt = 0; ; attempt += 1) {
+    const response = await fetch(url, {
+      ...init,
+      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+    });
+    if (response.status !== 429 || attempt >= RATE_LIMIT_RETRIES) return response;
+    const retryAfter = Number(response.headers.get('retry-after'));
+    const waitMs =
+      Number.isFinite(retryAfter) && retryAfter > 0 ? retryAfter * 1000 : 4000 * (attempt + 1);
+    console.log(`  rate limited; waiting ${Math.round(waitMs / 1000)}s before retrying`);
+    await new Promise((resolve) => setTimeout(resolve, waitMs));
+  }
+}
+
 async function fetchJson<T>(url: string): Promise<T> {
-  const response = await fetch(url, {
+  const response = await fetchWithBackoff(url, {
     headers: { accept: 'application/json', 'user-agent': 'INFNITY-catalog-import/1.1' },
-    signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
   });
   if (!response.ok) {
     throw new Error(`GET ${url} -> HTTP ${response.status} ${response.statusText}`);
@@ -266,9 +287,7 @@ async function downloadAsset(
 
   try {
     await mkdir(directory, { recursive: true });
-    const response = await fetch(cdnUrlAtWidth(sourceUrl, MAX_IMAGE_WIDTH), {
-      signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
-    });
+    const response = await fetchWithBackoff(cdnUrlAtWidth(sourceUrl, MAX_IMAGE_WIDTH));
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
     const buffer = Buffer.from(await response.arrayBuffer());

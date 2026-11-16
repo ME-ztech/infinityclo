@@ -1,0 +1,474 @@
+{
+  "importedAt": "2026-11-16T21:48:45.489Z",
+  "source": "https://infinityclo.ca",
+  "sizeCharts": {
+    "tee": [
+      {
+        "url": "/size-charts/tee-01-a59fef5d.png",
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/Untitled_Artwork_3_2048x2048.png?v=1715808184",
+        "bytes": 510951,
+        "width": 1600,
+        "height": 1600
+      }
+    ],
+    "pullover-hoodie": [
+      {
+        "url": "/size-charts/pullover-hoodie-01-d45573d8.png",
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/Untitled_Artwork_2.png?v=1737787818",
+        "bytes": 559922,
+        "width": 1600,
+        "height": 1600
+      }
+    ],
+    "zip-hoodie": [
+      {
+        "url": "/size-charts/zip-hoodie-01-03a0977d.png",
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/Untitled_Artwork_3_85226880-c58b-49a2-a423-2cf29d8800d8_1024x1024.png?v=1715827901",
+        "bytes": 454529,
+        "width": 1600,
+        "height": 1600
+      }
+    ],
+    "bottoms": [
+      {
+        "url": "/size-charts/bottoms-01-790e0ae9.png",
+        "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/Untitled_Artwork_6c937145-e645-4aaf-a75e-cc6614bc9a63_1024x1024.png?v=1715925956",
+        "bytes": 420966,
+        "width": 1600,
+        "height": 1600
+      }
+    ]
+  },
+  "bundle": [
+    {
+      "url": "/brand/bundle-of-2-01-03a0977d.png",
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/Untitled_Artwork_3_85226880-c58b-49a2-a423-2cf29d8800d8_1024x1024.png?v=1715827901",
+      "bytes": 454529,
+      "width": 1600,
+      "height": 1600
+    },
+    {
+      "url": "/brand/bundle-of-2-02-790e0ae9.png",
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/Untitled_Artwork_6c937145-e645-4aaf-a75e-cc6614bc9a63_1024x1024.png?v=1715925956",
+      "bytes": 420966,
+      "width": 1600,
+      "height": 1600
+    }
+  ],
+  "home": [
+    {
+      "url": "/brand/home-01-671567d9.png",
+      "sourceUrl": "https://infinityclo.ca/cdn/shop/files/Untitled_Artwork_5_a5401529-3027-40ac-9795-1abc62b83c87.png",
+      "bytes": 277327,
+      "width": 1600,
+      "height": 1600
+    },
+    {
+      "url": "/brand/home-02-5c6dd7d8.jpg",
+      "sourceUrl": "https://infinityclo.ca/cdn/shop/files/Untitled_Artwork_2_aa09d5c1-6537-4e4a-893a-ef7d44d4af41.jpg",
+      "bytes": 212840,
+      "width": 1600,
+      "height": 339
+    }
+  ],
+  "assets": [
+    {
+      "url": "/community/troop-01-ba9c4198.jpg",
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_2169_2048x2048.jpg?v=1764309517",
+      "bytes": 259058,
+      "width": 1320,
+      "height": 2019,
+      "usage": "community",
+      "sourcePage": "https://infinityclo.ca/pages/customer-gallery"
+    },
+    {
+      "url": "/community/troop-02-75421d1d.jpg",
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_7815_2048x2048.png?v=1764304857",
+      "bytes": 468174,
+      "width": 1320,
+      "height": 2112,
+      "usage": "community",
+      "sourcePage": "https://infinityclo.ca/pages/customer-gallery",
+      "note": "Re-encoded PNG to JPEG (quality 86) for delivery; pixels otherwise untouched."
+    },
+    {
+      "url": "/community/troop-03-135dfe6f.jpg",
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_9592_2048x2048.jpg?v=1764462362",
+      "bytes": 213212,
+      "width": 1170,
+      "height": 1903,
+      "usage": "community",
+      "sourcePage": "https://infinityclo.ca/pages/customer-gallery"
+    },
+    {
+      "url": "/community/troop-04-d20a2237.jpg",
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_2166_2048x2048.jpg?v=1764309589",
+      "bytes": 341806,
+      "width": 1320,
+      "height": 2041,
+      "usage": "community",
+      "sourcePage": "https://infinityclo.ca/pages/customer-gallery"
+    },
+    {
+      "url": "/community/troop-05-9c376ed4.jpg",
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_2150_2048x2048.jpg?v=1764304852",
+      "bytes": 110053,
+      "width": 1320,
+      "height": 1984,
+      "usage": "community",
+      "sourcePage": "https://infinityclo.ca/pages/customer-gallery"
+    },
+    {
+      "url": "/community/troop-06-a62420b9.jpg",
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_6408_2048x2048.jpg?v=1764462304",
+      "bytes": 178749,
+      "width": 1290,
+      "height": 1950,
+      "usage": "community",
+      "sourcePage": "https://infinityclo.ca/pages/customer-gallery"
+    },
+    {
+      "url": "/community/troop-07-69df1da1.jpg",
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_2147_2048x2048.jpg?v=1764304852",
+      "bytes": 240140,
+      "width": 1320,
+      "height": 2115,
+      "usage": "community",
+      "sourcePage": "https://infinityclo.ca/pages/customer-gallery"
+    },
+    {
+      "url": "/community/troop-08-67b7f1b4.jpg",
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_2162_2048x2048.jpg?v=1764304852",
+      "bytes": 222592,
+      "width": 1320,
+      "height": 2130,
+      "usage": "community",
+      "sourcePage": "https://infinityclo.ca/pages/customer-gallery"
+    },
+    {
+      "url": "/community/troop-09-f80a3175.jpg",
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_7809_2048x2048.png?v=1764304857",
+      "bytes": 366161,
+      "width": 1179,
+      "height": 1931,
+      "usage": "community",
+      "sourcePage": "https://infinityclo.ca/pages/customer-gallery",
+      "note": "Re-encoded PNG to JPEG (quality 86) for delivery; pixels otherwise untouched."
+    },
+    {
+      "url": "/community/troop-10-ea3ee901.jpg",
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_7811_2048x2048.png?v=1764304857",
+      "bytes": 378030,
+      "width": 1320,
+      "height": 2089,
+      "usage": "community",
+      "sourcePage": "https://infinityclo.ca/pages/customer-gallery",
+      "note": "Re-encoded PNG to JPEG (quality 86) for delivery; pixels otherwise untouched."
+    },
+    {
+      "url": "/community/troop-11-791f1c9f.jpg",
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_2167_2048x2048.jpg?v=1764309584",
+      "bytes": 285588,
+      "width": 1320,
+      "height": 2015,
+      "usage": "community",
+      "sourcePage": "https://infinityclo.ca/pages/customer-gallery"
+    },
+    {
+      "url": "/community/troop-12-34c294ae.jpg",
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_7828_2048x2048.png?v=1764304857",
+      "bytes": 484415,
+      "width": 1320,
+      "height": 2111,
+      "usage": "community",
+      "sourcePage": "https://infinityclo.ca/pages/customer-gallery",
+      "note": "Re-encoded PNG to JPEG (quality 86) for delivery; pixels otherwise untouched."
+    },
+    {
+      "url": "/community/troop-13-55b6894e.jpg",
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_7820_2048x2048.png?v=1764304856",
+      "bytes": 330964,
+      "width": 1170,
+      "height": 1902,
+      "usage": "community",
+      "sourcePage": "https://infinityclo.ca/pages/customer-gallery",
+      "note": "Re-encoded PNG to JPEG (quality 86) for delivery; pixels otherwise untouched."
+    },
+    {
+      "url": "/community/troop-14-e93ac2e6.jpg",
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_7813_2048x2048.png?v=1764304856",
+      "bytes": 279345,
+      "width": 1320,
+      "height": 2121,
+      "usage": "community",
+      "sourcePage": "https://infinityclo.ca/pages/customer-gallery",
+      "note": "Re-encoded PNG to JPEG (quality 86) for delivery; pixels otherwise untouched."
+    },
+    {
+      "url": "/community/troop-15-13243564.jpg",
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_2163_2048x2048.jpg?v=1764309592",
+      "bytes": 463686,
+      "width": 1320,
+      "height": 2005,
+      "usage": "community",
+      "sourcePage": "https://infinityclo.ca/pages/customer-gallery"
+    },
+    {
+      "url": "/community/troop-16-e6e61f89.jpg",
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_7816_2048x2048.png?v=1764304856",
+      "bytes": 380503,
+      "width": 1320,
+      "height": 2112,
+      "usage": "community",
+      "sourcePage": "https://infinityclo.ca/pages/customer-gallery",
+      "note": "Re-encoded PNG to JPEG (quality 86) for delivery; pixels otherwise untouched."
+    },
+    {
+      "url": "/community/troop-17-f930d96a.jpg",
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_2168_2048x2048.jpg?v=1764309579",
+      "bytes": 196832,
+      "width": 1320,
+      "height": 1195,
+      "usage": "community",
+      "sourcePage": "https://infinityclo.ca/pages/customer-gallery"
+    },
+    {
+      "url": "/community/troop-18-71be94e8.jpg",
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_7812_2048x2048.png?v=1764304855",
+      "bytes": 251358,
+      "width": 1320,
+      "height": 2116,
+      "usage": "community",
+      "sourcePage": "https://infinityclo.ca/pages/customer-gallery",
+      "note": "Re-encoded PNG to JPEG (quality 86) for delivery; pixels otherwise untouched."
+    },
+    {
+      "url": "/community/troop-19-feef08b6.jpg",
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_7814_2048x2048.png?v=1764304856",
+      "bytes": 253532,
+      "width": 1320,
+      "height": 2112,
+      "usage": "community",
+      "sourcePage": "https://infinityclo.ca/pages/customer-gallery",
+      "note": "Re-encoded PNG to JPEG (quality 86) for delivery; pixels otherwise untouched."
+    },
+    {
+      "url": "/community/troop-20-ee03f592.jpg",
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_2170_2048x2048.jpg?v=1764309512",
+      "bytes": 362454,
+      "width": 1320,
+      "height": 1999,
+      "usage": "community",
+      "sourcePage": "https://infinityclo.ca/pages/customer-gallery"
+    },
+    {
+      "url": "/community/troop-21-f5611545.jpg",
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_7810_2048x2048.png?v=1764304856",
+      "bytes": 195286,
+      "width": 1320,
+      "height": 1987,
+      "usage": "community",
+      "sourcePage": "https://infinityclo.ca/pages/customer-gallery",
+      "note": "Re-encoded PNG to JPEG (quality 86) for delivery; pixels otherwise untouched."
+    },
+    {
+      "url": "/community/troop-22-9f382b09.jpg",
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_7825_2048x2048.png?v=1764304854",
+      "bytes": 212830,
+      "width": 1320,
+      "height": 1984,
+      "usage": "community",
+      "sourcePage": "https://infinityclo.ca/pages/customer-gallery",
+      "note": "Re-encoded PNG to JPEG (quality 86) for delivery; pixels otherwise untouched."
+    },
+    {
+      "url": "/community/troop-23-bec1a42a.jpg",
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_7818_2048x2048.png?v=1764304855",
+      "bytes": 169744,
+      "width": 1320,
+      "height": 1084,
+      "usage": "community",
+      "sourcePage": "https://infinityclo.ca/pages/customer-gallery",
+      "note": "Re-encoded PNG to JPEG (quality 86) for delivery; pixels otherwise untouched."
+    },
+    {
+      "url": "/community/troop-24-a8c1b915.jpg",
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_7821_2048x2048.png?v=1764304855",
+      "bytes": 223661,
+      "width": 1320,
+      "height": 2137,
+      "usage": "community",
+      "sourcePage": "https://infinityclo.ca/pages/customer-gallery",
+      "note": "Re-encoded PNG to JPEG (quality 86) for delivery; pixels otherwise untouched."
+    },
+    {
+      "url": "/community/troop-25-56d4817c.jpg",
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_7807_2048x2048.png?v=1764304855",
+      "bytes": 174472,
+      "width": 1320,
+      "height": 1999,
+      "usage": "community",
+      "sourcePage": "https://infinityclo.ca/pages/customer-gallery",
+      "note": "Re-encoded PNG to JPEG (quality 86) for delivery; pixels otherwise untouched."
+    },
+    {
+      "url": "/community/troop-26-3e079d64.jpg",
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_6270_2048x2048.jpg?v=1764304855",
+      "bytes": 364090,
+      "width": 1170,
+      "height": 2060,
+      "usage": "community",
+      "sourcePage": "https://infinityclo.ca/pages/customer-gallery"
+    },
+    {
+      "url": "/community/troop-27-fee462be.jpg",
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_7827_2048x2048.png?v=1764304855",
+      "bytes": 222798,
+      "width": 1320,
+      "height": 2111,
+      "usage": "community",
+      "sourcePage": "https://infinityclo.ca/pages/customer-gallery",
+      "note": "Re-encoded PNG to JPEG (quality 86) for delivery; pixels otherwise untouched."
+    },
+    {
+      "url": "/community/troop-28-f3f7a9fd.jpg",
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_7823_2048x2048.png?v=1764304855",
+      "bytes": 267755,
+      "width": 1320,
+      "height": 1999,
+      "usage": "community",
+      "sourcePage": "https://infinityclo.ca/pages/customer-gallery",
+      "note": "Re-encoded PNG to JPEG (quality 86) for delivery; pixels otherwise untouched."
+    },
+    {
+      "url": "/community/troop-29-ff6fa3e3.jpg",
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_7817_2048x2048.png?v=1764304855",
+      "bytes": 215838,
+      "width": 828,
+      "height": 1266,
+      "usage": "community",
+      "sourcePage": "https://infinityclo.ca/pages/customer-gallery",
+      "note": "Re-encoded PNG to JPEG (quality 86) for delivery; pixels otherwise untouched."
+    },
+    {
+      "url": "/community/troop-30-ab21d288.jpg",
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_7822_2048x2048.png?v=1764304855",
+      "bytes": 155945,
+      "width": 1320,
+      "height": 2049,
+      "usage": "community",
+      "sourcePage": "https://infinityclo.ca/pages/customer-gallery",
+      "note": "Re-encoded PNG to JPEG (quality 86) for delivery; pixels otherwise untouched."
+    },
+    {
+      "url": "/community/troop-31-c78d8e77.jpg",
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_7824_2048x2048.png?v=1764304854",
+      "bytes": 153271,
+      "width": 1320,
+      "height": 2006,
+      "usage": "community",
+      "sourcePage": "https://infinityclo.ca/pages/customer-gallery",
+      "note": "Re-encoded PNG to JPEG (quality 86) for delivery; pixels otherwise untouched."
+    },
+    {
+      "url": "/community/troop-32-c9e1329c.jpg",
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_2149_2048x2048.jpg?v=1764304853",
+      "bytes": 518298,
+      "width": 1320,
+      "height": 1993,
+      "usage": "community",
+      "sourcePage": "https://infinityclo.ca/pages/customer-gallery"
+    },
+    {
+      "url": "/community/troop-33-55c4389b.jpg",
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_2143_2048x2048.jpg?v=1764304853",
+      "bytes": 358515,
+      "width": 1320,
+      "height": 2007,
+      "usage": "community",
+      "sourcePage": "https://infinityclo.ca/pages/customer-gallery"
+    },
+    {
+      "url": "/community/troop-34-8234e4ae.jpg",
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_2155_2048x2048.jpg?v=1764304852",
+      "bytes": 293320,
+      "width": 1320,
+      "height": 1998,
+      "usage": "community",
+      "sourcePage": "https://infinityclo.ca/pages/customer-gallery"
+    },
+    {
+      "url": "/size-charts/tee-01-a59fef5d.png",
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/Untitled_Artwork_3_2048x2048.png?v=1715808184",
+      "bytes": 510951,
+      "width": 1600,
+      "height": 1600,
+      "usage": "size-chart",
+      "sourcePage": "https://infinityclo.ca/pages/tee-shirt-size-chart"
+    },
+    {
+      "url": "/size-charts/pullover-hoodie-01-d45573d8.png",
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/Untitled_Artwork_2.png?v=1737787818",
+      "bytes": 559922,
+      "width": 1600,
+      "height": 1600,
+      "usage": "size-chart",
+      "sourcePage": "https://infinityclo.ca/pages/pullover-hoodies"
+    },
+    {
+      "url": "/size-charts/zip-hoodie-01-03a0977d.png",
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/Untitled_Artwork_3_85226880-c58b-49a2-a423-2cf29d8800d8_1024x1024.png?v=1715827901",
+      "bytes": 454529,
+      "width": 1600,
+      "height": 1600,
+      "usage": "size-chart",
+      "sourcePage": "https://infinityclo.ca/pages/zip-up-hoodie-size-chart"
+    },
+    {
+      "url": "/size-charts/bottoms-01-790e0ae9.png",
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/Untitled_Artwork_6c937145-e645-4aaf-a75e-cc6614bc9a63_1024x1024.png?v=1715925956",
+      "bytes": 420966,
+      "width": 1600,
+      "height": 1600,
+      "usage": "size-chart",
+      "sourcePage": "https://infinityclo.ca/pages/bottom-size-chart"
+    },
+    {
+      "url": "/brand/bundle-of-2-01-03a0977d.png",
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/Untitled_Artwork_3_85226880-c58b-49a2-a423-2cf29d8800d8_1024x1024.png?v=1715827901",
+      "bytes": 454529,
+      "width": 1600,
+      "height": 1600,
+      "usage": "offer-artwork",
+      "sourcePage": "https://infinityclo.ca/pages/bundle-of-2"
+    },
+    {
+      "url": "/brand/bundle-of-2-02-790e0ae9.png",
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/Untitled_Artwork_6c937145-e645-4aaf-a75e-cc6614bc9a63_1024x1024.png?v=1715925956",
+      "bytes": 420966,
+      "width": 1600,
+      "height": 1600,
+      "usage": "offer-artwork",
+      "sourcePage": "https://infinityclo.ca/pages/bundle-of-2"
+    },
+    {
+      "url": "/brand/home-01-671567d9.png",
+      "sourceUrl": "https://infinityclo.ca/cdn/shop/files/Untitled_Artwork_5_a5401529-3027-40ac-9795-1abc62b83c87.png",
+      "bytes": 277327,
+      "width": 1600,
+      "height": 1600,
+      "usage": "brand-artwork",
+      "sourcePage": "https://infinityclo.ca/"
+    },
+    {
+      "url": "/brand/home-02-5c6dd7d8.jpg",
+      "sourceUrl": "https://infinityclo.ca/cdn/shop/files/Untitled_Artwork_2_aa09d5c1-6537-4e4a-893a-ef7d44d4af41.jpg",
+      "bytes": 212840,
+      "width": 1600,
+      "height": 339,
+      "usage": "brand-artwork",
+      "sourcePage": "https://infinityclo.ca/"
+    }
+  ],
+  "failures": []
+}
