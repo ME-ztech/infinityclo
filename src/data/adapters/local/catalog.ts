@@ -164,8 +164,24 @@ function searchScore(product: Product, term: string): number {
   return score;
 }
 
-export class LocalCatalogRepository implements CatalogRepository {
+export interface CatalogData {
+  readonly products: readonly Product[];
+  readonly collections: readonly Collection[];
+}
+
+/**
+ * A catalogue repository over an in-memory product list.
+ *
+ * The list comes from a loader rather than a module constant, so the same
+ * filtering, sorting, faceting and search serve two sources: the committed
+ * snapshot (`localCatalogRepository`) and the live Shopify overlay
+ * (`src/data/adapters/shopify/catalog.ts`).
+ */
+export class ArrayCatalogRepository implements CatalogRepository {
+  constructor(private readonly load: () => Promise<CatalogData>) {}
+
   async listProducts(query: ProductQuery = {}): Promise<ProductQueryResult> {
+    const { products } = await this.load();
     const matched = products.filter((product) => matchesFilters(product, query.filters));
     const sorted = [...matched].sort(compareProducts(query.sort ?? 'featured'));
 
@@ -183,10 +199,12 @@ export class LocalCatalogRepository implements CatalogRepository {
   }
 
   async getProductBySlug(slug: string): Promise<Product | null> {
+    const { products } = await this.load();
     return products.find((product) => product.slug === slug) ?? null;
   }
 
   async getProductsBySlugs(slugs: readonly string[]): Promise<readonly Product[]> {
+    const { products } = await this.load();
     const bySlug = new Map(products.map((product) => [product.slug, product]));
     return slugs
       .map((slug) => bySlug.get(slug))
@@ -194,6 +212,7 @@ export class LocalCatalogRepository implements CatalogRepository {
   }
 
   async listCollections(): Promise<readonly Collection[]> {
+    const { collections } = await this.load();
     return [...collections].sort((a, b) => {
       const at = a.releasedAt ? Date.parse(a.releasedAt) : 0;
       const bt = b.releasedAt ? Date.parse(b.releasedAt) : 0;
@@ -202,11 +221,13 @@ export class LocalCatalogRepository implements CatalogRepository {
   }
 
   async getCollectionBySlug(slug: string): Promise<Collection | null> {
+    const { collections } = await this.load();
     return collections.find((collection) => collection.slug === slug) ?? null;
   }
 
   async searchProducts(term: string, limit = 8): Promise<readonly Product[]> {
     if (!term.trim()) return [];
+    const { products } = await this.load();
     return products
       .map((product) => ({ product, score: searchScore(product, term) }))
       .filter((entry) => entry.score > 0)
@@ -220,15 +241,20 @@ export class LocalCatalogRepository implements CatalogRepository {
   }
 
   async listProductSlugs(): Promise<readonly string[]> {
+    const { products } = await this.load();
     return products.map((product) => product.slug);
   }
 
   async listCollectionSlugs(): Promise<readonly string[]> {
+    const { collections } = await this.load();
     return collections.map((collection) => collection.slug);
   }
 }
 
-export const localCatalogRepository = new LocalCatalogRepository();
+export const localCatalogRepository = new ArrayCatalogRepository(async () => ({
+  products,
+  collections,
+}));
 
 /** Re-exported so filter UIs can label option groups consistently. */
 export { isColourOption, isSizeOption };

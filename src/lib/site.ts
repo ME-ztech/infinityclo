@@ -21,11 +21,11 @@ export const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '') ?? 'https://infinityclo.ca';
 
 /**
- * Preview mode. The public build has no payment infrastructure, so checkout is
- * disabled and the storefront says so plainly rather than presenting a buy flow
- * that cannot complete. Phase 2 flips this by wiring a real payment provider.
+ * Checkout switch. Checkout is Shopify-hosted and needs no credential, so it is
+ * on by default. Set NEXT_PUBLIC_CHECKOUT_ENABLED=false to turn the storefront
+ * into a browse-only preview (for example on a design-review deployment).
  */
-export const CHECKOUT_ENABLED = process.env.NEXT_PUBLIC_CHECKOUT_ENABLED === 'true';
+export const CHECKOUT_ENABLED = process.env.NEXT_PUBLIC_CHECKOUT_ENABLED !== 'false';
 
 export interface NavLink {
   readonly label: string;

@@ -45,6 +45,21 @@ export function createEmptyPersistedCart(): PersistedCart {
 }
 
 /**
+ * Validates an untrusted cart value (from storage or a request body). Returns
+ * an empty cart for anything that is not cart-shaped, and drops malformed lines.
+ */
+export function parsePersistedCartValue(parsed: unknown): PersistedCart {
+  if (typeof parsed !== 'object' || parsed === null) return createEmptyPersistedCart();
+  const cart = parsed as Record<string, unknown>;
+  if (typeof cart.id !== 'string' || !Array.isArray(cart.lines)) return createEmptyPersistedCart();
+  return {
+    id: cart.id.slice(0, 80),
+    lines: cart.lines.filter(isPersistedLine).slice(0, 50),
+    updatedAt: typeof cart.updatedAt === 'string' ? cart.updatedAt : new Date().toISOString(),
+  };
+}
+
+/**
  * Reads and validates the stored cart. Anything malformed is discarded rather
  * than partially trusted — a corrupt cart should empty, not throw on render.
  */
