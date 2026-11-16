@@ -17,5 +17,8 @@ export default defineConfig({
     globals: true,
     include: ['src/**/*.test.ts', 'src/**/*.test.tsx'],
     setupFiles: ['./vitest.setup.ts'],
+    // scrypt password hashing and PGlite migrations are deliberately slow.
+    testTimeout: 30_000,
+    hookTimeout: 60_000,
   },
 });

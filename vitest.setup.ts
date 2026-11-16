@@ -7,5 +7,6 @@ import { afterEach, vi } from 'vitest';
 afterEach(() => {
   vi.restoreAllMocks();
   vi.unstubAllGlobals();
-  window.localStorage.clear();
+  // Server integration suites run in the node environment, where there is no window.
+  if (typeof window !== 'undefined') window.localStorage.clear();
 });

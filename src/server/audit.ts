@@ -38,8 +38,14 @@ export function maskMetadata(value: unknown, depth = 0): unknown {
   return value;
 }
 
-export async function audit(entry: AuditEntry): Promise<void> {
-  const db = await getDb();
+type Inserter = Pick<Awaited<ReturnType<typeof getDb>>, 'insert'>;
+
+/**
+ * Writes an audit entry. Pass `executor` (a transaction) when auditing inside a
+ * transaction so the entry commits or rolls back with the change it describes.
+ */
+export async function audit(entry: AuditEntry, executor?: Inserter): Promise<void> {
+  const db = executor ?? (await getDb());
   await db.insert(auditLog).values({
     actorId: entry.actor?.id ?? null,
     actorEmail: entry.actor?.email ?? null,
