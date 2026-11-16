@@ -1,0 +1,333 @@
+{
+  "importedAt": "2026-11-16T21:43:37.491Z",
+  "source": "https://infinityclo.ca",
+  "productCount": 33,
+  "collectionCount": 1,
+  "mediaCount": 90,
+  "assets": {
+    "linked": 90,
+    "downloaded": 0,
+    "cached": 0,
+    "remoteFallback": 0,
+    "failed": 0
+  },
+  "productsWithoutMedia": [],
+  "productsWithSingleImage": [
+    "infnity-crew-socks",
+    "infnitys-signature-beanie",
+    "infnitys-signature-ivy-moss-patchwork-sweatpants",
+    "infnitys-signature-patchwork-sweatpants-copy",
+    "infnitys-ashen-grey-varsity-hoodie",
+    "infnitys-albastar-varsity-hoodie",
+    "infnitys-black-varsity-hoodie",
+    "infinitys-signature-ivy-moss-beanie-copy-1",
+    "infinity-cozy-cove-zip-sweatpants"
+  ],
+  "factGaps": [
+    {
+      "slug": "infnitys-iced-ivory-pearl-tank",
+      "missing": [
+        "fit",
+        "care",
+        "origin"
+      ]
+    },
+    {
+      "slug": "infnitys-iced-raven-tank",
+      "missing": [
+        "fit",
+        "care",
+        "origin"
+      ]
+    },
+    {
+      "slug": "infnitys-iced-soft-blush-tank",
+      "missing": [
+        "fit",
+        "care",
+        "origin"
+      ]
+    },
+    {
+      "slug": "infnitys-reversible-graphite-blank-sweatpants",
+      "missing": [
+        "materials",
+        "fit",
+        "care",
+        "origin"
+      ]
+    },
+    {
+      "slug": "infnitys-obsidian-blank-sweatpants",
+      "missing": [
+        "materials",
+        "fit",
+        "care",
+        "origin"
+      ]
+    },
+    {
+      "slug": "infnitys-reversible-hoodie",
+      "missing": [
+        "materials",
+        "fit",
+        "care",
+        "origin"
+      ]
+    },
+    {
+      "slug": "infnitys-reversible-obsidian-blank-hoodie",
+      "missing": [
+        "materials",
+        "fit",
+        "care",
+        "origin"
+      ]
+    },
+    {
+      "slug": "infnity-crew-socks",
+      "missing": [
+        "materials",
+        "fit",
+        "care",
+        "weight",
+        "origin",
+        "model sizing"
+      ]
+    },
+    {
+      "slug": "infnitys-city-bridge-keychain",
+      "missing": [
+        "materials",
+        "fit",
+        "care",
+        "weight",
+        "origin",
+        "model sizing"
+      ]
+    },
+    {
+      "slug": "lucki-star-infni-tee",
+      "missing": [
+        "materials",
+        "fit",
+        "care",
+        "origin",
+        "model sizing"
+      ]
+    },
+    {
+      "slug": "lil-yachty-infni-tee-copy",
+      "missing": [
+        "materials",
+        "fit",
+        "care",
+        "origin",
+        "model sizing"
+      ]
+    },
+    {
+      "slug": "infnitys-signature-beanie",
+      "missing": [
+        "materials",
+        "fit",
+        "care",
+        "weight",
+        "origin",
+        "model sizing"
+      ]
+    },
+    {
+      "slug": "infnitys-cherry-blosson-wildcard-hoodie-2-1",
+      "missing": [
+        "fit",
+        "care",
+        "origin",
+        "model sizing"
+      ]
+    },
+    {
+      "slug": "infnitys-cherry-blosson-wildcard-hoodie-2-0",
+      "missing": [
+        "fit",
+        "care",
+        "origin",
+        "model sizing"
+      ]
+    },
+    {
+      "slug": "infnitys-signature-ivy-moss-patchwork-hoodie",
+      "missing": [
+        "fit",
+        "care",
+        "origin",
+        "model sizing"
+      ]
+    },
+    {
+      "slug": "infnitys-signature-obsidian-patchwork-hoodie",
+      "missing": [
+        "fit",
+        "care",
+        "origin",
+        "model sizing"
+      ]
+    },
+    {
+      "slug": "infnitys-signature-ivy-moss-patchwork-sweatpants",
+      "missing": [
+        "care",
+        "origin",
+        "model sizing"
+      ]
+    },
+    {
+      "slug": "infnitys-signature-patchwork-sweatpants-copy",
+      "missing": [
+        "care",
+        "origin",
+        "model sizing"
+      ]
+    },
+    {
+      "slug": "infnitys-ashen-grey-varsity-hoodie",
+      "missing": [
+        "fit",
+        "care",
+        "origin",
+        "model sizing"
+      ]
+    },
+    {
+      "slug": "infnitys-albastar-varsity-hoodie",
+      "missing": [
+        "fit",
+        "care",
+        "origin",
+        "model sizing"
+      ]
+    },
+    {
+      "slug": "infnitys-black-varsity-hoodie",
+      "missing": [
+        "fit",
+        "care",
+        "origin",
+        "model sizing"
+      ]
+    },
+    {
+      "slug": "thrill-seekers-and-money-maker-infni-tee",
+      "missing": [
+        "materials",
+        "fit",
+        "care",
+        "origin",
+        "model sizing"
+      ]
+    },
+    {
+      "slug": "infnitys-mpnw-sleeved-shirt",
+      "missing": [
+        "fit",
+        "care",
+        "origin"
+      ]
+    },
+    {
+      "slug": "infni-tees-lecaptain-america",
+      "missing": [
+        "fit",
+        "care",
+        "origin"
+      ]
+    },
+    {
+      "slug": "infni-tees-chaos",
+      "missing": [
+        "fit",
+        "care",
+        "origin"
+      ]
+    },
+    {
+      "slug": "infnitys-stellar-ops-camo-jorts-copy",
+      "missing": [
+        "materials",
+        "fit",
+        "care",
+        "weight",
+        "origin"
+      ]
+    },
+    {
+      "slug": "infnitys-stellar-ops-camo-jorts",
+      "missing": [
+        "materials",
+        "fit",
+        "care",
+        "weight",
+        "origin"
+      ]
+    },
+    {
+      "slug": "infnitys-obsidian-jersey",
+      "missing": [
+        "materials",
+        "fit",
+        "care",
+        "origin"
+      ]
+    },
+    {
+      "slug": "infnitys-crimson-static-jersey-copy",
+      "missing": [
+        "materials",
+        "fit",
+        "care",
+        "origin"
+      ]
+    },
+    {
+      "slug": "infnitys-crimson-static-jersey",
+      "missing": [
+        "materials",
+        "fit",
+        "care",
+        "weight",
+        "origin"
+      ]
+    },
+    {
+      "slug": "infinitys-signature-ivy-moss-beanie-copy-1",
+      "missing": [
+        "materials",
+        "fit",
+        "care",
+        "weight",
+        "origin",
+        "model sizing"
+      ]
+    },
+    {
+      "slug": "infinitys-concrete-boy-tee",
+      "missing": [
+        "materials",
+        "fit",
+        "care",
+        "origin",
+        "model sizing"
+      ]
+    },
+    {
+      "slug": "infinity-cozy-cove-zip-sweatpants",
+      "missing": [
+        "fit",
+        "care",
+        "origin",
+        "model sizing"
+      ]
+    }
+  ],
+  "warnings": []
+}

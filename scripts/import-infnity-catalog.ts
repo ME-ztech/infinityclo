@@ -62,6 +62,15 @@ const MAX_IMAGE_WIDTH = 1600;
 /** Concurrent image downloads. Enough to be quick, few enough to stay polite. */
 const DOWNLOAD_CONCURRENCY = 6;
 
+/**
+ * `remote` (default): reference each photograph on the owner's own Shopify CDN —
+ * the same URLs the Storefront API returns once it is connected, because Shopify
+ * remains the system of record for product media. Nothing is copied into git.
+ * `local`: download into `public/products/` (the 1.x behaviour), for a fully
+ * self-contained snapshot.
+ */
+const ASSET_MODE: 'remote' | 'local' = process.env.IMPORT_ASSETS === 'local' ? 'local' : 'remote';
+
 /** Collection handles that mean "not current inventory". */
 const ARCHIVE_HANDLE = /\b(vault|archive|archived|past|sold-?out)\b/i;
 
@@ -124,7 +133,7 @@ interface ShopifyCollection {
  * Reporting
  * ------------------------------------------------------------------ */
 
-type AssetStatus = 'downloaded' | 'cached' | 'remote-fallback' | 'failed';
+type AssetStatus = 'downloaded' | 'cached' | 'linked' | 'remote-fallback' | 'failed';
 
 interface AssetRecord {
   localPath: string;
@@ -143,15 +152,38 @@ const factGaps: Array<{ slug: string; missing: string[] }> = [];
  * Fetch helpers
  * ------------------------------------------------------------------ */
 
+/**
+ * Pins the Canadian market. The store runs Shopify Markets, which converts the
+ * public JSON into the *visitor's* currency by IP — an import run from a US
+ * build host was served USD-converted numbers labelled as nothing at all. The
+ * `localization` cookie selects the CA market explicitly, and `assertCurrency`
+ * below refuses to import unless the store confirms CAD for this session.
+ */
+const MARKET_COOKIE = 'localization=CA; cart_currency=CAD';
+
 async function fetchJson<T>(url: string): Promise<T> {
   const response = await fetch(url, {
-    headers: { accept: 'application/json', 'user-agent': 'INFNITY-catalog-import/1.1' },
+    headers: {
+      accept: 'application/json',
+      'user-agent': 'INFNITY-catalog-import/1.2',
+      cookie: MARKET_COOKIE,
+    },
     signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
   });
   if (!response.ok) {
     throw new Error(`GET ${url} -> HTTP ${response.status} ${response.statusText}`);
   }
   return (await response.json()) as T;
+}
+
+async function assertCurrency(): Promise<void> {
+  const cart = await fetchJson<{ currency?: string }>(`${ORIGIN}/cart.js`);
+  if (cart.currency !== CURRENCY) {
+    throw new Error(
+      `The store answered in ${cart.currency ?? 'an unknown currency'}, not ${CURRENCY}. ` +
+        'Refusing to import converted prices.',
+    );
+  }
 }
 
 /** Walks Shopify's paginated products endpoint until it runs dry. */
@@ -257,6 +289,13 @@ async function downloadAsset(
   const directory = path.join(PRODUCT_ASSET_ROOT, productSlug);
   const destination = path.join(directory, filename);
   const publicPath = `/products/${productSlug}/${filename}`;
+
+  if (ASSET_MODE === 'remote') {
+    // Strip Shopify's cache-busting `v=` query so the URL is stable across imports.
+    const url = sourceUrl.split('?')[0] ?? sourceUrl;
+    assetLog.push({ localPath: url, sourceUrl, productSlug, alt, status: 'linked' });
+    return { url, status: 'linked' };
+  }
 
   // Re-running the importer must not re-download the whole catalogue.
   if (await exists(destination)) {
@@ -597,6 +636,7 @@ async function writeSnapshot(name: string, data: unknown): Promise<void> {
 async function writeProvenance(products: readonly Product[]): Promise<void> {
   const byStatus = (status: AssetStatus) => assetLog.filter((asset) => asset.status === status);
   const localised = [...byStatus('downloaded'), ...byStatus('cached')];
+  const linked = byStatus('linked');
   const remote = byStatus('remote-fallback');
 
   const lines = [
@@ -608,13 +648,21 @@ async function writeProvenance(products: readonly Product[]): Promise<void> {
     `Source: ${ORIGIN}`,
     `Products: ${products.length}`,
     `Photographs localised: ${localised.length}`,
+    `Photographs referenced on the owner's Shopify CDN: ${linked.length}`,
     `Still hotlinked (localisation failed): ${remote.length}`,
     '',
     "All imagery below originates from the brand's own storefront and is used with",
-    "the project owner's authorisation. Files are stored in the repository rather",
-    'than hotlinked, so the storefront has no runtime dependency on the source',
-    'site. Images are resized for delivery and cropped for layout only; no edit',
-    'alters how a garment or a person actually appears.',
+    "the project owner's authorisation. Shopify remains the system of record for",
+    'product media, so by default photographs are referenced on the store\'s own',
+    'Shopify CDN (`IMPORT_ASSETS=local` copies them into the repository instead).',
+    'Images are resized for delivery and cropped for layout only; no edit alters',
+    'how a garment or a person actually appears.',
+    '',
+    '## Photography on the owner\'s Shopify CDN',
+    '',
+    '| URL | Product | Alt text |',
+    '| --- | --- | --- |',
+    ...linked.map((a) => `| ${a.sourceUrl.split('?')[0]} | ${a.productSlug} | ${a.alt} |`),
     '',
     '## Localised photography',
     '',
@@ -662,6 +710,7 @@ async function writeManifest(
     collectionCount: collections.length,
     mediaCount: products.reduce((total, product) => total + product.media.length, 0),
     assets: {
+      linked: byStatus('linked'),
       downloaded: byStatus('downloaded'),
       cached: byStatus('cached'),
       remoteFallback: byStatus('remote-fallback'),
@@ -686,7 +735,8 @@ async function main(): Promise<void> {
 
   let sourceProducts: ShopifyProduct[];
   try {
-    console.log('Fetching products...');
+    await assertCurrency();
+    console.log(`Market pinned to ${CURRENCY}. Fetching products...`);
     sourceProducts = await fetchAllProducts();
   } catch (error) {
     console.error(`\nCould not reach the storefront: ${(error as Error).message}`);
@@ -799,12 +849,15 @@ async function main(): Promise<void> {
   await writeProvenance(products);
 
   const localised = assetLog.filter((a) => a.status === 'downloaded' || a.status === 'cached');
+  const linked = assetLog.filter((a) => a.status === 'linked');
   const remote = assetLog.filter((a) => a.status === 'remote-fallback');
 
   console.log('\n--- Import summary ---');
   console.log(`Products:     ${products.length}`);
   console.log(`Collections:  ${collections.length}`);
-  console.log(`Photographs:  ${localised.length} localised, ${remote.length} still remote`);
+  console.log(
+    `Photographs:  ${linked.length} on Shopify CDN, ${localised.length} localised, ${remote.length} fallback`,
+  );
   console.log(`Galleries:    ${products.filter((p) => p.media.length > 1).length} with 2+ images`);
   console.log(`Warnings:     ${warnings.length}`);
 

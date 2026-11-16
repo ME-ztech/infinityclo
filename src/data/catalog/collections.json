@@ -1,1 +1,47 @@
-[]
+[
+  {
+    "slug": "all",
+    "name": "All Products",
+    "description": null,
+    "heroMedia": null,
+    "dropLabel": null,
+    "releasedAt": null,
+    "isArchived": false,
+    "productSlugs": [
+      "lil-yachty-infni-tee-copy",
+      "infni-tees-chaos",
+      "infni-tees-lecaptain-america",
+      "infnity-crew-socks",
+      "infnitys-crimson-static-jersey",
+      "infnitys-reversible-graphite-blank-sweatpants",
+      "infnitys-iced-ivory-pearl-tank",
+      "infnitys-iced-raven-tank",
+      "infnitys-iced-soft-blush-tank",
+      "infnitys-crimson-static-jersey-copy",
+      "infnitys-obsidian-jersey",
+      "infnitys-mpnw-sleeved-shirt",
+      "infnitys-stellar-ops-camo-jorts-copy",
+      "infnitys-obsidian-blank-sweatpants",
+      "infnitys-stellar-ops-camo-jorts",
+      "infnitys-reversible-hoodie",
+      "infnitys-reversible-obsidian-blank-hoodie",
+      "infnitys-signature-ivy-moss-patchwork-hoodie",
+      "infnitys-signature-ivy-moss-patchwork-sweatpants",
+      "infnitys-signature-obsidian-patchwork-hoodie",
+      "infnitys-signature-patchwork-sweatpants-copy",
+      "infnitys-black-varsity-hoodie",
+      "infnitys-albastar-varsity-hoodie",
+      "infnitys-ashen-grey-varsity-hoodie",
+      "infnitys-cherry-blosson-wildcard-hoodie-2-0",
+      "infnitys-cherry-blosson-wildcard-hoodie-2-1",
+      "infnitys-city-bridge-keychain",
+      "infinitys-signature-ivy-moss-beanie-copy-1",
+      "infnitys-signature-beanie",
+      "infinitys-concrete-boy-tee",
+      "lucki-star-infni-tee",
+      "thrill-seekers-and-money-maker-infni-tee",
+      "infinity-cozy-cove-zip-sweatpants"
+    ],
+    "legacyUrl": "https://infinityclo.ca/collections/all"
+  }
+]
