@@ -1,1 +1,101 @@
-[]
+[
+  {
+    "id": "straight-cut-bottoms",
+    "name": "Straight cut bottoms",
+    "audience": "unisex",
+    "sizes": ["S", "M", "L", "XL", "2XL"],
+    "rows": [
+      {
+        "label": "Hip",
+        "unit": "in",
+        "measurements": [
+          { "size": "S", "value": 39 },
+          { "size": "M", "value": 40 },
+          { "size": "L", "value": 43 },
+          { "size": "XL", "value": 45 },
+          { "size": "2XL", "value": 47 }
+        ]
+      },
+      {
+        "label": "Waist",
+        "unit": "in",
+        "measurements": [
+          { "size": "S", "value": "30–32" },
+          { "size": "M", "value": "32–34" },
+          { "size": "L", "value": "34–36" },
+          { "size": "XL", "value": "36–38" },
+          { "size": "2XL", "value": "38–40" }
+        ]
+      },
+      {
+        "label": "Length",
+        "unit": "in",
+        "measurements": [
+          { "size": "S", "value": 40 },
+          { "size": "M", "value": 41 },
+          { "size": "L", "value": 42 },
+          { "size": "XL", "value": 43 },
+          { "size": "2XL", "value": 44 }
+        ]
+      },
+      {
+        "label": "Leg opening",
+        "unit": "in",
+        "measurements": [
+          { "size": "S", "value": 22.75 },
+          { "size": "M", "value": 23.75 },
+          { "size": "L", "value": 24.75 },
+          { "size": "XL", "value": 25.75 },
+          { "size": "2XL", "value": 26.75 }
+        ]
+      }
+    ],
+    "notes": "Garment measurements published by INFNITY on the \"bottom size chart\" page. The chart labels the largest size XXL; it is sold as 2XL.",
+    "isPending": false,
+    "sourceUrl": "https://infinityclo.ca/pages/bottom-size-chart"
+  },
+  {
+    "id": "zip-hoodies",
+    "name": "Zip hoodies",
+    "audience": "unisex",
+    "sizes": ["S", "M", "L", "XL", "2XL"],
+    "rows": [
+      {
+        "label": "Length",
+        "unit": "in",
+        "measurements": [
+          { "size": "S", "value": 24.5 },
+          { "size": "M", "value": 25 },
+          { "size": "L", "value": 25.5 },
+          { "size": "XL", "value": 26 },
+          { "size": "2XL", "value": 26.5 }
+        ]
+      },
+      {
+        "label": "Width",
+        "unit": "in",
+        "measurements": [
+          { "size": "S", "value": 24 },
+          { "size": "M", "value": 25 },
+          { "size": "L", "value": 26 },
+          { "size": "XL", "value": 27 },
+          { "size": "2XL", "value": 28 }
+        ]
+      },
+      {
+        "label": "Sleeve length",
+        "unit": "in",
+        "measurements": [
+          { "size": "S", "value": 25 },
+          { "size": "M", "value": 25.5 },
+          { "size": "L", "value": 26 },
+          { "size": "XL", "value": 26.5 },
+          { "size": "2XL", "value": 27 }
+        ]
+      }
+    ],
+    "notes": "Garment measurements published by INFNITY on the \"bundle of 2\" page. The chart labels the largest size XXL; it is sold as 2XL.",
+    "isPending": false,
+    "sourceUrl": "https://infinityclo.ca/pages/bundle-of-2"
+  }
+]

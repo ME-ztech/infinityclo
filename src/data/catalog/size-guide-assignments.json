@@ -1,0 +1,7 @@
+{
+  "_comment": "Product -> size guide. Only products whose own copy matches the chart are assigned (patchwork sweatpants: 'straight-legged bottoms'; patchwork hoodies: 'Zipper'). Admin -> Content -> Size guides can assign more.",
+  "infnitys-signature-ivy-moss-patchwork-sweatpants": "straight-cut-bottoms",
+  "infnitys-signature-patchwork-sweatpants-copy": "straight-cut-bottoms",
+  "infnitys-signature-ivy-moss-patchwork-hoodie": "zip-hoodies",
+  "infnitys-signature-obsidian-patchwork-hoodie": "zip-hoodies"
+}

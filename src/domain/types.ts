@@ -150,7 +150,11 @@ export interface Collection {
  */
 export interface SizeGuideMeasurement {
   readonly size: string;
-  readonly value: number | null;
+  /**
+   * A number, or a range exactly as the brand printed it (e.g. "30–32" for a
+   * drawstring waist). Null when unconfirmed.
+   */
+  readonly value: number | string | null;
 }
 
 export interface SizeGuideRow {
@@ -159,9 +163,15 @@ export interface SizeGuideRow {
   readonly measurements: readonly SizeGuideMeasurement[];
 }
 
+export type SizeGuideAudience = 'unisex' | 'mens' | 'womens';
+
 export interface SizeGuide {
   readonly id: string;
   readonly name: string;
+  /** Who the measurements are cut for. A women's guide is only ever published from brand data. */
+  readonly audience?: SizeGuideAudience;
+  /** Where the brand published these numbers, for provenance. */
+  readonly sourceUrl?: string | null;
   readonly sizes: readonly string[];
   readonly rows: readonly SizeGuideRow[];
   readonly notes: string | null;

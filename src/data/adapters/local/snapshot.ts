@@ -33,6 +33,7 @@ import campaignsJson from '@/data/catalog/campaigns.json';
 import collectionsJson from '@/data/catalog/collections.json';
 import editorialJson from '@/data/catalog/editorial.json';
 import productsJson from '@/data/catalog/products.json';
+import sizeGuideAssignmentsJson from '@/data/catalog/size-guide-assignments.json';
 import sizeGuidesJson from '@/data/catalog/size-guides.json';
 import ugcJson from '@/data/catalog/ugc.json';
 import { seedCollections, seedProducts } from '@/data/catalog/seed';
@@ -55,7 +56,21 @@ export const catalogSource: CatalogSource = hasImport
     ? 'seed'
     : 'empty';
 
-export const products: readonly Product[] = hasImport ? importedProducts : seedProducts;
+/**
+ * Size guides are assigned by product handle in `size-guide-assignments.json`
+ * (the imported feed has no such field). Only products whose own copy matches a
+ * published chart are listed there.
+ */
+const sizeGuideAssignments = sizeGuideAssignmentsJson as Readonly<Record<string, string>>;
+
+function withSizeGuide(product: Product): Product {
+  const assigned = sizeGuideAssignments[product.slug];
+  return assigned && !product.sizeGuideId ? { ...product, sizeGuideId: assigned } : product;
+}
+
+export const products: readonly Product[] = (hasImport ? importedProducts : seedProducts).map(
+  withSizeGuide,
+);
 
 /**
  * Collections follow the products. Serving imported collections alongside seed

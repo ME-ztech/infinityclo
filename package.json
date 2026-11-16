@@ -2,7 +2,7 @@
   "name": "infnity-storefront",
   "version": "1.1.0",
   "private": true,
-  "description": "INFNITY — digital flagship storefront",
+  "description": "INFNITY \u2014 digital flagship storefront",
   "scripts": {
     "dev": "next dev",
     "prebuild": "node scripts/prepare-catalog.mjs",
@@ -15,12 +15,18 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "e2e": "playwright test",
-    "import:catalog": "tsx scripts/import-infnity-catalog.ts"
+    "import:catalog": "NODE_USE_ENV_PROXY=1 tsx scripts/import-infnity-catalog.ts",
+    "import:content": "NODE_USE_ENV_PROXY=1 tsx scripts/import-legacy-content.ts"
   },
   "dependencies": {
-    "next": "^16.3.0",
+    "@electric-sql/pglite": "^0.5.16",
+    "drizzle-orm": "^0.45.4",
+    "next": "^16.4.6",
+    "pg": "^8.23.1",
     "react": "^19.2.8",
-    "react-dom": "^19.2.8"
+    "react-dom": "^19.2.8",
+    "server-only": "^0.0.1",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@playwright/test": "^1.62.1",
@@ -28,11 +34,14 @@
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.4",
     "@types/node": "^26.2.0",
+    "@types/pg": "^8.23.1",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
     "@vitejs/plugin-react": "^6.0.5",
+    "@vitest/mocker": "^5.1.0",
+    "drizzle-kit": "^0.31.11",
     "eslint": "^9.39.5",
-    "eslint-config-next": "^16.3.0",
+    "eslint-config-next": "^16.4.6",
     "jsdom": "^30.0.1",
     "postcss": "^8.5.26",
     "prettier": "^3.9.6",
@@ -40,7 +49,7 @@
     "tailwindcss": "^4.3.3",
     "tsx": "^4.23.12",
     "typescript": "^6.0.3",
-    "vitest": "^4.1.10"
+    "vitest": "^5.1.0"
   },
   "engines": {
     "node": ">=20.9.0"
