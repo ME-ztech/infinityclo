@@ -281,7 +281,10 @@ export interface ProductWriteInput {
     sku: string | null;
     barcode: string | null;
     weightGrams: number | null;
+    /** Only used when creating: starting "available" quantity at `initialLocationId`. */
+    initialQuantity?: number | null;
   }>;
+  initialLocationId?: string | null;
   /** New images by URL (already uploaded to Shopify or publicly reachable). */
   newMedia: Array<{ url: string; alt: string }>;
   /** Brand-authored garment facts shown in the PDP accordions. */
@@ -344,6 +347,9 @@ export async function saveProduct(input: ProductWriteInput): Promise<{ id: strin
             tracked: true,
             ...(variant.weightGrams ? { measurement: { weight: { value: variant.weightGrams, unit: 'GRAMS' } } } : {}),
           },
+          ...(!input.id && input.initialLocationId && variant.initialQuantity !== null && variant.initialQuantity !== undefined
+            ? { inventoryQuantities: [{ locationId: input.initialLocationId, name: 'available', quantity: variant.initialQuantity }] }
+            : {}),
         })),
         ...(input.newMedia.length
           ? { files: input.newMedia.map((media) => ({ originalSource: media.url, alt: media.alt, contentType: 'IMAGE' })) }
@@ -1066,4 +1072,16 @@ export async function addOrderTags(id: string, tags: string[]): Promise<void> {
     { id: toGid('Order', id), tags },
   );
   assertNoUserErrors(data.tagsAdd, 'Tagging the order');
+}
+
+export async function setProductStatus(id: string, status: 'ACTIVE' | 'DRAFT' | 'ARCHIVED'): Promise<void> {
+  const data = await adminRequest<{ productUpdate: { userErrors: Array<{ field: string[] | null; message: string }> } }>(
+    /* GraphQL */ `
+      mutation Status($product: ProductUpdateInput!) {
+        productUpdate(product: $product) { userErrors { field message } }
+      }
+    `,
+    { product: { id: toGid('Product', id), status } },
+  );
+  assertNoUserErrors(data.productUpdate, 'Changing the product status');
 }
