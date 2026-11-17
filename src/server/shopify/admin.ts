@@ -966,3 +966,104 @@ export async function salesSummary(sinceIso: string) {
   }
   return orders;
 }
+
+/* ------------------------------------------------------------------ *
+ * Inventory overview and counts
+ * ------------------------------------------------------------------ */
+
+export interface InventoryRow {
+  variantId: string;
+  variantTitle: string;
+  sku: string | null;
+  productId: string;
+  productTitle: string;
+  productHandle: string;
+  inventoryItemId: string;
+  tracked: boolean;
+  levels: Array<{ locationId: string; locationName: string; available: number; committed: number; onHand: number; reserved: number; incoming: number }>;
+}
+
+export async function listInventory(search: string | null, after: string | null = null) {
+  const data = await adminRequest<{
+    productVariants: {
+      pageInfo: { hasNextPage: boolean; endCursor: string | null };
+      nodes: Array<{
+        id: string;
+        title: string;
+        sku: string | null;
+        product: { id: string; title: string; handle: string };
+        inventoryItem: {
+          id: string;
+          tracked: boolean;
+          inventoryLevels: { nodes: Array<{ location: { id: string; name: string }; quantities: Array<{ name: string; quantity: number }> }> };
+        };
+      }>;
+    };
+  }>(
+    /* GraphQL */ `
+      query Inventory($query: String, $after: String) {
+        productVariants(first: 100, after: $after, query: $query) {
+          pageInfo { hasNextPage endCursor }
+          nodes {
+            id title sku
+            product { id title handle }
+            inventoryItem {
+              id tracked
+              inventoryLevels(first: 10) {
+                nodes {
+                  location { id name }
+                  quantities(names: ["available", "committed", "on_hand", "reserved", "incoming"]) { name quantity }
+                }
+              }
+            }
+          }
+        }
+      }
+    `,
+    { query: search || null, after },
+  );
+  return {
+    pageInfo: data.productVariants.pageInfo,
+    rows: data.productVariants.nodes.map(
+      (node): InventoryRow => ({
+        variantId: node.id,
+        variantTitle: node.title,
+        sku: node.sku,
+        productId: node.product.id,
+        productTitle: node.product.title,
+        productHandle: node.product.handle,
+        inventoryItemId: node.inventoryItem.id,
+        tracked: node.inventoryItem.tracked,
+        levels: node.inventoryItem.inventoryLevels.nodes.map((level) => {
+          const q = (name: string) => level.quantities.find((entry) => entry.name === name)?.quantity ?? 0;
+          return {
+            locationId: level.location.id,
+            locationName: level.location.name,
+            available: q('available'),
+            committed: q('committed'),
+            onHand: q('on_hand'),
+            reserved: q('reserved'),
+            incoming: q('incoming'),
+          };
+        }),
+      }),
+    ),
+  };
+}
+
+export async function countOrders(query: string): Promise<number> {
+  const data = await adminRequest<{ ordersCount: { count: number } }>(
+    /* GraphQL */ `query Count($query: String) { ordersCount(query: $query) { count } }`,
+    { query },
+  );
+  return data.ordersCount.count;
+}
+
+/** Adds tags to an order (used to record a cancellation/refund *request* for the owner). */
+export async function addOrderTags(id: string, tags: string[]): Promise<void> {
+  const data = await adminRequest<{ tagsAdd: { userErrors: Array<{ field: string[] | null; message: string }> } }>(
+    /* GraphQL */ `mutation Tag($id: ID!, $tags: [String!]!) { tagsAdd(id: $id, tags: $tags) { userErrors { field message } } }`,
+    { id: toGid('Order', id), tags },
+  );
+  assertNoUserErrors(data.tagsAdd, 'Tagging the order');
+}

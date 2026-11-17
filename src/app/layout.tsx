@@ -1,15 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import { Archivo, Poppins } from 'next/font/google';
 
-import { CartDrawer } from '@/components/cart/CartDrawer';
-import { AnnouncementBar } from '@/components/layout/AnnouncementBar';
-import { Footer } from '@/components/layout/Footer';
-import { Header } from '@/components/layout/Header';
-import { CartProvider } from '@/lib/cart/CartProvider';
 import { BRAND, SITE_URL } from '@/lib/site';
-import { StoreConfigProvider, type StoreConfig } from '@/lib/store-config';
-import { getCms, getSettings } from '@/server/content/cms';
-import { checkoutMode, isCustomerAccountConfigured, shopifyConfig } from '@/server/shopify/config';
 
 import './globals.css';
 
@@ -58,15 +50,7 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const [settings, announcement] = await Promise.all([getSettings(), getCms('announcement')]);
-  const storeConfig: StoreConfig = {
-    checkoutMode: checkoutMode(),
-    cartUpsellEnabled: settings.cartUpsellEnabled,
-    nativeAccounts: isCustomerAccountConfigured(),
-    accountUrl: isCustomerAccountConfigured() ? '/account' : shopifyConfig().hostedAccountUrl,
-  };
-
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en-CA" className={`${archivo.variable} ${poppins.variable}`}>
       <head>
@@ -75,21 +59,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         </noscript>
       </head>
       <body data-surface="paper" className="bg-surface text-fg min-h-dvh antialiased">
-        <StoreConfigProvider value={storeConfig}>
-          <CartProvider>
-            <a
-              href="#main"
-              className="sr-only-focusable bg-fg text-paper absolute top-2 left-2 z-[100] px-4 py-2 text-sm font-semibold"
-            >
-              Skip to content
-            </a>
-            <AnnouncementBar content={announcement.value} />
-            <Header />
-            <main id="main">{children}</main>
-            <Footer settings={settings} />
-            <CartDrawer />
-          </CartProvider>
-        </StoreConfigProvider>
+        {children}
       </body>
     </html>
   );
