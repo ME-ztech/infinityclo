@@ -28,6 +28,7 @@ export function ActionForm({
   className,
   variant = 'primary',
   hideSubmit = false,
+  inline = false,
   testId,
 }: {
   action: Action;
@@ -37,6 +38,8 @@ export function ActionForm({
   className?: string;
   variant?: 'primary' | 'secondary' | 'danger';
   hideSubmit?: boolean;
+  /** Lay fields and the button out in one row (for table cells). */
+  inline?: boolean;
   testId?: string;
 }) {
   const [state, formAction] = useActionState(action, null);
@@ -51,14 +54,20 @@ export function ActionForm({
       onSubmit={(event) => {
         if (confirm && !window.confirm(confirm)) event.preventDefault();
       }}
-      className={cn('flex flex-col gap-4', className)}
+      className={cn(inline ? 'flex flex-row flex-wrap items-center gap-2' : 'flex flex-col gap-4', className)}
     >
       {children}
-      {!hideSubmit && (
+      {!hideSubmit && !inline && (
         <div className="flex flex-wrap items-center gap-3">
           <SubmitButton label={submitLabel} variant={variant} />
           <Result state={state} />
         </div>
+      )}
+      {!hideSubmit && inline && (
+        <>
+          <SubmitButton label={submitLabel} variant={variant} />
+          <Result state={state} />
+        </>
       )}
       {hideSubmit && <Result state={state} />}
     </form>
