@@ -66,7 +66,9 @@ async function connect(): Promise<Db> {
     const pool = new Pool({
       connectionString: process.env.DATABASE_URL,
       max: Number(process.env.DATABASE_POOL_MAX ?? 5),
-      ssl: /sslmode=disable/.test(process.env.DATABASE_URL) ? undefined : { rejectUnauthorized: true },
+      ssl: /sslmode=disable/.test(process.env.DATABASE_URL)
+        ? undefined
+        : { rejectUnauthorized: true },
     });
     const db = drizzle(pool, { schema });
     // Serialise concurrent cold starts so two instances never race a migration.

@@ -24,8 +24,12 @@ test.describe('consent and contact forms', () => {
     await expect(page.getByTestId('contact-sent')).toBeVisible();
   });
 
-  test('account pages hand off to Shopify-hosted accounts when the Customer Account API is not configured', async ({ page }) => {
+  test('account pages hand off to Shopify-hosted accounts when the Customer Account API is not configured', async ({
+    page,
+  }) => {
     await page.goto('/account');
-    await expect(page.getByTestId('hosted-account').getByRole('link', { name: 'Sign in / sign up' })).toHaveAttribute('href', /apparelinifinty85\.myshopify\.com\/account/);
+    await expect(
+      page.getByTestId('hosted-account').getByRole('link', { name: 'Sign in / sign up' }),
+    ).toHaveAttribute('href', /apparelinifinty85\.myshopify\.com\/account/);
   });
 });

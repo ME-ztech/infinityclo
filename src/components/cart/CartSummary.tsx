@@ -26,7 +26,10 @@ export function CartSummary({ cart, onNavigate }: { cart: Cart; onNavigate?: () 
       {extras.offers.length > 0 && (
         <ul className="mb-4 flex flex-col gap-2" data-testid="cart-offers">
           {extras.offers.map((offer) => (
-            <li key={offer.promotionId} className="bg-surface-sunken text-fg px-3 py-2 text-xs leading-snug">
+            <li
+              key={offer.promotionId}
+              className="bg-surface-sunken text-fg px-3 py-2 text-xs leading-snug"
+            >
               <span className="font-semibold">{offer.title}:</span> {offer.message}
             </li>
           ))}
@@ -40,9 +43,14 @@ export function CartSummary({ cart, onNavigate }: { cart: Cart; onNavigate?: () 
         </span>
       </div>
       {extras.estimatedSavingCents > 0 && (
-        <div className="mt-1 flex items-baseline justify-between text-sm" data-testid="cart-estimated-saving">
+        <div
+          className="mt-1 flex items-baseline justify-between text-sm"
+          data-testid="cart-estimated-saving"
+        >
           <span className="text-fg-muted">Estimated offer saving</span>
-          <span className="text-signal font-semibold tabular-nums">−{formatMoney(money(extras.estimatedSavingCents, cart.currency))}</span>
+          <span className="text-signal font-semibold tabular-nums">
+            −{formatMoney(money(extras.estimatedSavingCents, cart.currency))}
+          </span>
         </div>
       )}
       <p className="text-fg-faint mt-2 text-[0.7rem] leading-relaxed">
@@ -56,16 +64,32 @@ export function CartSummary({ cart, onNavigate }: { cart: Cart; onNavigate?: () 
 
       {cartUpsellEnabled && extras.upsell.length > 0 && (
         <div className="border-line mt-6 border-t pt-5" data-testid="cart-upsell">
-          <p className="text-fg-faint mb-3 text-[0.66rem] font-semibold tracking-[0.24em] uppercase">You may also like</p>
+          <p className="text-fg-faint mb-3 text-[0.66rem] font-semibold tracking-[0.24em] uppercase">
+            You may also like
+          </p>
           <ul className="grid grid-cols-3 gap-2">
             {extras.upsell.map((item) => (
               <li key={item.slug}>
                 <Link href={`/products/${item.slug}`} onClick={onNavigate} className="group block">
                   <div className="bg-surface-sunken relative aspect-square overflow-hidden">
-                    {item.image && <Image src={item.image.url} alt={item.image.alt} fill sizes="120px" className="object-cover" />}
+                    {item.image && (
+                      <Image
+                        src={item.image.url}
+                        alt={item.image.alt}
+                        fill
+                        sizes="120px"
+                        className="object-cover"
+                      />
+                    )}
                   </div>
-                  <p className="text-fg mt-1.5 line-clamp-2 text-[0.68rem] leading-tight">{item.name}</p>
-                  {item.price && <p className="text-fg-muted text-[0.68rem] tabular-nums">{formatMoney(item.price)}</p>}
+                  <p className="text-fg mt-1.5 line-clamp-2 text-[0.68rem] leading-tight">
+                    {item.name}
+                  </p>
+                  {item.price && (
+                    <p className="text-fg-muted text-[0.68rem] tabular-nums">
+                      {formatMoney(item.price)}
+                    </p>
+                  )}
                 </Link>
               </li>
             ))}

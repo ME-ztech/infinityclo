@@ -126,4 +126,3 @@ export function extractSpecification(description: string | null): {
 
   return { spec, missing };
 }
-

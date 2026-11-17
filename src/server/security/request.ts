@@ -16,7 +16,8 @@ export interface RequestContext {
 export function contextFromHeaders(h: Headers): RequestContext {
   const forwarded = h.get('x-forwarded-for')?.split(',')[0]?.trim() || null;
   const ip = forwarded ?? h.get('x-real-ip') ?? null;
-  const proto = h.get('x-forwarded-proto') ?? (h.get('host')?.startsWith('localhost') ? 'http' : null);
+  const proto =
+    h.get('x-forwarded-proto') ?? (h.get('host')?.startsWith('localhost') ? 'http' : null);
   return {
     ip,
     ipHash: hashIp(ip),

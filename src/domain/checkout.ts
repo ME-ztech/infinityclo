@@ -27,7 +27,9 @@ export type CheckoutAvailability =
 export function checkoutAvailability(cart: Cart, mode: CheckoutMode): CheckoutAvailability {
   if (mode === 'disabled') return { status: 'unavailable', reason: 'not_connected' };
   if (cart.lines.length === 0) return { status: 'unavailable', reason: 'empty_cart' };
-  if (cart.lines.some((line) => line.availability === 'sold_out' || line.availability === 'archived')) {
+  if (
+    cart.lines.some((line) => line.availability === 'sold_out' || line.availability === 'archived')
+  ) {
     return { status: 'unavailable', reason: 'items_unavailable' };
   }
   return { status: 'available' };
@@ -47,12 +49,16 @@ export function buildCartPermalink(
 ): string {
   if (lines.length === 0) throw new Error('Cannot build a checkout link for an empty cart.');
   const items = lines.map((line) => {
-    if (!/^\d+$/.test(line.variantId)) throw new Error(`Variant id "${line.variantId}" is not a Shopify variant id.`);
+    if (!/^\d+$/.test(line.variantId))
+      throw new Error(`Variant id "${line.variantId}" is not a Shopify variant id.`);
     const quantity = Math.trunc(line.quantity);
-    if (!Number.isFinite(quantity) || quantity < 1) throw new Error('Quantities must be at least 1.');
+    if (!Number.isFinite(quantity) || quantity < 1)
+      throw new Error('Quantities must be at least 1.');
     return `${line.variantId}:${quantity}`;
   });
-  const url = new URL(`https://${storeDomain.replace(/^https?:\/\//, '').replace(/\/$/, '')}/cart/${items.join(',')}`);
+  const url = new URL(
+    `https://${storeDomain.replace(/^https?:\/\//, '').replace(/\/$/, '')}/cart/${items.join(',')}`,
+  );
   if (options.discountCode) url.searchParams.set('discount', options.discountCode);
   url.searchParams.set('ref', 'infnity-storefront');
   return url.toString();

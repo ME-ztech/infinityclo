@@ -25,7 +25,15 @@ export function ImageUrlInput({
   return (
     <div className="flex flex-col gap-1">
       <div className="flex gap-2">
-        <input name={name} value={value} onChange={(event) => setValue(event.target.value)} list="cms-image-suggestions" className={inputClass} placeholder="https://cdn.shopify.com/…" aria-label={label} />
+        <input
+          name={name}
+          value={value}
+          onChange={(event) => setValue(event.target.value)}
+          list="cms-image-suggestions"
+          className={inputClass}
+          placeholder="https://cdn.shopify.com/…"
+          aria-label={label}
+        />
         {uploadAction && (
           <>
             <input
@@ -46,13 +54,21 @@ export function ImageUrlInput({
                 } else setStatus(result.error ?? 'Upload failed.');
               }}
             />
-            <button type="button" onClick={() => fileRef.current?.click()} className="border-ink shrink-0 border px-3 text-xs font-semibold uppercase">
+            <button
+              type="button"
+              onClick={() => fileRef.current?.click()}
+              className="border-ink shrink-0 border px-3 text-xs font-semibold uppercase"
+            >
               Upload
             </button>
           </>
         )}
       </div>
-      {status && <p className="text-xs text-neutral-600" role="status">{status}</p>}
+      {status && (
+        <p className="text-xs text-neutral-600" role="status">
+          {status}
+        </p>
+      )}
     </div>
   );
 }

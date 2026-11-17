@@ -38,7 +38,11 @@ export const metadata: Metadata = {
     url: SITE_URL,
     locale: 'en_CA',
   },
-  twitter: { card: 'summary_large_image', title: `${BRAND.name} — ${BRAND.tagline}`, description: DESCRIPTION },
+  twitter: {
+    card: 'summary_large_image',
+    title: `${BRAND.name} — ${BRAND.tagline}`,
+    description: DESCRIPTION,
+  },
   robots: { index: process.env.NEXT_PUBLIC_NOINDEX !== 'true', follow: true },
   alternates: { canonical: '/' },
 };

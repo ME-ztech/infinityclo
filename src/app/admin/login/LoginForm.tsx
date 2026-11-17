@@ -17,14 +17,24 @@ export function LoginForm({ next }: { next: string }) {
       </label>
       <label className="flex flex-col gap-1 text-sm font-medium">
         Password
-        <input name="password" type="password" autoComplete="current-password" required className={inputClass} />
+        <input
+          name="password"
+          type="password"
+          autoComplete="current-password"
+          required
+          className={inputClass}
+        />
       </label>
       {state?.error && (
         <p role="alert" className="text-signal text-sm">
           {state.error}
         </p>
       )}
-      <button type="submit" disabled={pending} className="bg-ink text-paper hover:bg-signal h-11 text-sm font-semibold tracking-wide uppercase disabled:opacity-50">
+      <button
+        type="submit"
+        disabled={pending}
+        className="bg-ink text-paper hover:bg-signal h-11 text-sm font-semibold tracking-wide uppercase disabled:opacity-50"
+      >
         {pending ? 'Signing in…' : 'Sign in'}
       </button>
     </form>

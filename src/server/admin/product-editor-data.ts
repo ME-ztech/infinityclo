@@ -10,7 +10,12 @@ export async function editorContext() {
   return {
     publications: shop.publications.nodes,
     locations: shop.locations.nodes.filter((location) => location.isActive),
-    sizeGuides: (sizeGuides as Array<{ id: string; name: string }>).map(({ id, name }) => ({ id, name })),
-    imageSuggestions: [...new Set(products.flatMap((product) => product.media.map((media) => media.url)))].slice(0, 200),
+    sizeGuides: (sizeGuides as Array<{ id: string; name: string }>).map(({ id, name }) => ({
+      id,
+      name,
+    })),
+    imageSuggestions: [
+      ...new Set(products.flatMap((product) => product.media.map((media) => media.url))),
+    ].slice(0, 200),
   };
 }

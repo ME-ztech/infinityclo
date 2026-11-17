@@ -37,8 +37,12 @@ export default async function HomePage() {
 
   const render: Record<HomepageSectionKey, React.ReactNode> = {
     statement: <StatementSection key="statement" content={homepage.value.statement} />,
-    featured: <FeaturedSection key="featured" title={homepage.value.featured.title} products={featured} />,
-    vault: <VaultSection key="vault" content={homepage.value.vault} productCount={everything.total} />,
+    featured: (
+      <FeaturedSection key="featured" title={homepage.value.featured.title} products={featured} />
+    ),
+    vault: (
+      <VaultSection key="vault" content={homepage.value.vault} productCount={everything.total} />
+    ),
     lookbook: <LookbookSection key="lookbook" content={lookbook.value} />,
     community: <CommunitySection key="community" posts={posts} />,
     coming_soon: <ComingSoonSection key="coming_soon" drop={teasers[0] ?? null} />,
@@ -48,7 +52,9 @@ export default async function HomePage() {
   return (
     <>
       <Hero content={hero.value} />
-      {homepage.value.sections.filter((section) => section.enabled).map((section) => render[section.key])}
+      {homepage.value.sections
+        .filter((section) => section.enabled)
+        .map((section) => render[section.key])}
     </>
   );
 }

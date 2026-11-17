@@ -64,7 +64,12 @@ export async function POST(request: Request): Promise<NextResponse> {
 
   // Cart upsell is an owner switch (off by default); suggestions are links, never auto-added.
   const settings = await getSettings();
-  let upsell: Array<{ slug: string; name: string; price: unknown; image: { url: string; alt: string } | null }> = [];
+  let upsell: Array<{
+    slug: string;
+    name: string;
+    price: unknown;
+    image: { url: string; alt: string } | null;
+  }> = [];
   if (settings.cartUpsellEnabled && cart.lines.length > 0) {
     const inCart = new Set(cart.lines.map((line) => line.productSlug));
     const { products } = await catalogRepository.listProducts({ sort: 'featured' });
@@ -73,7 +78,12 @@ export async function POST(request: Request): Promise<NextResponse> {
       .slice(0, 3)
       .map((product) => {
         const media = primaryMedia(product);
-        return { slug: product.slug, name: product.name, price: fromPrice(product), image: media ? { url: media.url, alt: media.alt } : null };
+        return {
+          slug: product.slug,
+          name: product.name,
+          price: fromPrice(product),
+          image: media ? { url: media.url, alt: media.alt } : null,
+        };
       });
   }
 

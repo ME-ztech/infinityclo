@@ -22,7 +22,11 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
   if (!isAdminConfigured()) {
     return (
       <AdminPage title="Edit product">
-        <NotConnected what="Editing products" envVar="SHOPIFY_ADMIN_ACCESS_TOKEN" scopes="write_products" />
+        <NotConnected
+          what="Editing products"
+          envVar="SHOPIFY_ADMIN_ACCESS_TOKEN"
+          scopes="write_products"
+        />
       </AdminPage>
     );
   }
@@ -38,7 +42,12 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
           <Link href={`/products/${product.handle}`} target="_blank" className="underline">
             View on storefront
           </Link>
-          <a href={shopifyAdminUrl(`products/${id}`)} target="_blank" rel="noopener noreferrer" className="underline">
+          <a
+            href={shopifyAdminUrl(`products/${id}`)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline"
+          >
             Open in Shopify admin
           </a>
         </span>
@@ -57,10 +66,16 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
             tags: product.tags,
             seoTitle: product.seo.title ?? '',
             seoDescription: product.seo.description ?? '',
-            options: product.options.map((option) => ({ name: option.name, values: option.values })),
+            options: product.options.map((option) => ({
+              name: option.name,
+              values: option.values,
+            })),
             variants: product.variants.map((variant) => ({
               id: variant.id.split('/').pop() ?? variant.id,
-              optionValues: variant.selectedOptions.map((option) => ({ optionName: option.name, name: option.value })),
+              optionValues: variant.selectedOptions.map((option) => ({
+                optionName: option.name,
+                name: option.value,
+              })),
               price: variant.price,
               compareAtPrice: variant.compareAtPrice,
               sku: variant.sku,
@@ -68,7 +83,12 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
               weightGrams: variant.weight?.unit === 'GRAMS' ? variant.weight.value : null,
             })),
             media: product.media,
-            facts: { fit: product.metafields.fit ?? '', fabric: product.metafields.fabric ?? '', care: product.metafields.care ?? '', sizeGuide: product.metafields.size_guide ?? '' },
+            facts: {
+              fit: product.metafields.fit ?? '',
+              fabric: product.metafields.fabric ?? '',
+              care: product.metafields.care ?? '',
+              sizeGuide: product.metafields.size_guide ?? '',
+            },
           }}
           canPublish={can(role, 'products:publish')}
           {...context}
@@ -83,9 +103,18 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
         {can(role, 'products:write') && (
           <div className="border-line border bg-white p-5">
             <h2 className="mb-3 text-sm font-semibold uppercase">Duplicate</h2>
-            <ActionForm action={duplicateAction} submitLabel="Duplicate as draft" variant="secondary">
+            <ActionForm
+              action={duplicateAction}
+              submitLabel="Duplicate as draft"
+              variant="secondary"
+            >
               <input type="hidden" name="id" value={id} />
-              <input name="title" defaultValue={`${product.title} (copy)`} className="border-line h-10 border px-3 text-sm" aria-label="Title for the copy" />
+              <input
+                name="title"
+                defaultValue={`${product.title} (copy)`}
+                className="border-line h-10 border px-3 text-sm"
+                aria-label="Title for the copy"
+              />
             </ActionForm>
           </div>
         )}
@@ -96,7 +125,13 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
               {(['DRAFT', 'ARCHIVED'] as const)
                 .filter((status) => status !== product.status)
                 .map((status) => (
-                  <ActionForm key={status} action={setStatusAction} submitLabel={status === 'ARCHIVED' ? 'Archive' : 'Move to draft'} variant={status === 'ARCHIVED' ? 'danger' : 'secondary'} confirm={`Set this product to ${status.toLowerCase()}? It will no longer be sold on the storefront.`}>
+                  <ActionForm
+                    key={status}
+                    action={setStatusAction}
+                    submitLabel={status === 'ARCHIVED' ? 'Archive' : 'Move to draft'}
+                    variant={status === 'ARCHIVED' ? 'danger' : 'secondary'}
+                    confirm={`Set this product to ${status.toLowerCase()}? It will no longer be sold on the storefront.`}
+                  >
                     <input type="hidden" name="id" value={id} />
                     <input type="hidden" name="status" value={status} />
                   </ActionForm>

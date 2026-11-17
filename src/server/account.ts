@@ -4,7 +4,11 @@ import { redirect } from 'next/navigation';
 
 import { getCustomerSession, isSessionExpired } from '@/server/auth/customer';
 import { isCustomerAccountConfigured } from '@/server/shopify/config';
-import { CUSTOMER_ORDER_QUERY, CUSTOMER_OVERVIEW_QUERY, customerQuery } from '@/server/shopify/customer-account';
+import {
+  CUSTOMER_ORDER_QUERY,
+  CUSTOMER_OVERVIEW_QUERY,
+  customerQuery,
+} from '@/server/shopify/customer-account';
 
 export type AccountState =
   | { kind: 'not_configured' }
@@ -16,7 +20,8 @@ export async function accountState(returnTo: string): Promise<AccountState> {
   if (!isCustomerAccountConfigured()) return { kind: 'not_configured' };
   const session = await getCustomerSession();
   if (!session) return { kind: 'signed_out' };
-  if (isSessionExpired(session)) redirect(`/account/refresh?returnTo=${encodeURIComponent(returnTo)}`);
+  if (isSessionExpired(session))
+    redirect(`/account/refresh?returnTo=${encodeURIComponent(returnTo)}`);
   return { kind: 'signed_in', accessToken: session.accessToken, email: session.email };
 }
 
@@ -43,8 +48,24 @@ export interface CustomerOverview {
         financialStatus: string | null;
         fulfillmentStatus: string | null;
         totalPrice: MoneyV2;
-        lineItems: { nodes: Array<{ title: string; quantity: number; image: { url: string; altText: string | null } | null }> };
-        fulfillments: { nodes: Array<{ status: string | null; latestShipmentStatus: string | null; trackingInformation: Array<{ number: string | null; company: string | null; url: string | null }> }> };
+        lineItems: {
+          nodes: Array<{
+            title: string;
+            quantity: number;
+            image: { url: string; altText: string | null } | null;
+          }>;
+        };
+        fulfillments: {
+          nodes: Array<{
+            status: string | null;
+            latestShipmentStatus: string | null;
+            trackingInformation: Array<{
+              number: string | null;
+              company: string | null;
+              url: string | null;
+            }>;
+          }>;
+        };
       }>;
     };
   };
@@ -69,10 +90,26 @@ export interface CustomerOrder {
     totalTax: MoneyV2 | null;
     totalPrice: MoneyV2;
     totalRefunded: MoneyV2 | null;
-    discountApplications: { nodes: Array<{ code?: string; title?: string; value: { amount?: string; currencyCode?: string; percentage?: number } }> };
+    discountApplications: {
+      nodes: Array<{
+        code?: string;
+        title?: string;
+        value: { amount?: string; currencyCode?: string; percentage?: number };
+      }>;
+    };
     shippingAddress: { formatted: string[] } | null;
     lineItems: {
-      nodes: Array<{ id: string; title: string; variantTitle: string | null; quantity: number; sku: string | null; price: MoneyV2 | null; totalPrice: MoneyV2 | null; totalDiscount: MoneyV2 | null; image: { url: string; altText: string | null } | null }>;
+      nodes: Array<{
+        id: string;
+        title: string;
+        variantTitle: string | null;
+        quantity: number;
+        sku: string | null;
+        price: MoneyV2 | null;
+        totalPrice: MoneyV2 | null;
+        totalDiscount: MoneyV2 | null;
+        image: { url: string; altText: string | null } | null;
+      }>;
     };
     fulfillments: {
       nodes: Array<{
@@ -81,7 +118,11 @@ export interface CustomerOrder {
         createdAt: string;
         estimatedDeliveryAt: string | null;
         latestShipmentStatus: string | null;
-        trackingInformation: Array<{ number: string | null; company: string | null; url: string | null }>;
+        trackingInformation: Array<{
+          number: string | null;
+          company: string | null;
+          url: string | null;
+        }>;
         events: { nodes: Array<{ happenedAt: string; status: string }> };
       }>;
     };
@@ -89,7 +130,10 @@ export interface CustomerOrder {
 }
 
 /** Token-scoped: Shopify returns null for an order that is not this customer's. */
-export async function loadOrder(accessToken: string, orderId: string): Promise<CustomerOrder['order']> {
+export async function loadOrder(
+  accessToken: string,
+  orderId: string,
+): Promise<CustomerOrder['order']> {
   const id = /^\d+$/.test(orderId) ? `gid://shopify/Order/${orderId}` : orderId;
   const data = await customerQuery<CustomerOrder>(accessToken, CUSTOMER_ORDER_QUERY, { id });
   return data.order;
@@ -97,5 +141,7 @@ export async function loadOrder(accessToken: string, orderId: string): Promise<C
 
 export function formatShopifyMoney(value: MoneyV2 | null | undefined): string {
   if (!value) return '—';
-  return new Intl.NumberFormat('en-CA', { style: 'currency', currency: value.currencyCode }).format(Number(value.amount));
+  return new Intl.NumberFormat('en-CA', { style: 'currency', currency: value.currencyCode }).format(
+    Number(value.amount),
+  );
 }

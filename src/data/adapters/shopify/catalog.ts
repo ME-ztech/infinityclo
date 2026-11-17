@@ -20,7 +20,11 @@ export const CATALOG_CACHE_TAG = 'shopify-catalog';
 const cachedLoad = unstable_cache(
   async () => {
     const live = await fetchStorefrontCatalog();
-    return { products: live.products, collections: live.collections, fetchedAt: new Date().toISOString() };
+    return {
+      products: live.products,
+      collections: live.collections,
+      fetchedAt: new Date().toISOString(),
+    };
   },
   ['shopify-catalog-v1'],
   { revalidate: 300, tags: [CATALOG_CACHE_TAG] },
@@ -30,9 +34,15 @@ export async function loadShopifyCatalog(): Promise<CatalogData> {
   const snapshot = await loadSnapshotCatalog();
   try {
     const live = await cachedLoad();
-    return { products: live.products, collections: live.collections, sizeGuides: snapshot.sizeGuides };
+    return {
+      products: live.products,
+      collections: live.collections,
+      sizeGuides: snapshot.sizeGuides,
+    };
   } catch (error) {
-    console.error(`[catalog] Storefront API failed, serving the imported snapshot: ${(error as Error).message}`);
+    console.error(
+      `[catalog] Storefront API failed, serving the imported snapshot: ${(error as Error).message}`,
+    );
     return snapshot;
   }
 }

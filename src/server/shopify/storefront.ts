@@ -17,7 +17,11 @@ import { assertNoUserErrors, legacyId, shopifyGraphql, ShopifyApiError, toGid } 
  * Transport
  * ------------------------------------------------------------------ */
 
-export async function storefrontRequest<T>(query: string, variables?: Record<string, unknown>, buyerIp?: string | null): Promise<T> {
+export async function storefrontRequest<T>(
+  query: string,
+  variables?: Record<string, unknown>,
+  buyerIp?: string | null,
+): Promise<T> {
   const config = shopifyConfig();
   if (!config.storefrontToken) {
     throw new ShopifyApiError('The Storefront API is not configured.', 'not_configured');
@@ -83,8 +87,17 @@ const COLLECTIONS_QUERY = /* GraphQL */ `
         handle
         title
         descriptionHtml
-        image { url altText width height }
-        products(first: 250) { nodes { handle } }
+        image {
+          url
+          altText
+          width
+          height
+        }
+        products(first: 250) {
+          nodes {
+            handle
+          }
+        }
       }
     }
   }
@@ -99,7 +112,15 @@ export interface StorefrontProductNode {
   tags: string[];
   publishedAt: string | null;
   options: Array<{ id: string; name: string; optionValues: Array<{ name: string }> }>;
-  images: { nodes: Array<{ id: string; url: string; altText: string | null; width: number | null; height: number | null }> };
+  images: {
+    nodes: Array<{
+      id: string;
+      url: string;
+      altText: string | null;
+      width: number | null;
+      height: number | null;
+    }>;
+  };
   variants: {
     nodes: Array<{
       id: string;
@@ -127,19 +148,26 @@ function money(value: { amount: string; currencyCode: string } | null | undefine
 }
 
 /** Maps a Storefront API product onto the storefront's domain model. Pure; unit-tested. */
-export function mapStorefrontProduct(node: StorefrontProductNode, featuredRank: number | null): Product {
+export function mapStorefrontProduct(
+  node: StorefrontProductNode,
+  featuredRank: number | null,
+): Product {
   const slug = node.handle;
   const media: ProductMedia[] = node.images.nodes.map((image, index) => ({
     id: `${slug}-media-${index + 1}`,
     url: image.url.split('?')[0] ?? image.url,
-    alt: image.altText?.trim() || (index === 0 ? `${node.title} — INFNITY` : `${node.title} — INFNITY, view ${index + 1}`),
+    alt:
+      image.altText?.trim() ||
+      (index === 0 ? `${node.title} — INFNITY` : `${node.title} — INFNITY, view ${index + 1}`),
     kind: index === 0 ? 'product' : 'model',
     width: image.width ?? 1600,
     height: image.height ?? 1600,
     position: index + 1,
     sourceUrl: image.url,
   }));
-  const mediaIdByImageId = new Map(node.images.nodes.map((image, index) => [image.id, media[index]!.id]));
+  const mediaIdByImageId = new Map(
+    node.images.nodes.map((image, index) => [image.id, media[index]!.id]),
+  );
 
   const variants: ProductVariant[] = node.variants.nodes.map((variant) => ({
     id: legacyId(variant.id),
@@ -148,7 +176,9 @@ export function mapStorefrontProduct(node: StorefrontProductNode, featuredRank: 
     price: money(variant.price) ?? { amount: 0, currency: 'CAD' },
     compareAtPrice: money(variant.compareAtPrice),
     availability: variant.availableForSale ? 'in_stock' : 'sold_out',
-    selectedOptions: Object.fromEntries(variant.selectedOptions.map((option) => [option.name, option.value])),
+    selectedOptions: Object.fromEntries(
+      variant.selectedOptions.map((option) => [option.name, option.value]),
+    ),
     mediaId: variant.image ? (mediaIdByImageId.get(variant.image.id) ?? null) : null,
   }));
 
@@ -187,13 +217,20 @@ export function mapStorefrontProduct(node: StorefrontProductNode, featuredRank: 
   };
 }
 
-export async function fetchStorefrontCatalog(): Promise<{ products: Product[]; collections: Collection[] }> {
+export async function fetchStorefrontCatalog(): Promise<{
+  products: Product[];
+  collections: Collection[];
+}> {
   const country = shopifyConfig().defaultCountry;
   const nodes: StorefrontProductNode[] = [];
   let cursor: string | null = null;
   for (let page = 0; page < 10; page += 1) {
-    const data: { products: { pageInfo: { hasNextPage: boolean; endCursor: string | null }; nodes: StorefrontProductNode[] } } =
-      await storefrontRequest(PRODUCTS_QUERY, { cursor, country });
+    const data: {
+      products: {
+        pageInfo: { hasNextPage: boolean; endCursor: string | null };
+        nodes: StorefrontProductNode[];
+      };
+    } = await storefrontRequest(PRODUCTS_QUERY, { cursor, country });
     nodes.push(...data.products.nodes);
     if (!data.products.pageInfo.hasNextPage) break;
     cursor = data.products.pageInfo.endCursor;
@@ -205,7 +242,12 @@ export async function fetchStorefrontCatalog(): Promise<{ products: Product[]; c
         handle: string;
         title: string;
         descriptionHtml: string | null;
-        image: { url: string; altText: string | null; width: number | null; height: number | null } | null;
+        image: {
+          url: string;
+          altText: string | null;
+          width: number | null;
+          height: number | null;
+        } | null;
         products: { nodes: Array<{ handle: string }> };
       }>;
     };
@@ -249,11 +291,26 @@ const CART_CREATE = /* GraphQL */ `
         id
         checkoutUrl
         totalQuantity
-        cost { subtotalAmount { amount currencyCode } }
-        discountCodes { code applicable }
+        cost {
+          subtotalAmount {
+            amount
+            currencyCode
+          }
+        }
+        discountCodes {
+          code
+          applicable
+        }
       }
-      userErrors { field message code }
-      warnings { code message }
+      userErrors {
+        field
+        message
+        code
+      }
+      warnings {
+        code
+        message
+      }
     }
   }
 `;
@@ -290,7 +347,10 @@ export async function createStorefrontCart(input: {
     {
       country: shopifyConfig().defaultCountry,
       input: {
-        lines: input.lines.map((line) => ({ merchandiseId: toGid('ProductVariant', line.variantId), quantity: line.quantity })),
+        lines: input.lines.map((line) => ({
+          merchandiseId: toGid('ProductVariant', line.variantId),
+          quantity: line.quantity,
+        })),
         discountCodes: input.discountCodes ?? [],
         buyerIdentity: {
           countryCode: shopifyConfig().defaultCountry,
@@ -320,10 +380,30 @@ export async function createStorefrontCart(input: {
 const POLICIES_QUERY = /* GraphQL */ `
   query Policies {
     shop {
-      privacyPolicy { handle title body url }
-      refundPolicy { handle title body url }
-      shippingPolicy { handle title body url }
-      termsOfService { handle title body url }
+      privacyPolicy {
+        handle
+        title
+        body
+        url
+      }
+      refundPolicy {
+        handle
+        title
+        body
+        url
+      }
+      shippingPolicy {
+        handle
+        title
+        body
+        url
+      }
+      termsOfService {
+        handle
+        title
+        body
+        url
+      }
     }
   }
 `;
@@ -339,5 +419,7 @@ export async function fetchStorefrontPolicies(): Promise<StorefrontPolicy[]> {
   const data = await storefrontRequest<{
     shop: Record<string, StorefrontPolicy | StorefrontPolicy[] | null>;
   }>(POLICIES_QUERY);
-  return Object.values(data.shop).flatMap((policy) => (policy ? (Array.isArray(policy) ? policy : [policy]) : []));
+  return Object.values(data.shop).flatMap((policy) =>
+    policy ? (Array.isArray(policy) ? policy : [policy]) : [],
+  );
 }

@@ -44,7 +44,13 @@ interface PanelProps {
   siblings?: ReadonlyArray<{ slug: string; label: string }>;
 }
 
-export function ProductPurchasePanel({ product, sizeGuide, onActiveMediaChange, offerMessages = [], siblings = [] }: PanelProps) {
+export function ProductPurchasePanel({
+  product,
+  sizeGuide,
+  onActiveMediaChange,
+  offerMessages = [],
+  siblings = [],
+}: PanelProps) {
   const { addLine, isPending } = useCart();
   const wishlist = useWishlist();
 
@@ -150,7 +156,9 @@ export function ProductPurchasePanel({ product, sizeGuide, onActiveMediaChange, 
 
       {siblings.length > 0 && (
         <div className="mt-6">
-          <p className="text-fg-faint mb-3 text-[0.66rem] font-semibold tracking-[0.24em] uppercase">Also in</p>
+          <p className="text-fg-faint mb-3 text-[0.66rem] font-semibold tracking-[0.24em] uppercase">
+            Also in
+          </p>
           <div className="flex flex-wrap gap-2">
             {siblings.map((sibling) => (
               <Link

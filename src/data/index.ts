@@ -22,6 +22,8 @@ export const contentRepository: ContentRepository = localContentRepository;
 export const reviewRepository: ReviewRepository = localReviewRepository;
 
 export type CatalogSourceKind = 'shopify-storefront' | 'snapshot';
-export const catalogSourceKind: CatalogSourceKind = storefrontConfigured ? 'shopify-storefront' : 'snapshot';
+export const catalogSourceKind: CatalogSourceKind = storefrontConfigured
+  ? 'shopify-storefront'
+  : 'snapshot';
 
 export * from './repositories';

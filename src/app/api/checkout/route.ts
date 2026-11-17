@@ -27,9 +27,14 @@ export async function POST(request: Request): Promise<NextResponse> {
     return NextResponse.json({ error: 'Cross-origin request refused.' }, { status: 403 });
   }
   const context = contextFromHeaders(request.headers);
-  const limited = await rateLimit(`checkout:${context.ipHash ?? 'unknown'}`, 30, 60).catch(() => null);
+  const limited = await rateLimit(`checkout:${context.ipHash ?? 'unknown'}`, 30, 60).catch(
+    () => null,
+  );
   if (limited && !limited.allowed) {
-    return NextResponse.json({ error: 'Too many attempts. Please wait a moment.' }, { status: 429 });
+    return NextResponse.json(
+      { error: 'Too many attempts. Please wait a moment.' },
+      { status: 429 },
+    );
   }
 
   let body: unknown;
@@ -38,14 +43,23 @@ export async function POST(request: Request): Promise<NextResponse> {
   } catch {
     return NextResponse.json({ error: 'Invalid request.' }, { status: 400 });
   }
-  const rawLines = Array.isArray((body as { lines?: unknown })?.lines) ? (body as { lines: unknown[] }).lines.slice(0, MAX_LINES) : [];
+  const rawLines = Array.isArray((body as { lines?: unknown })?.lines)
+    ? (body as { lines: unknown[] }).lines.slice(0, MAX_LINES)
+    : [];
   const lines = rawLines.map(parseLine).filter((line): line is PersistedLine => line !== null);
-  if (lines.length === 0) return NextResponse.json({ error: 'Your bag is empty.' }, { status: 400 });
+  if (lines.length === 0)
+    return NextResponse.json({ error: 'Your bag is empty.' }, { status: 400 });
 
   const customer = await getCustomerSession().catch(() => null);
-  const result = await startCheckout(lines, { customerAccessToken: customer?.accessToken ?? null, buyerIp: context.ip });
+  const result = await startCheckout(lines, {
+    customerAccessToken: customer?.accessToken ?? null,
+    buyerIp: context.ip,
+  });
   if (!result.ok) {
-    return NextResponse.json({ error: result.error, droppedLines: result.droppedLines ?? [] }, { status: result.status });
+    return NextResponse.json(
+      { error: result.error, droppedLines: result.droppedLines ?? [] },
+      { status: result.status },
+    );
   }
   return NextResponse.json({ url: result.url, mode: result.mode });
 }

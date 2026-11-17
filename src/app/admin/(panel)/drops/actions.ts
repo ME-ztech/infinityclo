@@ -10,7 +10,10 @@ const opt = (value: FormDataEntryValue | null) => {
   return text ? text : null;
 };
 
-export async function saveDropAction(_state: ActionResult | null, form: FormData): Promise<ActionResult> {
+export async function saveDropAction(
+  _state: ActionResult | null,
+  form: FormData,
+): Promise<ActionResult> {
   return runAction('drops:write', async (user) => {
     const id = opt(form.get('id'));
     const releaseLocal = opt(form.get('releaseAt'));

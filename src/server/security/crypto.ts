@@ -119,12 +119,17 @@ export async function verifyPassword(password: string, stored: string): Promise<
   if (parts.length !== 6 || parts[0] !== 'scrypt') return false;
   const [, n, r, p, saltB64, keyB64] = parts as [string, string, string, string, string, string];
   const expected = Buffer.from(keyB64, 'base64url');
-  const key = await scrypt(password.normalize('NFKC'), Buffer.from(saltB64, 'base64url'), expected.length, {
-    N: Number(n),
-    r: Number(r),
-    p: Number(p),
-    maxmem: SCRYPT.maxmem,
-  });
+  const key = await scrypt(
+    password.normalize('NFKC'),
+    Buffer.from(saltB64, 'base64url'),
+    expected.length,
+    {
+      N: Number(n),
+      r: Number(r),
+      p: Number(p),
+      maxmem: SCRYPT.maxmem,
+    },
+  );
   return key.length === expected.length && timingSafeEqual(key, expected);
 }
 
@@ -132,7 +137,11 @@ export async function verifyPassword(password: string, stored: string): Promise<
  * HMAC verification (Shopify webhooks)
  * ------------------------------------------------------------------ */
 
-export function verifyHmacBase64(rawBody: string | Buffer, secret: string, provided: string | null): boolean {
+export function verifyHmacBase64(
+  rawBody: string | Buffer,
+  secret: string,
+  provided: string | null,
+): boolean {
   if (!provided || !secret) return false;
   const computed = createHmac('sha256', secret).update(rawBody).digest();
   let given: Buffer;

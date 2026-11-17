@@ -11,7 +11,10 @@ export const metadata: Metadata = { title: 'Wishlist', robots: { index: false } 
 export const dynamic = 'force-dynamic';
 
 export default async function WishlistPage() {
-  const [{ products }, session] = await Promise.all([catalogRepository.listProducts(), getCustomerSession()]);
+  const [{ products }, session] = await Promise.all([
+    catalogRepository.listProducts(),
+    getCustomerSession(),
+  ]);
   const catalogue = products.map((product) => {
     const price = fromPrice(product);
     const media = primaryMedia(product);

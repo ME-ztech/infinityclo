@@ -14,12 +14,23 @@ import { drops, waitlistEntries } from '@/server/db/schema';
  * Only coming_soon and early_access drops appear on the storefront teaser; a
  * countdown appears only when the release time is marked confirmed.
  */
-export const DROP_STATUSES = ['draft', 'coming_soon', 'early_access', 'published', 'sold_out', 'archived'] as const;
+export const DROP_STATUSES = [
+  'draft',
+  'coming_soon',
+  'early_access',
+  'published',
+  'sold_out',
+  'archived',
+] as const;
 export type DropStatus = (typeof DROP_STATUSES)[number];
 export const PUBLIC_TEASER_STATUSES: readonly DropStatus[] = ['coming_soon', 'early_access'];
 
 export const dropInputSchema = z.object({
-  slug: z.string().trim().toLowerCase().regex(/^[a-z0-9-]{2,60}$/, 'Use lowercase letters, numbers and dashes.'),
+  slug: z
+    .string()
+    .trim()
+    .toLowerCase()
+    .regex(/^[a-z0-9-]{2,60}$/, 'Use lowercase letters, numbers and dashes.'),
   name: z.string().trim().min(2).max(80),
   status: z.enum(DROP_STATUSES),
   headline: z.string().trim().max(120).nullable(),
@@ -65,7 +76,8 @@ export async function getDropBySlug(slug: string) {
 
 export async function saveDrop(id: string | null, input: DropInput, actor: AuditActor) {
   const parsed = dropInputSchema.parse(input);
-  if (parsed.releaseConfirmed && !parsed.releaseAt) throw new Error('Set the release date before marking it confirmed.');
+  if (parsed.releaseConfirmed && !parsed.releaseAt)
+    throw new Error('Set the release date before marking it confirmed.');
   const db = await getDb();
   const values = {
     ...parsed,
@@ -74,23 +86,44 @@ export async function saveDrop(id: string | null, input: DropInput, actor: Audit
   };
   if (id) {
     await db.update(drops).set(values).where(eq(drops.id, id));
-    await audit({ actor, action: 'drop.update', summary: `Updated drop "${parsed.name}" (${parsed.status})`, targetType: 'drop', targetId: id });
+    await audit({
+      actor,
+      action: 'drop.update',
+      summary: `Updated drop "${parsed.name}" (${parsed.status})`,
+      targetType: 'drop',
+      targetId: id,
+    });
     return id;
   }
   const [created] = await db.insert(drops).values(values).returning({ id: drops.id });
-  await audit({ actor, action: 'drop.create', summary: `Created drop "${parsed.name}"`, targetType: 'drop', targetId: created!.id });
+  await audit({
+    actor,
+    action: 'drop.create',
+    summary: `Created drop "${parsed.name}"`,
+    targetType: 'drop',
+    targetId: created!.id,
+  });
   return created!.id;
 }
 
-
 /** Returns false when the address was already on this drop's list (no duplicate rows). */
-export async function joinWaitlist(input: { slug: string; email: string; ipHash: string | null }): Promise<'joined' | 'already' | 'closed'> {
+export async function joinWaitlist(input: {
+  slug: string;
+  email: string;
+  ipHash: string | null;
+}): Promise<'joined' | 'already' | 'closed'> {
   const drop = await getDropBySlug(input.slug);
-  if (!drop || !drop.waitlistEnabled || !PUBLIC_TEASER_STATUSES.includes(drop.status as DropStatus)) return 'closed';
+  if (!drop || !drop.waitlistEnabled || !PUBLIC_TEASER_STATUSES.includes(drop.status as DropStatus))
+    return 'closed';
   const db = await getDb();
   const inserted = await db
     .insert(waitlistEntries)
-    .values({ dropId: drop.id, email: input.email.trim().toLowerCase(), consentText: WAITLIST_CONSENT_TEXT, ipHash: input.ipHash })
+    .values({
+      dropId: drop.id,
+      email: input.email.trim().toLowerCase(),
+      consentText: WAITLIST_CONSENT_TEXT,
+      ipHash: input.ipHash,
+    })
     .onConflictDoNothing()
     .returning({ id: waitlistEntries.id });
   return inserted.length ? 'joined' : 'already';
@@ -98,7 +131,11 @@ export async function joinWaitlist(input: { slug: string; email: string; ipHash:
 
 export async function waitlistFor(dropId: string) {
   const db = await getDb();
-  return db.select().from(waitlistEntries).where(and(eq(waitlistEntries.dropId, dropId))).orderBy(asc(waitlistEntries.createdAt));
+  return db
+    .select()
+    .from(waitlistEntries)
+    .where(and(eq(waitlistEntries.dropId, dropId)))
+    .orderBy(asc(waitlistEntries.createdAt));
 }
 
 export { WAITLIST_CONSENT_TEXT };

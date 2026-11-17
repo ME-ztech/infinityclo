@@ -68,7 +68,12 @@ export function SizeGuideDialog({
 
           {/* Table scrolls inside its own container so the page never scrolls
               sideways on a phone. */}
-          <div className="-mx-2 overflow-x-auto px-2" tabIndex={0} role="region" aria-label={`${guide.name} table, scrolls sideways`}>
+          <div
+            className="-mx-2 overflow-x-auto px-2"
+            tabIndex={0}
+            role="region"
+            aria-label={`${guide.name} table, scrolls sideways`}
+          >
             <table className="w-full min-w-[420px] border-collapse text-sm">
               <caption className="sr-only">Garment measurements by size for {guide.name}</caption>
               <thead>

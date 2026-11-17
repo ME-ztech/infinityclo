@@ -436,9 +436,7 @@
         "drops_slug_unique": {
           "name": "drops_slug_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "slug"
-          ]
+          "columns": ["slug"]
         }
       },
       "policies": {},
@@ -875,12 +873,8 @@
           "name": "staff_sessions_user_id_staff_users_id_fk",
           "tableFrom": "staff_sessions",
           "tableTo": "staff_users",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -974,9 +968,7 @@
         "staff_users_email_unique": {
           "name": "staff_users_email_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
+          "columns": ["email"]
         }
       },
       "policies": {},
@@ -1091,9 +1083,7 @@
         "subscribers_email_unique": {
           "name": "subscribers_email_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
+          "columns": ["email"]
         }
       },
       "policies": {},
@@ -1184,12 +1174,8 @@
           "name": "waitlist_entries_drop_id_drops_id_fk",
           "tableFrom": "waitlist_entries",
           "tableTo": "drops",
-          "columnsFrom": [
-            "drop_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["drop_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }

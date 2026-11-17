@@ -34,7 +34,11 @@ export async function subscribe(input: {
   const settings = await getSettings();
   const doubleOptIn = settings.newsletterDoubleOptIn && isEmailConfigured();
 
-  const [existing] = await db.select().from(subscribers).where(eq(subscribers.email, email)).limit(1);
+  const [existing] = await db
+    .select()
+    .from(subscribers)
+    .where(eq(subscribers.email, email))
+    .limit(1);
   if (existing?.status === 'subscribed') return 'already_subscribed';
 
   const confirmToken = randomToken(24);
@@ -76,11 +80,20 @@ export async function subscribe(input: {
 
 export async function confirm(token: string): Promise<boolean> {
   const db = await getDb();
-  const [row] = await db.select().from(subscribers).where(eq(subscribers.confirmTokenHash, sha256Hex(token))).limit(1);
+  const [row] = await db
+    .select()
+    .from(subscribers)
+    .where(eq(subscribers.confirmTokenHash, sha256Hex(token)))
+    .limit(1);
   if (!row || row.status === 'unsubscribed') return false;
   await db
     .update(subscribers)
-    .set({ status: 'subscribed', confirmedAt: new Date(), confirmTokenHash: null, updatedAt: new Date() })
+    .set({
+      status: 'subscribed',
+      confirmedAt: new Date(),
+      confirmTokenHash: null,
+      updatedAt: new Date(),
+    })
     .where(eq(subscribers.id, row.id));
   await mirrorToShopify(row.email, true);
   return true;
@@ -88,7 +101,11 @@ export async function confirm(token: string): Promise<boolean> {
 
 export async function unsubscribeByToken(token: string): Promise<boolean> {
   const db = await getDb();
-  const [row] = await db.select().from(subscribers).where(eq(subscribers.unsubscribeTokenHash, sha256Hex(token))).limit(1);
+  const [row] = await db
+    .select()
+    .from(subscribers)
+    .where(eq(subscribers.unsubscribeTokenHash, sha256Hex(token)))
+    .limit(1);
   if (!row) return false;
   await db
     .update(subscribers)
@@ -103,7 +120,10 @@ async function mirrorToShopify(email: string, subscribed: boolean): Promise<void
   const db = await getDb();
   try {
     const result = await syncEmailConsent(email, subscribed);
-    await db.update(subscribers).set({ shopifySyncStatus: `synced:${result}` }).where(eq(subscribers.email, email));
+    await db
+      .update(subscribers)
+      .set({ shopifySyncStatus: `synced:${result}` })
+      .where(eq(subscribers.email, email));
   } catch (error) {
     await db
       .update(subscribers)

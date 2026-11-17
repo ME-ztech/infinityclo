@@ -26,7 +26,8 @@ export async function runAction(
   try {
     staff = await requireStaffAction(permission);
   } catch (error) {
-    if (error instanceof ForbiddenError) return { error: 'You don’t have permission to do that. Ask the owner.' };
+    if (error instanceof ForbiddenError)
+      return { error: 'You don’t have permission to do that. Ask the owner.' };
     throw error;
   }
   try {
@@ -35,10 +36,20 @@ export async function runAction(
     return result ?? { ok: true, message: 'Saved.' };
   } catch (error) {
     if (error instanceof ZodError) {
-      return { error: error.issues.map((issue) => `${issue.path.join(' › ') || 'Form'}: ${issue.message}`).slice(0, 6).join(' · ') };
+      return {
+        error: error.issues
+          .map((issue) => `${issue.path.join(' › ') || 'Form'}: ${issue.message}`)
+          .slice(0, 6)
+          .join(' · '),
+      };
     }
     if (error instanceof ShopifyApiError) {
-      return { error: error.kind === 'not_configured' ? `${error.message} Nothing was changed.` : `Shopify: ${error.message}` };
+      return {
+        error:
+          error.kind === 'not_configured'
+            ? `${error.message} Nothing was changed.`
+            : `Shopify: ${error.message}`,
+      };
     }
     console.error(`[admin] ${permission} failed: ${(error as Error).message}`);
     return { error: (error as Error).message || 'Something went wrong. Nothing was changed.' };

@@ -77,7 +77,10 @@ export const auditLog = pgTable(
     metadata: jsonb('metadata').$type<Record<string, unknown>>(),
     ipHash: text('ip_hash'),
   },
-  (t) => [index('audit_log_at_idx').on(t.at), index('audit_log_target_idx').on(t.targetType, t.targetId)],
+  (t) => [
+    index('audit_log_at_idx').on(t.at),
+    index('audit_log_target_idx').on(t.targetType, t.targetId),
+  ],
 );
 
 /* ------------------------------------------------------------------ *
@@ -233,7 +236,10 @@ export const messages = pgTable(
     subject: text('subject'),
     body: text('body').notNull(),
     shopifyCustomerId: text('shopify_customer_id'),
-    notes: jsonb('notes').$type<Array<{ at: string; by: string; text: string }>>().notNull().default([]),
+    notes: jsonb('notes')
+      .$type<Array<{ at: string; by: string; text: string }>>()
+      .notNull()
+      .default([]),
     ipHash: text('ip_hash'),
     createdAt: createdAt(),
     updatedAt: updatedAt(),

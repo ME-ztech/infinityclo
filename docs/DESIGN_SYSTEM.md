@@ -7,7 +7,6 @@
 > header centres the owner's swoosh mark (`public/brand/infnity-mark.png`, rendered as a CSS mask)
 > beside the wordmark. Sections below describe the token system, which is unchanged.
 
-
 Tokens live in `src/app/globals.css` under Tailwind v4's `@theme`. Nothing here
 is a component library — art direction comes first, and the primitives exist to
 keep that direction consistent, not to make every page look like a demo.

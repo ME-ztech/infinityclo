@@ -10,7 +10,10 @@ import { OWNER, SUPPORT, signIn } from './helpers';
 test.describe.configure({ mode: 'serial' });
 test.skip(({ isMobile }) => isMobile, 'Back-office journey runs once, on desktop.');
 
-test('staff sign-in rejects a wrong password and the admin is noindexed', async ({ page, request }) => {
+test('staff sign-in rejects a wrong password and the admin is noindexed', async ({
+  page,
+  request,
+}) => {
   await page.goto('/admin/login');
   await page.getByLabel('Email').fill(OWNER.email);
   await page.getByLabel('Password').fill('not-the-password-1');
@@ -23,7 +26,9 @@ test('staff sign-in rejects a wrong password and the admin is noindexed', async 
   await expect(page).toHaveURL(/\/admin\/login\?next=/);
 });
 
-test('owner signs in, sees honest Shopify gates, and creates a support account', async ({ page }) => {
+test('owner signs in, sees honest Shopify gates, and creates a support account', async ({
+  page,
+}) => {
   await signIn(page, OWNER);
   await expect(page.getByRole('heading', { name: 'Overview' })).toBeVisible();
   await page.goto('/admin/products');
@@ -43,14 +48,18 @@ test('owner signs in, sees honest Shopify gates, and creates a support account',
 
 test('RBAC: support cannot reach content or promotions approval', async ({ page }) => {
   await signIn(page, SUPPORT);
-  await expect(page.getByRole('navigation', { name: 'Back office' }).getByRole('link', { name: 'Content' })).toHaveCount(0);
+  await expect(
+    page.getByRole('navigation', { name: 'Back office' }).getByRole('link', { name: 'Content' }),
+  ).toHaveCount(0);
   await page.goto('/admin/content');
   await expect(page).toHaveURL(/\/admin\/forbidden/);
   await page.goto('/admin/promotions');
   await expect(page).toHaveURL(/\/admin\/forbidden/);
 });
 
-test('CMS: an announcement published in admin appears on the storefront without a deploy', async ({ page }) => {
+test('CMS: an announcement published in admin appears on the storefront without a deploy', async ({
+  page,
+}) => {
   await signIn(page, OWNER);
   await page.goto('/admin/content');
   const form = page.getByTestId('cms-announcement');
@@ -62,7 +71,9 @@ test('CMS: an announcement published in admin appears on the storefront without 
   await expect(page.getByTestId('announcement-bar')).toHaveText(/restock drops Friday/);
 });
 
-test('promotions stay draft until the owner approves with a margin check, and never go live without Shopify', async ({ page }) => {
+test('promotions stay draft until the owner approves with a margin check, and never go live without Shopify', async ({
+  page,
+}) => {
   await signIn(page, OWNER);
   await page.goto('/admin/promotions');
   await page.getByRole('link', { name: /Bundle of 2/ }).click();
@@ -128,13 +139,22 @@ test('community: submissions stay private until approved with a photo', async ({
 
   await signIn(page, OWNER);
   await page.goto('/admin/community?status=pending');
-  const card = page.getByTestId('moderation-card').filter({ has: page.getByRole('link', { name: 'Instagram post' }) }).first();
+  const card = page
+    .getByTestId('moderation-card')
+    .filter({ has: page.getByRole('link', { name: 'Instagram post' }) })
+    .first();
   await card.getByRole('button', { name: 'Approve' }).click();
   await expect(card.getByTestId('action-error')).toContainText(/Attach the photo/);
-  await card.getByLabel('Photo URL').fill('https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_2143_2048x2048.jpg');
+  await card
+    .getByLabel('Photo URL')
+    .fill('https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_2143_2048x2048.jpg');
   await card.getByRole('button', { name: 'Approve' }).click();
   // Approved posts leave the pending queue.
-  await expect(page.getByTestId('moderation-card').filter({ has: page.getByRole('link', { name: 'Instagram post' }) })).toHaveCount(0);
+  await expect(
+    page
+      .getByTestId('moderation-card')
+      .filter({ has: page.getByRole('link', { name: 'Instagram post' }) }),
+  ).toHaveCount(0);
 
   await page.goto('/styled-by-you');
   await expect(page.getByText('@e2e_fit')).toBeVisible();
@@ -145,7 +165,9 @@ test('inbox and audit log record what happened', async ({ page }) => {
   const form = page.getByTestId('contact-form');
   await form.getByLabel('Name').fill('E2E Shopper');
   await form.getByLabel('Email').fill('shopper@example.com');
-  await form.getByLabel('Message').fill('The jorts are too big — can I exchange for a smaller size?');
+  await form
+    .getByLabel('Message')
+    .fill('The jorts are too big — can I exchange for a smaller size?');
   await form.getByRole('button', { name: 'Send message' }).click();
   await expect(page.getByTestId('contact-sent')).toBeVisible();
 
@@ -153,7 +175,13 @@ test('inbox and audit log record what happened', async ({ page }) => {
   await page.goto('/admin/messages');
   await expect(page.getByRole('link', { name: 'E2E Shopper' })).toBeVisible();
   await page.goto('/admin/settings');
-  for (const action of ['cms.save', 'promotion.approve', 'drop.create', 'community.approved', 'staff.create']) {
+  for (const action of [
+    'cms.save',
+    'promotion.approve',
+    'drop.create',
+    'community.approved',
+    'staff.create',
+  ]) {
     await expect(page.getByText(action, { exact: true }).first()).toBeVisible();
   }
 });

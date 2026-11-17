@@ -14,15 +14,37 @@ export default async function NewProductPage() {
   if (!isAdminConfigured()) {
     return (
       <AdminPage title="New product">
-        <NotConnected what="Creating products" envVar="SHOPIFY_ADMIN_ACCESS_TOKEN" scopes="write_products, write_inventory, write_publications" />
+        <NotConnected
+          what="Creating products"
+          envVar="SHOPIFY_ADMIN_ACCESS_TOKEN"
+          scopes="write_products, write_inventory, write_publications"
+        />
       </AdminPage>
     );
   }
   const context = await editorContext();
   return (
-    <AdminPage title="New product" description="Saved to Shopify as a draft until you publish. Add stock now or later under Inventory.">
+    <AdminPage
+      title="New product"
+      description="Saved to Shopify as a draft until you publish. Add stock now or later under Inventory."
+    >
       <ProductEditor
-        product={{ id: null, title: '', handle: '', description: '', productType: '', vendor: 'Infnity.clo', status: 'DRAFT', tags: [], seoTitle: '', seoDescription: '', options: [], variants: [], media: [], facts: { fit: '', fabric: '', care: '', sizeGuide: '' } }}
+        product={{
+          id: null,
+          title: '',
+          handle: '',
+          description: '',
+          productType: '',
+          vendor: 'Infnity.clo',
+          status: 'DRAFT',
+          tags: [],
+          seoTitle: '',
+          seoDescription: '',
+          options: [],
+          variants: [],
+          media: [],
+          facts: { fit: '', fabric: '', care: '', sizeGuide: '' },
+        }}
         canPublish={can(session.user.role, 'products:publish')}
         {...context}
         saveAction={saveProductAction}

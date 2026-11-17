@@ -3,7 +3,10 @@
  * nested object. Checkbox fields are only present when ticked, so callers pass
  * the list of boolean paths they expect.
  */
-export function parseNested(form: FormData, booleanPaths: readonly string[] = []): Record<string, unknown> {
+export function parseNested(
+  form: FormData,
+  booleanPaths: readonly string[] = [],
+): Record<string, unknown> {
   const root: Record<string, unknown> = {};
   const set = (path: string, value: unknown) => {
     const keys = path.split('.');
@@ -34,7 +37,12 @@ export function parseNested(form: FormData, booleanPaths: readonly string[] = []
 /** Removes array holes left by skipped indices and entries flagged as removed. */
 export function compact<T>(items: unknown): T[] {
   if (!Array.isArray(items)) return [];
-  return items.filter((item) => item !== undefined && item !== null && !(typeof item === 'object' && (item as { _remove?: unknown })._remove === 'on')) as T[];
+  return items.filter(
+    (item) =>
+      item !== undefined &&
+      item !== null &&
+      !(typeof item === 'object' && (item as { _remove?: unknown })._remove === 'on'),
+  ) as T[];
 }
 
 export function numberOr(value: unknown, fallback: number): number {

@@ -43,9 +43,11 @@ export function normaliseEmail(email: string): string {
 export const PASSWORD_MIN_LENGTH = 12;
 
 export function passwordProblem(password: string): string | null {
-  if (password.length < PASSWORD_MIN_LENGTH) return `Use at least ${PASSWORD_MIN_LENGTH} characters.`;
+  if (password.length < PASSWORD_MIN_LENGTH)
+    return `Use at least ${PASSWORD_MIN_LENGTH} characters.`;
   if (password.length > 200) return 'Use at most 200 characters.';
-  if (!/[a-zA-Z]/.test(password) || !/[0-9]/.test(password)) return 'Use letters and at least one number.';
+  if (!/[a-zA-Z]/.test(password) || !/[0-9]/.test(password))
+    return 'Use letters and at least one number.';
   return null;
 }
 
@@ -70,7 +72,9 @@ export async function bootstrapOwnerFromEnv(): Promise<boolean> {
   if (!email || !password) return false;
   if ((await staffCount()) > 0) return false;
   if (passwordProblem(password)) {
-    console.error('[admin] ADMIN_BOOTSTRAP_PASSWORD does not meet the password policy; owner not created.');
+    console.error(
+      '[admin] ADMIN_BOOTSTRAP_PASSWORD does not meet the password policy; owner not created.',
+    );
     return false;
   }
   await createStaffUser({ email, name: 'Owner', role: 'owner', password }, null);
@@ -87,7 +91,12 @@ export async function createStaffUser(
   const email = normaliseEmail(input.email);
   const [created] = await db
     .insert(staffUsers)
-    .values({ email, name: input.name.trim() || email, role: input.role, passwordHash: await hashPassword(input.password) })
+    .values({
+      email,
+      name: input.name.trim() || email,
+      role: input.role,
+      passwordHash: await hashPassword(input.password),
+    })
     .returning({ id: staffUsers.id });
   await audit({
     actor: actor ? { id: actor.id, email: actor.email } : { id: null, email: 'system' },
@@ -107,7 +116,11 @@ export type LoginResult =
   | { ok: true; token: string; expiresAt: Date }
   | { ok: false; reason: 'invalid' | 'locked' | 'rate_limited' };
 
-export async function attemptLogin(email: string, password: string, ctx: RequestContext): Promise<LoginResult> {
+export async function attemptLogin(
+  email: string,
+  password: string,
+  ctx: RequestContext,
+): Promise<LoginResult> {
   const normalised = normaliseEmail(email);
   const [byIp, byAccount] = await Promise.all([
     rateLimit(`login:ip:${ctx.ipHash ?? 'unknown'}`, 20, 15 * 60),
@@ -118,10 +131,17 @@ export async function attemptLogin(email: string, password: string, ctx: Request
   await bootstrapOwnerFromEnv();
 
   const db = await getDb();
-  const [user] = await db.select().from(staffUsers).where(eq(staffUsers.email, normalised)).limit(1);
+  const [user] = await db
+    .select()
+    .from(staffUsers)
+    .where(eq(staffUsers.email, normalised))
+    .limit(1);
 
   // Always spend the scrypt cost so response time does not reveal whether the account exists.
-  const valid = await verifyPassword(password, user?.passwordHash ?? 'scrypt$32768$8$1$AAAAAAAAAAAAAAAAAAAAAA$AAAA');
+  const valid = await verifyPassword(
+    password,
+    user?.passwordHash ?? 'scrypt$32768$8$1$AAAAAAAAAAAAAAAAAAAAAA$AAAA',
+  );
 
   if (!user || !user.active) {
     return { ok: false, reason: 'invalid' };
@@ -135,13 +155,17 @@ export async function attemptLogin(email: string, password: string, ctx: Request
       .update(staffUsers)
       .set({
         failedLoginCount: failed >= MAX_FAILED_LOGINS ? 0 : failed,
-        lockedUntil: failed >= MAX_FAILED_LOGINS ? new Date(Date.now() + LOCKOUT_MS) : user.lockedUntil,
+        lockedUntil:
+          failed >= MAX_FAILED_LOGINS ? new Date(Date.now() + LOCKOUT_MS) : user.lockedUntil,
       })
       .where(eq(staffUsers.id, user.id));
     await audit({
       actor: { id: user.id, email: user.email },
       action: failed >= MAX_FAILED_LOGINS ? 'staff.locked' : 'staff.login_failed',
-      summary: failed >= MAX_FAILED_LOGINS ? 'Account locked after repeated failed sign-ins' : 'Failed sign-in',
+      summary:
+        failed >= MAX_FAILED_LOGINS
+          ? 'Account locked after repeated failed sign-ins'
+          : 'Failed sign-in',
       ipHash: ctx.ipHash,
     });
     return { ok: false, reason: failed >= MAX_FAILED_LOGINS ? 'locked' : 'invalid' };
@@ -160,11 +184,20 @@ export async function attemptLogin(email: string, password: string, ctx: Request
     .update(staffUsers)
     .set({ failedLoginCount: 0, lockedUntil: null, lastLoginAt: new Date() })
     .where(eq(staffUsers.id, user.id));
-  await audit({ actor: { id: user.id, email: user.email }, action: 'staff.login', summary: 'Signed in', ipHash: ctx.ipHash });
+  await audit({
+    actor: { id: user.id, email: user.email },
+    action: 'staff.login',
+    summary: 'Signed in',
+    ipHash: ctx.ipHash,
+  });
   return { ok: true, token, expiresAt };
 }
 
-export async function setSessionCookie(token: string, expiresAt: Date, secure: boolean): Promise<void> {
+export async function setSessionCookie(
+  token: string,
+  expiresAt: Date,
+  secure: boolean,
+): Promise<void> {
   const jar = await cookies();
   jar.set(ADMIN_COOKIE, token, {
     httpOnly: true,
@@ -184,7 +217,11 @@ export async function logout(): Promise<void> {
     const session = await getStaffSession();
     await db.update(staffSessions).set({ revokedAt: new Date() }).where(eq(staffSessions.id, id));
     if (session) {
-      await audit({ actor: { id: session.user.id, email: session.user.email }, action: 'staff.logout', summary: 'Signed out' });
+      await audit({
+        actor: { id: session.user.id, email: session.user.email },
+        action: 'staff.logout',
+        summary: 'Signed out',
+      });
     }
   }
   jar.delete(ADMIN_COOKIE);
@@ -206,7 +243,13 @@ export async function getStaffSession(): Promise<StaffSession | null> {
     .select({ session: staffSessions, user: staffUsers })
     .from(staffSessions)
     .innerJoin(staffUsers, eq(staffSessions.userId, staffUsers.id))
-    .where(and(eq(staffSessions.id, id), isNull(staffSessions.revokedAt), gt(staffSessions.expiresAt, now)))
+    .where(
+      and(
+        eq(staffSessions.id, id),
+        isNull(staffSessions.revokedAt),
+        gt(staffSessions.expiresAt, now),
+      ),
+    )
     .limit(1);
 
   if (!row || !row.user.active || !isRole(row.user.role)) return null;
@@ -223,10 +266,14 @@ export async function getStaffSession(): Promise<StaffSession | null> {
 }
 
 /** For admin pages: redirect to sign-in, or to the forbidden page, as appropriate. */
-export async function requireStaffPage(permission: Permission, from = '/admin'): Promise<StaffSession> {
+export async function requireStaffPage(
+  permission: Permission,
+  from = '/admin',
+): Promise<StaffSession> {
   const session = await getStaffSession();
   if (!session) redirect(`/admin/login?next=${encodeURIComponent(from)}`);
-  if (!can(session.user.role, permission)) redirect(`/admin/forbidden?p=${encodeURIComponent(permission)}`);
+  if (!can(session.user.role, permission))
+    redirect(`/admin/forbidden?p=${encodeURIComponent(permission)}`);
   return session;
 }
 
@@ -249,19 +296,34 @@ export async function currentRequestIsHttps(): Promise<boolean> {
 export async function listStaff() {
   const db = await getDb();
   return db
-    .select({ id: staffUsers.id, email: staffUsers.email, name: staffUsers.name, role: staffUsers.role, active: staffUsers.active, lastLoginAt: staffUsers.lastLoginAt, lockedUntil: staffUsers.lockedUntil, createdAt: staffUsers.createdAt })
+    .select({
+      id: staffUsers.id,
+      email: staffUsers.email,
+      name: staffUsers.name,
+      role: staffUsers.role,
+      active: staffUsers.active,
+      lastLoginAt: staffUsers.lastLoginAt,
+      lockedUntil: staffUsers.lockedUntil,
+      createdAt: staffUsers.createdAt,
+    })
     .from(staffUsers)
     .orderBy(staffUsers.createdAt);
 }
 
 async function revokeAllSessions(userId: string) {
   const db = await getDb();
-  await db.update(staffSessions).set({ revokedAt: new Date() }).where(and(eq(staffSessions.userId, userId), isNull(staffSessions.revokedAt)));
+  await db
+    .update(staffSessions)
+    .set({ revokedAt: new Date() })
+    .where(and(eq(staffSessions.userId, userId), isNull(staffSessions.revokedAt)));
 }
 
 async function activeOwnerCount(): Promise<number> {
   const db = await getDb();
-  const [row] = await db.select({ value: count() }).from(staffUsers).where(and(eq(staffUsers.role, 'owner'), eq(staffUsers.active, true)));
+  const [row] = await db
+    .select({ value: count() })
+    .from(staffUsers)
+    .where(and(eq(staffUsers.role, 'owner'), eq(staffUsers.active, true)));
   return Number(row?.value ?? 0);
 }
 
@@ -273,8 +335,12 @@ export async function updateStaff(
   const db = await getDb();
   const [target] = await db.select().from(staffUsers).where(eq(staffUsers.id, id)).limit(1);
   if (!target) throw new Error('Staff member not found.');
-  const losingOwner = target.role === 'owner' && target.active && ((update.role && update.role !== 'owner') || update.active === false);
-  if (losingOwner && (await activeOwnerCount()) <= 1) throw new Error('There must always be at least one active owner.');
+  const losingOwner =
+    target.role === 'owner' &&
+    target.active &&
+    ((update.role && update.role !== 'owner') || update.active === false);
+  if (losingOwner && (await activeOwnerCount()) <= 1)
+    throw new Error('There must always be at least one active owner.');
   if (update.password) {
     const problem = passwordProblem(update.password);
     if (problem) throw new Error(problem);
@@ -284,7 +350,13 @@ export async function updateStaff(
     .set({
       ...(update.role ? { role: update.role } : {}),
       ...(update.active !== undefined ? { active: update.active } : {}),
-      ...(update.password ? { passwordHash: await hashPassword(update.password), failedLoginCount: 0, lockedUntil: null } : {}),
+      ...(update.password
+        ? {
+            passwordHash: await hashPassword(update.password),
+            failedLoginCount: 0,
+            lockedUntil: null,
+          }
+        : {}),
       updatedAt: new Date(),
     })
     .where(eq(staffUsers.id, id));

@@ -76,6 +76,7 @@ export async function takeOAuthState(): Promise<OAuthState | null> {
 
 /** Only same-site relative paths are accepted as post-login destinations. */
 export function safeReturnTo(value: string | null | undefined, fallback = '/account'): string {
-  if (!value || !value.startsWith('/') || value.startsWith('//') || value.includes('\\')) return fallback;
+  if (!value || !value.startsWith('/') || value.startsWith('//') || value.includes('\\'))
+    return fallback;
   return value.slice(0, 300);
 }

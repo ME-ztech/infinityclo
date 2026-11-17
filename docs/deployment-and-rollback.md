@@ -33,14 +33,14 @@ The current theme serves `infinityclo.ca` from Shopify. Shopify checkout must ke
 
 ## 3. Rollback
 
-| What broke | Rollback | Time |
-| --- | --- | --- |
-| A bad deploy | Vercel → Deployments → previous deployment → **Instant Rollback** | < 1 min |
+| What broke                            | Rollback                                                                                                                                                                   | Time         |
+| ------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------ |
+| A bad deploy                          | Vercel → Deployments → previous deployment → **Instant Rollback**                                                                                                          | < 1 min      |
 | Storefront unusable after DNS cutover | Point `infinityclo.ca` DNS back to Shopify (`A 23.227.38.65`, `www CNAME shops.myshopify.com`) and re-select it as primary domain in Shopify; the old theme is still there | TTL (≈5 min) |
-| Bad content edit | Re-edit in Admin → Content (each save is versioned in the audit log) | minutes |
-| Bad promotion | Admin → Promotions → **End** (deactivates the Shopify discount) or deactivate in Shopify admin | < 1 min |
-| Bad product edit | Edit again in Admin or Shopify admin; Shopify keeps product history in its admin timeline | minutes |
-| Database problem | Neon point-in-time restore to before the incident (enable PITR on the paid plan), then redeploy | 10–30 min |
+| Bad content edit                      | Re-edit in Admin → Content (each save is versioned in the audit log)                                                                                                       | minutes      |
+| Bad promotion                         | Admin → Promotions → **End** (deactivates the Shopify discount) or deactivate in Shopify admin                                                                             | < 1 min      |
+| Bad product edit                      | Edit again in Admin or Shopify admin; Shopify keeps product history in its admin timeline                                                                                  | minutes      |
+| Database problem                      | Neon point-in-time restore to before the incident (enable PITR on the paid plan), then redeploy                                                                            | 10–30 min    |
 
 **Backups.** Shopify holds the commerce data. The app database holds CMS content, promotion drafts, consent records, community submissions, inbox, staff and audit; enable Neon PITR/backups and export subscribers regularly (Admin → Marketing).
 
@@ -51,10 +51,10 @@ The current theme serves `infinityclo.ca` from Shopify. Shopify checkout must ke
 
 ## 5. Change log
 
-| Commit range | Change | Rollback |
-| --- | --- | --- |
-| Phase 0 | Audit docs, CAD-pinned catalogue import | Revert commit |
-| Platform | App DB (new tables only), Shopify clients, checkout hand-off | Drop the app DB; Shopify untouched |
-| Storefront 2.0 | Theme, hero, pages | Vercel rollback |
-| Back office | Admin modules | Vercel rollback |
-| E2E | Tests and a11y fixes | — |
+| Commit range   | Change                                                       | Rollback                           |
+| -------------- | ------------------------------------------------------------ | ---------------------------------- |
+| Phase 0        | Audit docs, CAD-pinned catalogue import                      | Revert commit                      |
+| Platform       | App DB (new tables only), Shopify clients, checkout hand-off | Drop the app DB; Shopify untouched |
+| Storefront 2.0 | Theme, hero, pages                                           | Vercel rollback                    |
+| Back office    | Admin modules                                                | Vercel rollback                    |
+| E2E            | Tests and a11y fixes                                         | —                                  |

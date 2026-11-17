@@ -51,21 +51,34 @@ export async function shopifyGraphql<T>(request: GraphqlRequest): Promise<T> {
     try {
       response = await transport.fetch(request.endpoint, {
         method: 'POST',
-        headers: { 'content-type': 'application/json', accept: 'application/json', ...request.headers },
+        headers: {
+          'content-type': 'application/json',
+          accept: 'application/json',
+          ...request.headers,
+        },
         body: JSON.stringify({ query: request.query, variables: request.variables ?? {} }),
         signal: AbortSignal.timeout(request.timeoutMs ?? 15_000),
         cache: 'no-store',
       });
     } catch (error) {
-      lastError = new ShopifyApiError(`Shopify is unreachable: ${(error as Error).message}`, 'network');
+      lastError = new ShopifyApiError(
+        `Shopify is unreachable: ${(error as Error).message}`,
+        'network',
+      );
       await sleep(backoff(attempt));
       continue;
     }
 
     if (response.status === 429 || response.status >= 500) {
-      lastError = new ShopifyApiError(`Shopify responded ${response.status}`, response.status === 429 ? 'throttled' : 'http', response.status);
+      lastError = new ShopifyApiError(
+        `Shopify responded ${response.status}`,
+        response.status === 429 ? 'throttled' : 'http',
+        response.status,
+      );
       const retryAfter = Number(response.headers.get('retry-after'));
-      await sleep(Number.isFinite(retryAfter) && retryAfter > 0 ? retryAfter * 1000 : backoff(attempt));
+      await sleep(
+        Number.isFinite(retryAfter) && retryAfter > 0 ? retryAfter * 1000 : backoff(attempt),
+      );
       continue;
     }
 
@@ -86,10 +99,19 @@ export async function shopifyGraphql<T>(request: GraphqlRequest): Promise<T> {
       if (throttled) {
         lastError = new ShopifyApiError('Shopify Admin API throttled the request', 'throttled');
         const status = body.extensions?.cost?.throttleStatus;
-        await sleep(status ? Math.min(10_000, (1000 * 100) / Math.max(1, status.restoreRate)) : backoff(attempt));
+        await sleep(
+          status
+            ? Math.min(10_000, (1000 * 100) / Math.max(1, status.restoreRate))
+            : backoff(attempt),
+        );
         continue;
       }
-      throw new ShopifyApiError(body.errors.map((error) => error.message).join('; '), 'graphql', 200, body.errors);
+      throw new ShopifyApiError(
+        body.errors.map((error) => error.message).join('; '),
+        'graphql',
+        200,
+        body.errors,
+      );
     }
     if (!body.data) throw new ShopifyApiError('Shopify returned no data', 'graphql');
     return body.data;
@@ -109,7 +131,10 @@ export interface UserError {
 }
 
 /** Throws when a mutation payload carries userErrors — a rejected write is never a success. */
-export function assertNoUserErrors(payload: { userErrors?: readonly UserError[] | null } | null | undefined, action: string): void {
+export function assertNoUserErrors(
+  payload: { userErrors?: readonly UserError[] | null } | null | undefined,
+  action: string,
+): void {
   const errors = payload?.userErrors ?? [];
   if (errors.length > 0) {
     throw new ShopifyApiError(

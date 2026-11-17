@@ -2,10 +2,22 @@ import Link from 'next/link';
 
 import { cn } from '@/lib/cn';
 
-export const inputClass = 'border-line focus:border-ink h-10 w-full border bg-white px-3 text-sm outline-none disabled:bg-neutral-100 disabled:text-neutral-500';
-export const textareaClass = 'border-line focus:border-ink w-full border bg-white px-3 py-2 text-sm outline-none';
+export const inputClass =
+  'border-line focus:border-ink h-10 w-full border bg-white px-3 text-sm outline-none disabled:bg-neutral-100 disabled:text-neutral-500';
+export const textareaClass =
+  'border-line focus:border-ink w-full border bg-white px-3 py-2 text-sm outline-none';
 
-export function AdminPage({ title, description, actions, children }: { title: string; description?: React.ReactNode; actions?: React.ReactNode; children: React.ReactNode }) {
+export function AdminPage({
+  title,
+  description,
+  actions,
+  children,
+}: {
+  title: string;
+  description?: React.ReactNode;
+  actions?: React.ReactNode;
+  children: React.ReactNode;
+}) {
   return (
     <div className="flex flex-col gap-6">
       <header className="flex flex-wrap items-end justify-between gap-4">
@@ -20,7 +32,17 @@ export function AdminPage({ title, description, actions, children }: { title: st
   );
 }
 
-export function Card({ title, children, className, actions }: { title?: string; children: React.ReactNode; className?: string; actions?: React.ReactNode }) {
+export function Card({
+  title,
+  children,
+  className,
+  actions,
+}: {
+  title?: string;
+  children: React.ReactNode;
+  className?: string;
+  actions?: React.ReactNode;
+}) {
   return (
     <section className={cn('border-line border bg-white p-5', className)}>
       {(title || actions) && (
@@ -34,7 +56,17 @@ export function Card({ title, children, className, actions }: { title?: string; 
   );
 }
 
-export function Stat({ label, value, hint, href }: { label: string; value: React.ReactNode; hint?: string; href?: string }) {
+export function Stat({
+  label,
+  value,
+  hint,
+  href,
+}: {
+  label: string;
+  value: React.ReactNode;
+  hint?: string;
+  href?: string;
+}) {
   const body = (
     <>
       <p className="text-xs font-semibold tracking-wide text-neutral-500 uppercase">{label}</p>
@@ -59,11 +91,35 @@ const BADGE_TONES = {
   info: 'bg-blue-100 text-blue-800',
 } as const;
 
-export function Badge({ children, tone = 'neutral' }: { children: React.ReactNode; tone?: keyof typeof BADGE_TONES }) {
-  return <span className={cn('inline-flex items-center px-2 py-0.5 text-[0.7rem] font-semibold uppercase', BADGE_TONES[tone])}>{children}</span>;
+export function Badge({
+  children,
+  tone = 'neutral',
+}: {
+  children: React.ReactNode;
+  tone?: keyof typeof BADGE_TONES;
+}) {
+  return (
+    <span
+      className={cn(
+        'inline-flex items-center px-2 py-0.5 text-[0.7rem] font-semibold uppercase',
+        BADGE_TONES[tone],
+      )}
+    >
+      {children}
+    </span>
+  );
 }
 
-export function Field({ label, hint, children }: { label: string; hint?: React.ReactNode; children: React.ReactNode; htmlFor?: string }) {
+export function Field({
+  label,
+  hint,
+  children,
+}: {
+  label: string;
+  hint?: React.ReactNode;
+  children: React.ReactNode;
+  htmlFor?: string;
+}) {
   // The control sits inside its <label>, so it is named for assistive technology without ids.
   return (
     <label className="flex flex-col gap-1">
@@ -75,9 +131,20 @@ export function Field({ label, hint, children }: { label: string; hint?: React.R
 }
 
 /** States exactly what is missing for a Shopify-backed module, instead of showing fake data. */
-export function NotConnected({ what, envVar, scopes }: { what: string; envVar: string; scopes?: string }) {
+export function NotConnected({
+  what,
+  envVar,
+  scopes,
+}: {
+  what: string;
+  envVar: string;
+  scopes?: string;
+}) {
   return (
-    <div className="border border-amber-300 bg-amber-50 p-4 text-sm text-amber-950" data-testid="not-connected">
+    <div
+      className="border border-amber-300 bg-amber-50 p-4 text-sm text-amber-950"
+      data-testid="not-connected"
+    >
       <p className="font-semibold">{what} needs the Shopify Admin API.</p>
       <p className="mt-1">
         Set <code className="bg-white px-1">{envVar}</code>
@@ -87,21 +154,33 @@ export function NotConnected({ what, envVar, scopes }: { what: string; envVar: s
             with scopes <code className="bg-white px-1">{scopes}</code>
           </>
         ) : null}
-        . Until then this screen shows the imported catalogue read-only and every write is disabled — nothing here pretends to change your store. See
-        Settings → Integrations.
+        . Until then this screen shows the imported catalogue read-only and every write is disabled
+        — nothing here pretends to change your store. See Settings → Integrations.
       </p>
     </div>
   );
 }
 
-export function Table({ head, children, empty }: { head: React.ReactNode[]; children: React.ReactNode; empty?: string }) {
+export function Table({
+  head,
+  children,
+  empty,
+}: {
+  head: React.ReactNode[];
+  children: React.ReactNode;
+  empty?: string;
+}) {
   return (
     <div className="border-line overflow-x-auto border bg-white">
       <table className="w-full min-w-[640px] text-left text-sm">
         <thead className="border-line border-b bg-neutral-50">
           <tr>
             {head.map((cell, index) => (
-              <th key={index} scope="col" className="px-3 py-2 text-xs font-semibold tracking-wide text-neutral-600 uppercase">
+              <th
+                key={index}
+                scope="col"
+                className="px-3 py-2 text-xs font-semibold tracking-wide text-neutral-600 uppercase"
+              >
                 {cell}
               </th>
             ))}
@@ -120,7 +199,11 @@ export function Td({ children, className }: { children: React.ReactNode; classNa
 
 export function formatDate(value: string | Date | null | undefined): string {
   if (!value) return '—';
-  return new Date(value).toLocaleString('en-CA', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'America/Winnipeg' });
+  return new Date(value).toLocaleString('en-CA', {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+    timeZone: 'America/Winnipeg',
+  });
 }
 
 export function formatCad(amount: string | number | null | undefined, currency = 'CAD'): string {
@@ -131,7 +214,11 @@ export function formatCad(amount: string | number | null | undefined, currency =
 /** CSV export link. Exports are route handlers that return a file, so this is a plain download anchor, not page navigation. */
 export function DownloadLink({ href, children }: { href: string; children: React.ReactNode }) {
   return (
-    <a download href={href} className="border-ink inline-flex h-10 items-center border px-4 text-xs font-semibold uppercase">
+    <a
+      download
+      href={href}
+      className="border-ink inline-flex h-10 items-center border px-4 text-xs font-semibold uppercase"
+    >
       {children}
     </a>
   );

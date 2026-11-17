@@ -27,7 +27,13 @@ const DEFAULT_CONFIG: StoreConfig = {
 
 const StoreConfigContext = createContext<StoreConfig>(DEFAULT_CONFIG);
 
-export function StoreConfigProvider({ value, children }: { value: StoreConfig; children: ReactNode }) {
+export function StoreConfigProvider({
+  value,
+  children,
+}: {
+  value: StoreConfig;
+  children: ReactNode;
+}) {
   return <StoreConfigContext.Provider value={value}>{children}</StoreConfigContext.Provider>;
 }
 

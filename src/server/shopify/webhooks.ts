@@ -49,7 +49,10 @@ export const HANDLED_TOPICS = [
   'app/uninstalled',
 ] as const;
 
-export async function handleShopifyWebhook(rawBody: string, headers: Headers): Promise<WebhookOutcome> {
+export async function handleShopifyWebhook(
+  rawBody: string,
+  headers: Headers,
+): Promise<WebhookOutcome> {
   const secret = shopifyConfig().webhookSecret;
   if (!secret) return { status: 401, body: 'Webhook secret not configured' };
   if (!verifyHmacBase64(rawBody, secret, headers.get('x-shopify-hmac-sha256'))) {
@@ -83,8 +86,13 @@ export async function handleShopifyWebhook(rawBody: string, headers: Headers): P
 
   if (claimed.length === 0) {
     // Seen before. If the earlier attempt failed, process again (handlers are idempotent).
-    const [existing] = await db.select().from(webhookEvents).where(eq(webhookEvents.webhookId, webhookId)).limit(1);
-    if (existing?.status === 'processed' || existing?.status === 'ignored') return { status: 200, body: 'duplicate' };
+    const [existing] = await db
+      .select()
+      .from(webhookEvents)
+      .where(eq(webhookEvents.webhookId, webhookId))
+      .limit(1);
+    if (existing?.status === 'processed' || existing?.status === 'ignored')
+      return { status: 200, body: 'duplicate' };
     await db
       .update(webhookEvents)
       .set({ attempts: sql`${webhookEvents.attempts} + 1` })
@@ -108,7 +116,10 @@ export async function handleShopifyWebhook(rawBody: string, headers: Headers): P
 }
 
 /** Returns false for topics we acknowledge but do not act on. */
-export async function processTopic(topic: string, payload: Record<string, unknown>): Promise<boolean> {
+export async function processTopic(
+  topic: string,
+  payload: Record<string, unknown>,
+): Promise<boolean> {
   switch (topic) {
     case 'products/create':
     case 'products/update':
@@ -142,8 +153,12 @@ export async function processTopic(topic: string, payload: Record<string, unknow
         const db = await getDb();
         await db.delete(subscribers).where(eq(subscribers.email, email));
         await db.execute(sql`DELETE FROM waitlist_entries WHERE email = ${email}`);
-        await db.execute(sql`UPDATE messages SET name = '[redacted]', email = '[redacted]', body = '[redacted]' WHERE email = ${email}`);
-        await db.execute(sql`UPDATE community_posts SET submitter_email = NULL WHERE submitter_email = ${email}`);
+        await db.execute(
+          sql`UPDATE messages SET name = '[redacted]', email = '[redacted]', body = '[redacted]' WHERE email = ${email}`,
+        );
+        await db.execute(
+          sql`UPDATE community_posts SET submitter_email = NULL WHERE submitter_email = ${email}`,
+        );
       }
       return true;
     }

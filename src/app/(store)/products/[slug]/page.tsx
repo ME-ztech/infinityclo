@@ -7,7 +7,13 @@ import { ProductRack } from '@/components/product/ProductRack';
 import { Section, SectionHeader } from '@/components/layout/Section';
 import { TextLink } from '@/components/ui/Button';
 import { catalogRepository } from '@/data';
-import { fromPrice, isSoldOut, primaryMedia, productAvailability, relatedProducts } from '@/domain/product';
+import {
+  fromPrice,
+  isSoldOut,
+  primaryMedia,
+  productAvailability,
+  relatedProducts,
+} from '@/domain/product';
 import { previewOffers } from '@/domain/promotions';
 import type { Product } from '@/domain/types';
 import { BRAND, SITE_URL } from '@/lib/site';
@@ -65,13 +71,22 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
   // "You may also like": only pieces a customer can actually buy right now.
   const related = settings.pdpRecommendationsEnabled
-    ? relatedProducts(product, catalog.filter((candidate) => !isSoldOut(candidate)), 4)
+    ? relatedProducts(
+        product,
+        catalog.filter((candidate) => !isSoldOut(candidate)),
+        4,
+      )
     : [];
   const siblings = colourSiblings(product, catalog);
   const firstVariant = product.variants[0];
   const offerMessages = firstVariant
     ? previewOffers(promotions, [
-        { productSlug: product.slug, quantity: 1, unitPrice: firstVariant.price, compareAtUnitPrice: firstVariant.compareAtPrice },
+        {
+          productSlug: product.slug,
+          quantity: 1,
+          unitPrice: firstVariant.price,
+          compareAtUnitPrice: firstVariant.compareAtPrice,
+        },
       ])
         .filter((offer) => offer.kind !== 'percentage' || offer.qualified || offer.code)
         .map((offer) => offer.message)
@@ -89,7 +104,9 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     '@type': 'Product',
     name: product.name,
     description: product.description ?? undefined,
-    image: media ? [media.url.startsWith('http') ? media.url : `${SITE_URL}${media.url}`] : undefined,
+    image: media
+      ? [media.url.startsWith('http') ? media.url : `${SITE_URL}${media.url}`]
+      : undefined,
     brand: { '@type': 'Brand', name: BRAND.name },
     ...(price && {
       offers: {
@@ -133,9 +150,13 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           </ol>
         </nav>
 
-        <ProductDetailView product={product} sizeGuide={sizeGuide} offerMessages={offerMessages} siblings={siblings} />
+        <ProductDetailView
+          product={product}
+          sizeGuide={sizeGuide}
+          offerMessages={offerMessages}
+          siblings={siblings}
+        />
       </Section>
-
 
       {related.length > 0 && (
         <Section surface="paper" aria-labelledby="related-heading">
@@ -165,7 +186,9 @@ function colourSiblings(product: Product, catalog: readonly Product[]) {
   return catalog
     .filter((candidate) => candidate.slug !== product.slug && candidate.name === product.name)
     .map((candidate) => {
-      const colour = candidate.variants[0]?.selectedOptions.Color ?? candidate.variants[0]?.selectedOptions.Colour;
+      const colour =
+        candidate.variants[0]?.selectedOptions.Color ??
+        candidate.variants[0]?.selectedOptions.Colour;
       return { slug: candidate.slug, label: colour ?? candidate.slug.replace(/-/g, ' ') };
     });
 }

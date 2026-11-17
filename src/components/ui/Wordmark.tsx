@@ -8,7 +8,9 @@ import { BRAND } from '@/lib/site';
  */
 export function Wordmark({ className }: { className?: string }) {
   return (
-    <span className={cn('font-display leading-none tracking-[0.04em] uppercase select-none', className)}>
+    <span
+      className={cn('font-display leading-none tracking-[0.04em] uppercase select-none', className)}
+    >
       {BRAND.name}
       <span className="text-signal">.</span>
       <span className="tracking-[0.02em] lowercase">clo</span>
@@ -17,11 +19,24 @@ export function Wordmark({ className }: { className?: string }) {
 }
 
 export function BrandMark({ className, label }: { className?: string; label?: string }) {
-  return <span className={cn('brand-mark', className)} role={label ? 'img' : undefined} aria-label={label} aria-hidden={label ? undefined : true} />;
+  return (
+    <span
+      className={cn('brand-mark', className)}
+      role={label ? 'img' : undefined}
+      aria-label={label}
+      aria-hidden={label ? undefined : true}
+    />
+  );
 }
 
 /** Mark + wordmark lockup used in the header and footer; scales with the viewport. */
-export function BrandLogo({ className, compact = false }: { className?: string; compact?: boolean }) {
+export function BrandLogo({
+  className,
+  compact = false,
+}: {
+  className?: string;
+  compact?: boolean;
+}) {
   return (
     <span className={cn('inline-flex items-center gap-2 md:gap-2.5', className)}>
       <BrandMark className={compact ? 'h-6' : 'h-6 md:h-8'} />

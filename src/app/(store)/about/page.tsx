@@ -6,7 +6,8 @@ import { BrandMark } from '@/components/ui/Wordmark';
 
 export const metadata: Metadata = {
   title: 'Our story',
-  description: 'Infnity.clo is where raw identity meets untouchable design. Built for the ones who don’t fold, don’t follow — and never settle.',
+  description:
+    'Infnity.clo is where raw identity meets untouchable design. Built for the ones who don’t fold, don’t follow — and never settle.',
   alternates: { canonical: '/about' },
 };
 
@@ -20,9 +21,12 @@ export default function AboutPage() {
     <div className="pb-(--spacing-section)">
       <section className="edge mx-auto max-w-3xl pt-16 text-center md:pt-24">
         <BrandMark className="h-16 md:h-20" />
-        <h1 className="font-display mt-8 text-[clamp(2.6rem,9vw,6rem)] leading-[0.88]">Be the Statement</h1>
+        <h1 className="font-display mt-8 text-[clamp(2.6rem,9vw,6rem)] leading-[0.88]">
+          Be the Statement
+        </h1>
         <p className="text-fg mt-8 text-lg leading-relaxed md:text-xl">
-          Infnity.clo is where raw identity meets untouchable design. Built for the ones who don’t fold, don’t follow — and never settle.
+          Infnity.clo is where raw identity meets untouchable design. Built for the ones who don’t
+          fold, don’t follow — and never settle.
         </p>
         <p className="font-display mt-6 text-xl">For the FLY only.</p>
         <p className="text-fg-muted mt-2">Question is… you got what it takes to be one?</p>
@@ -39,10 +43,15 @@ export default function AboutPage() {
           />
         </div>
         <div className="text-center md:text-left">
-          <p className="text-fg-faint text-[0.66rem] font-semibold tracking-[0.32em] uppercase">The Troop in INFNITY</p>
-          <h2 className="font-display mt-4 text-[clamp(2rem,5vw,3rem)] leading-[0.92]">A community label, based in Canada</h2>
+          <p className="text-fg-faint text-[0.66rem] font-semibold tracking-[0.32em] uppercase">
+            The Troop in INFNITY
+          </p>
+          <h2 className="font-display mt-4 text-[clamp(2rem,5vw,3rem)] leading-[0.92]">
+            A community label, based in Canada
+          </h2>
           <p className="text-fg-muted mt-5 text-sm leading-relaxed">
-            The wall belongs to the people who wear it. Wanna be added? Post and tag us @infnity.clo — or send your fit in.
+            The wall belongs to the people who wear it. Wanna be added? Post and tag us @infnity.clo
+            — or send your fit in.
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3 md:justify-start">
             <ButtonLink href="/styled-by-you" variant="primary" size="md">

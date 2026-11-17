@@ -95,10 +95,15 @@ export function Header() {
               <nav aria-label="Primary" className="hidden lg:block">
                 <ul className="flex items-center gap-6 xl:gap-8">
                   {PRIMARY_NAV.map((item) => {
-                    const isActive = item.href === '/' ? pathname === '/' : pathname.startsWith(item.href);
+                    const isActive =
+                      item.href === '/' ? pathname === '/' : pathname.startsWith(item.href);
                     return (
                       <li key={item.label}>
-                        <Link href={item.href} className={linkClass(isActive)} aria-current={isActive ? 'page' : undefined}>
+                        <Link
+                          href={item.href}
+                          className={linkClass(isActive)}
+                          aria-current={isActive ? 'page' : undefined}
+                        >
                           {item.label}
                         </Link>
                       </li>
@@ -133,7 +138,9 @@ export function Header() {
               <button
                 type="button"
                 onClick={openDrawer}
-                aria-label={count > 0 ? `Cart, ${count} ${count === 1 ? 'item' : 'items'}` : 'Cart, empty'}
+                aria-label={
+                  count > 0 ? `Cart, ${count} ${count === 1 ? 'item' : 'items'}` : 'Cart, empty'
+                }
                 data-testid="cart-button"
                 className="text-fg hover:text-signal flex h-11 min-w-11 items-center justify-center transition-colors"
               >
@@ -165,7 +172,7 @@ function Pip({ children, testId }: { children: React.ReactNode; testId?: string 
   return (
     <span
       data-testid={testId}
-      className="bg-signal text-paper -ml-1.5 -mt-4 flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[0.58rem] font-bold tabular-nums"
+      className="bg-signal text-paper -mt-4 -ml-1.5 flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[0.58rem] font-bold tabular-nums"
     >
       {children}
     </span>

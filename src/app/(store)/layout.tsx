@@ -19,7 +19,10 @@ export default async function StoreLayout({ children }: { children: React.ReactN
   return (
     <StoreConfigProvider value={storeConfig}>
       <CartProvider>
-        <a href="#main" className="sr-only-focusable bg-fg text-paper absolute top-2 left-2 z-[100] px-4 py-2 text-sm font-semibold">
+        <a
+          href="#main"
+          className="sr-only-focusable bg-fg text-paper absolute top-2 left-2 z-[100] px-4 py-2 text-sm font-semibold"
+        >
           Skip to content
         </a>
         <AnnouncementBar content={announcement.value} />

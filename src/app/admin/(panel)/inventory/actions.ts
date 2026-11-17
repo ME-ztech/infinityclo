@@ -8,7 +8,10 @@ import { audit } from '@/server/audit';
 import { actorOf, runAction, type ActionResult } from '@/server/admin/action';
 import { setAvailableQuantity } from '@/server/shopify/admin';
 
-export async function setStockAction(_state: ActionResult | null, form: FormData): Promise<ActionResult> {
+export async function setStockAction(
+  _state: ActionResult | null,
+  form: FormData,
+): Promise<ActionResult> {
   return runAction('inventory:write', async (user) => {
     const input = z
       .object({
@@ -21,7 +24,10 @@ export async function setStockAction(_state: ActionResult | null, form: FormData
       })
       .parse(Object.fromEntries(form));
     if (input.quantity === input.expectedCurrent) return { ok: true, message: 'No change.' };
-    await setAvailableQuantity({ ...input, referenceDocumentUri: `infnity://admin/inventory/${user.id}/${Date.now()}` });
+    await setAvailableQuantity({
+      ...input,
+      referenceDocumentUri: `infnity://admin/inventory/${user.id}/${Date.now()}`,
+    });
     await audit({
       actor: actorOf(user),
       action: 'inventory.set',

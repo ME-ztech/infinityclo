@@ -15,7 +15,6 @@ import type { Cart, CartLine, CurrencyCode } from '@/domain/types';
 import { MAX_QUANTITY_PER_LINE } from './limits';
 import type { PersistedCart, PersistedLine } from './storage';
 
-
 export interface ResolvedCart {
   readonly cart: Cart;
   /**

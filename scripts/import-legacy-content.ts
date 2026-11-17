@@ -111,12 +111,16 @@ async function importPolicies() {
   const policies = [];
   for (const handle of POLICIES) {
     const html = await fetchText(`${ORIGIN}/policies/${handle}`);
-    const title = stripTags(html.match(/shopify-policy__title">\s*<h1>([\s\S]*?)<\/h1>/)?.[1] ?? handle);
+    const title = stripTags(
+      html.match(/shopify-policy__title">\s*<h1>([\s\S]*?)<\/h1>/)?.[1] ?? handle,
+    );
     const body =
-      html.match(/shopify-policy__body">\s*<div class="rte">([\s\S]*?)<\/div>\s*<\/div>\s*<\/div>/)?.[1] ??
-      '';
+      html.match(
+        /shopify-policy__body">\s*<div class="rte">([\s\S]*?)<\/div>\s*<\/div>\s*<\/div>/,
+      )?.[1] ?? '';
     const blocks = policyBlocks(body);
-    if (blocks.length === 0) throw new Error(`Policy ${handle} parsed to nothing; refusing to write.`);
+    if (blocks.length === 0)
+      throw new Error(`Policy ${handle} parsed to nothing; refusing to write.`);
     policies.push({
       handle,
       title,
@@ -134,7 +138,9 @@ async function importCommunityWall() {
   const main = html.slice(html.indexOf('<main'), html.indexOf('</main>'));
   const seen = new Set<string>();
   const entries = [];
-  for (const match of main.matchAll(/<img[^>]*?(?:height="(\d+)")?[^>]*?(?:width="(\d+)")?[^>]*?src="([^"]+)"/gi)) {
+  for (const match of main.matchAll(
+    /<img[^>]*?(?:height="(\d+)")?[^>]*?(?:width="(\d+)")?[^>]*?src="([^"]+)"/gi,
+  )) {
     const raw = match[3] ?? '';
     if (!raw.includes('/files/')) continue;
     const base = raw.split('?')[0]!.replace(/^\/\//, 'https://');
@@ -165,7 +171,10 @@ async function main() {
     const policies = await importPolicies();
     const wall = await importCommunityWall();
     await writeFile(path.join(OUT_DIR, 'policies.json'), `${JSON.stringify(policies, null, 2)}\n`);
-    await writeFile(path.join(OUT_DIR, 'community-legacy.json'), `${JSON.stringify(wall, null, 2)}\n`);
+    await writeFile(
+      path.join(OUT_DIR, 'community-legacy.json'),
+      `${JSON.stringify(wall, null, 2)}\n`,
+    );
     console.log('Done.');
   } catch (error) {
     console.error(`Import failed, nothing written: ${(error as Error).message}`);

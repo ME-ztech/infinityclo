@@ -49,7 +49,10 @@ export function Hero({ content }: { content: HeroContent }) {
 
   useEffect(() => {
     if (!isPlaying) return;
-    const timer = window.setInterval(() => setActive((index) => (index + 1) % slides.length), content.intervalSeconds * 1000);
+    const timer = window.setInterval(
+      () => setActive((index) => (index + 1) % slides.length),
+      content.intervalSeconds * 1000,
+    );
     return () => window.clearInterval(timer);
   }, [isPlaying, slides.length, content.intervalSeconds]);
 
@@ -71,12 +74,20 @@ export function Hero({ content }: { content: HeroContent }) {
       onMouseLeave={() => setIsInteracting(false)}
       onFocusCapture={() => setIsInteracting(true)}
       onBlurCapture={(event) => {
-        if (!regionRef.current?.contains(event.relatedTarget as Node | null)) setIsInteracting(false);
+        if (!regionRef.current?.contains(event.relatedTarget as Node | null))
+          setIsInteracting(false);
       }}
       className="relative -mt-16 h-[max(36rem,calc(100svh-2rem))] w-full overflow-hidden bg-white md:-mt-[4.75rem] md:h-[min(92vh,60rem)]"
     >
       {slides.map((slide, index) => (
-        <SlideMedia key={slide.id} slide={slide} index={index} count={slides.length} isActive={index === active} load={index === 0 || loadRest} />
+        <SlideMedia
+          key={slide.id}
+          slide={slide}
+          index={index}
+          count={slides.length}
+          isActive={index === active}
+          load={index === 0 || loadRest}
+        />
       ))}
 
       {/* Legibility wash behind the copy, toned to the photograph. */}
@@ -90,7 +101,14 @@ export function Hero({ content }: { content: HeroContent }) {
         )}
       />
       {current.overlay > 0 && (
-        <div aria-hidden className={cn('pointer-events-none absolute inset-0', tone === 'light' ? 'bg-white' : 'bg-black')} style={{ opacity: current.overlay / 100 }} />
+        <div
+          aria-hidden
+          className={cn(
+            'pointer-events-none absolute inset-0',
+            tone === 'light' ? 'bg-white' : 'bg-black',
+          )}
+          style={{ opacity: current.overlay / 100 }}
+        />
       )}
 
       <div
@@ -100,7 +118,10 @@ export function Hero({ content }: { content: HeroContent }) {
         )}
       >
         <div className="max-w-xl">
-          <h1 className="font-display text-[clamp(1.9rem,8vw,5.6rem)] leading-[0.88]" data-testid="hero-slogan">
+          <h1
+            className="font-display text-[clamp(1.9rem,8vw,5.6rem)] leading-[0.88]"
+            data-testid="hero-slogan"
+          >
             {content.slogan}
           </h1>
 
@@ -124,7 +145,10 @@ export function Hero({ content }: { content: HeroContent }) {
             ))}
           </ul>
 
-          <p className="mt-4 hidden max-w-sm text-sm leading-snug font-medium opacity-80 md:block" aria-live={isPlaying ? 'off' : 'polite'}>
+          <p
+            className="mt-4 hidden max-w-sm text-sm leading-snug font-medium opacity-80 md:block"
+            aria-live={isPlaying ? 'off' : 'polite'}
+          >
             {current.headline}
           </p>
 
@@ -134,7 +158,9 @@ export function Hero({ content }: { content: HeroContent }) {
               data-testid="hero-cta"
               className={cn(
                 'font-display inline-flex h-12 min-w-36 items-center justify-center px-7 text-[0.8rem] transition-colors md:h-13 md:min-w-40 md:px-8',
-                tone === 'light' ? 'bg-ink text-paper hover:bg-signal' : 'bg-paper text-ink hover:bg-signal hover:text-paper',
+                tone === 'light'
+                  ? 'bg-ink text-paper hover:bg-signal'
+                  : 'bg-paper text-ink hover:bg-signal hover:text-paper',
               )}
             >
               {current.ctaLabel}
@@ -157,7 +183,9 @@ export function Hero({ content }: { content: HeroContent }) {
             data-testid="hero-pause"
             className={cn(
               'font-display flex h-11 min-w-20 shrink-0 items-center justify-center rounded-full border px-4 text-[0.7rem] transition-colors md:h-12 md:min-w-24 md:px-5',
-              tone === 'light' ? 'border-ink/70 hover:bg-ink hover:text-paper' : 'border-paper/70 hover:bg-paper hover:text-ink',
+              tone === 'light'
+                ? 'border-ink/70 hover:bg-ink hover:text-paper'
+                : 'border-paper/70 hover:bg-paper hover:text-ink',
             )}
           >
             {isPaused || reducedMotion ? 'Play' : 'Pause'}
@@ -168,7 +196,19 @@ export function Hero({ content }: { content: HeroContent }) {
   );
 }
 
-function SlideMedia({ slide, index, count, isActive, load }: { slide: HeroSlide; index: number; count: number; isActive: boolean; load: boolean }) {
+function SlideMedia({
+  slide,
+  index,
+  count,
+  isActive,
+  load,
+}: {
+  slide: HeroSlide;
+  index: number;
+  count: number;
+  isActive: boolean;
+  load: boolean;
+}) {
   const phone = slide.mobileImage ?? slide.images[0]!;
   const priority = index === 0;
   return (
@@ -178,7 +218,10 @@ function SlideMedia({ slide, index, count, isActive, load }: { slide: HeroSlide;
       aria-label={`${index + 1} of ${count}: ${slide.label}`}
       aria-hidden={!isActive}
       inert={!isActive}
-      className={cn('absolute inset-0 transition-opacity duration-700 ease-out', isActive ? 'opacity-100' : 'opacity-0')}
+      className={cn(
+        'absolute inset-0 transition-opacity duration-700 ease-out',
+        isActive ? 'opacity-100' : 'opacity-0',
+      )}
     >
       {load && slide.mobileImage && (
         <div className="absolute inset-0 md:hidden">
@@ -201,17 +244,28 @@ function SlideMedia({ slide, index, count, isActive, load }: { slide: HeroSlide;
           className={cn(
             'absolute inset-0 grid grid-cols-1',
             slide.mobileImage && 'hidden md:grid',
-            slide.images.length === 2 ? 'md:grid-cols-2' : slide.images.length >= 3 ? 'md:grid-cols-3' : 'md:grid-cols-1',
+            slide.images.length === 2
+              ? 'md:grid-cols-2'
+              : slide.images.length >= 3
+                ? 'md:grid-cols-3'
+                : 'md:grid-cols-1',
           )}
         >
           {slide.images.map((image, imageIndex) => (
-            <div key={image.url} className={cn('relative h-full', imageIndex > 0 && 'hidden md:block')}>
+            <div
+              key={image.url}
+              className={cn('relative h-full', imageIndex > 0 && 'hidden md:block')}
+            >
               <Image
                 src={image.url}
                 alt={image.alt}
                 fill
                 priority={priority && imageIndex === 0 && !slide.mobileImage}
-                sizes={imageIndex === 0 ? `(min-width: 768px) ${Math.round(100 / slide.images.length)}vw, 100vw` : `${Math.round(100 / slide.images.length)}vw`}
+                sizes={
+                  imageIndex === 0
+                    ? `(min-width: 768px) ${Math.round(100 / slide.images.length)}vw, 100vw`
+                    : `${Math.round(100 / slide.images.length)}vw`
+                }
                 className="object-cover"
                 style={{ objectPosition: `${image.focalX}% ${image.focalY}%` }}
               />

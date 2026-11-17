@@ -16,7 +16,11 @@ export interface RateLimitResult {
  * same statement that increments it, so two concurrent requests cannot both
  * see a fresh window.
  */
-export async function rateLimit(key: string, limit: number, windowSeconds: number): Promise<RateLimitResult> {
+export async function rateLimit(
+  key: string,
+  limit: number,
+  windowSeconds: number,
+): Promise<RateLimitResult> {
   const db = await getDb();
   const result = await db.execute<{ count: number }>(sql`
     INSERT INTO rate_limits (key, window_start, count)

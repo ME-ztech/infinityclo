@@ -5,7 +5,10 @@ import policiesJson from '@/data/catalog/policies.json';
  * infinityclo.ca (imported by `npm run import:content`). Not paraphrased: these
  * are the store's actual terms, flagged for owner/legal review.
  */
-type Block = { type: 'heading'; text: string } | { type: 'paragraph'; text: string } | { type: 'list'; items: string[] };
+type Block =
+  | { type: 'heading'; text: string }
+  | { type: 'paragraph'; text: string }
+  | { type: 'list'; items: string[] };
 interface Policy {
   handle: string;
   title: string;
@@ -27,7 +30,10 @@ export function PublishedPolicy({ handle }: { handle: string }) {
     <div className="flex flex-col gap-4 text-sm leading-relaxed" data-testid={`policy-${handle}`}>
       {policy.blocks.map((block, index) =>
         block.type === 'heading' ? (
-          <h2 key={index} className="text-fg mt-4 text-sm font-semibold tracking-[0.06em] uppercase">
+          <h2
+            key={index}
+            className="text-fg mt-4 text-sm font-semibold tracking-[0.06em] uppercase"
+          >
             {block.text}
           </h2>
         ) : block.type === 'list' ? (
@@ -43,8 +49,8 @@ export function PublishedPolicy({ handle }: { handle: string }) {
         ),
       )}
       <p className="text-fg-faint border-line mt-6 border-t pt-4 text-xs">
-        This is the policy currently published by Infnity.clo on its Shopify store (imported {policy.fetchedAt.slice(0, 10)}). It is pending
-        owner and legal review for the new site.
+        This is the policy currently published by Infnity.clo on its Shopify store (imported{' '}
+        {policy.fetchedAt.slice(0, 10)}). It is pending owner and legal review for the new site.
       </p>
     </div>
   );

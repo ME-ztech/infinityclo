@@ -10,7 +10,8 @@ export async function GET(request: Request): Promise<Response> {
   const url = new URL(request.url);
   const context = contextFromHeaders(request.headers);
   const origin = `${context.isHttps ? 'https' : url.protocol.replace(':', '')}://${context.host ?? url.host}`;
-  const fail = (reason: string) => NextResponse.redirect(new URL(`/account?error=${reason}`, origin));
+  const fail = (reason: string) =>
+    NextResponse.redirect(new URL(`/account?error=${reason}`, origin));
 
   const saved = await takeOAuthState();
   const code = url.searchParams.get('code');
@@ -19,9 +20,17 @@ export async function GET(request: Request): Promise<Response> {
   if (!saved || !code || !state || state !== saved.state) return fail('signin_state');
 
   try {
-    const tokens = await exchangeCode({ code, redirectUri: `${origin}/account/callback`, verifier: saved.verifier, origin });
+    const tokens = await exchangeCode({
+      code,
+      redirectUri: `${origin}/account/callback`,
+      verifier: saved.verifier,
+      origin,
+    });
     const { email } = tokens.idToken
-      ? validateIdTokenClaims(tokens.idToken, { nonce: saved.nonce, clientId: shopifyConfig().customerAccountClientId ?? '' })
+      ? validateIdTokenClaims(tokens.idToken, {
+          nonce: saved.nonce,
+          clientId: shopifyConfig().customerAccountClientId ?? '',
+        })
       : { email: null };
     await setCustomerSession({ ...tokens, email }, context.isHttps);
     return NextResponse.redirect(new URL(saved.returnTo, origin));

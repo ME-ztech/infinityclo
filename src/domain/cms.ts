@@ -24,7 +24,10 @@ export const imageUrlSchema = z
     if (value.startsWith('/') && !value.startsWith('//')) return true;
     try {
       const url = new URL(value);
-      return url.protocol === 'https:' && (ALLOWED_IMAGE_HOSTS as readonly string[]).includes(url.hostname);
+      return (
+        url.protocol === 'https:' &&
+        (ALLOWED_IMAGE_HOSTS as readonly string[]).includes(url.hostname)
+      );
     } catch {
       return false;
     }
@@ -34,7 +37,10 @@ export const linkSchema = z
   .string()
   .trim()
   .max(300)
-  .refine((value) => (value.startsWith('/') && !value.startsWith('//')) || /^https:\/\//.test(value), 'Use a path like /shop or a full https:// link.');
+  .refine(
+    (value) => (value.startsWith('/') && !value.startsWith('//')) || /^https:\/\//.test(value),
+    'Use a path like /shop or a full https:// link.',
+  );
 
 const text = (max: number) => z.string().trim().max(max);
 
@@ -90,9 +96,24 @@ export const DEFAULT_HERO: HeroContent = {
       label: 'Iced tanks',
       headline: 'Rhinestone on rib. Pre-made, ready to ship.',
       images: [
-        { url: `${CDN}/RIRI-1.jpg`, alt: "Model wearing INFNITY's Iced Raven Tank with camo trousers", focalX: 50, focalY: 30 },
-        { url: `${CDN}/SHAN-1.jpg`, alt: "Model wearing INFNITY's Iced Soft Blush Tank with jeans", focalX: 50, focalY: 30 },
-        { url: `${CDN}/SUM-1.jpg`, alt: "Model wearing INFNITY's Iced Ivory Pearl Tank with camo trousers", focalX: 50, focalY: 30 },
+        {
+          url: `${CDN}/RIRI-1.jpg`,
+          alt: "Model wearing INFNITY's Iced Raven Tank with camo trousers",
+          focalX: 50,
+          focalY: 30,
+        },
+        {
+          url: `${CDN}/SHAN-1.jpg`,
+          alt: "Model wearing INFNITY's Iced Soft Blush Tank with jeans",
+          focalX: 50,
+          focalY: 30,
+        },
+        {
+          url: `${CDN}/SUM-1.jpg`,
+          alt: "Model wearing INFNITY's Iced Ivory Pearl Tank with camo trousers",
+          focalX: 50,
+          focalY: 30,
+        },
       ],
       mobileImage: null,
       tone: 'light',
@@ -105,9 +126,24 @@ export const DEFAULT_HERO: HeroContent = {
       label: 'Reversible blanks',
       headline: '450 gsm French terry. Two ways to wear it.',
       images: [
-        { url: `${CDN}/fiji-2.jpg`, alt: "Model wearing INFNITY's Reversible Obsidian Blank Hoodie, graphic side out", focalX: 50, focalY: 30 },
-        { url: `${CDN}/kalia-1_cc0be1e3-04d3-453b-a9f3-2b533b90989e.jpg`, alt: "Model wearing INFNITY's Reversible Graphite Blank Hoodie", focalX: 50, focalY: 30 },
-        { url: `${CDN}/fiji-4.jpg`, alt: "Back view of INFNITY's Reversible Obsidian Blank Hoodie", focalX: 50, focalY: 30 },
+        {
+          url: `${CDN}/fiji-2.jpg`,
+          alt: "Model wearing INFNITY's Reversible Obsidian Blank Hoodie, graphic side out",
+          focalX: 50,
+          focalY: 30,
+        },
+        {
+          url: `${CDN}/kalia-1_cc0be1e3-04d3-453b-a9f3-2b533b90989e.jpg`,
+          alt: "Model wearing INFNITY's Reversible Graphite Blank Hoodie",
+          focalX: 50,
+          focalY: 30,
+        },
+        {
+          url: `${CDN}/fiji-4.jpg`,
+          alt: "Back view of INFNITY's Reversible Obsidian Blank Hoodie",
+          focalX: 50,
+          focalY: 30,
+        },
       ],
       mobileImage: null,
       tone: 'light',
@@ -120,9 +156,24 @@ export const DEFAULT_HERO: HeroContent = {
       label: 'Infinity athletics',
       headline: '260 gsm mesh jerseys. Number 44 on the back.',
       images: [
-        { url: `${CDN}/jet-black-2_abbb039b-98dc-49c8-8c3e-7e0f09e92c35.jpg`, alt: "Model wearing INFNITY's Jet-Black Jersey", focalX: 50, focalY: 30 },
-        { url: `${CDN}/ivy-moss-1.jpg`, alt: "Model wearing INFNITY's Ivy Moss Jersey", focalX: 50, focalY: 30 },
-        { url: `${CDN}/crimson-1.jpg`, alt: "Model wearing INFNITY's Crimson Static Jersey", focalX: 50, focalY: 30 },
+        {
+          url: `${CDN}/jet-black-2_abbb039b-98dc-49c8-8c3e-7e0f09e92c35.jpg`,
+          alt: "Model wearing INFNITY's Jet-Black Jersey",
+          focalX: 50,
+          focalY: 30,
+        },
+        {
+          url: `${CDN}/ivy-moss-1.jpg`,
+          alt: "Model wearing INFNITY's Ivy Moss Jersey",
+          focalX: 50,
+          focalY: 30,
+        },
+        {
+          url: `${CDN}/crimson-1.jpg`,
+          alt: "Model wearing INFNITY's Crimson Static Jersey",
+          focalX: 50,
+          focalY: 30,
+        },
       ],
       mobileImage: null,
       tone: 'light',
@@ -135,9 +186,24 @@ export const DEFAULT_HERO: HeroContent = {
       label: 'Ops jorts',
       headline: 'Straight leg, baggy fit. Size up for more.',
       images: [
-        { url: `${CDN}/night-1.jpg`, alt: "Model wearing INFNITY's Night Ops Jorts", focalX: 50, focalY: 45 },
-        { url: `${CDN}/mpnw-1.jpg`, alt: "Model wearing INFNITY's MPNW Sleeved Shirt", focalX: 50, focalY: 30 },
-        { url: `${CDN}/camo-1_914b6df5-5613-4c6d-aad6-3907c28514c1.jpg`, alt: "Model wearing INFNITY's Recon Ops Jorts", focalX: 50, focalY: 45 },
+        {
+          url: `${CDN}/night-1.jpg`,
+          alt: "Model wearing INFNITY's Night Ops Jorts",
+          focalX: 50,
+          focalY: 45,
+        },
+        {
+          url: `${CDN}/mpnw-1.jpg`,
+          alt: "Model wearing INFNITY's MPNW Sleeved Shirt",
+          focalX: 50,
+          focalY: 30,
+        },
+        {
+          url: `${CDN}/camo-1_914b6df5-5613-4c6d-aad6-3907c28514c1.jpg`,
+          alt: "Model wearing INFNITY's Recon Ops Jorts",
+          focalX: 50,
+          focalY: 45,
+        },
       ],
       mobileImage: null,
       tone: 'light',
@@ -176,7 +242,10 @@ export const HOMEPAGE_SECTION_LABELS: Record<HomepageSectionKey, string> = {
 export const homepageSchema = z.object({
   sections: z
     .array(z.object({ key: z.enum(HOMEPAGE_SECTION_KEYS), enabled: z.boolean() }))
-    .refine((sections) => new Set(sections.map((s) => s.key)).size === sections.length, 'Each section appears once.'),
+    .refine(
+      (sections) => new Set(sections.map((s) => s.key)).size === sections.length,
+      'Each section appears once.',
+    ),
   statement: z.object({ eyebrow: text(40), headline: text(120).min(1), body: text(600) }),
   featured: z.object({
     title: text(60).min(1),
@@ -184,7 +253,12 @@ export const homepageSchema = z.object({
     productHandles: z.array(text(200)).max(12).default([]),
     limit: z.number().int().min(2).max(12).default(8),
   }),
-  vault: z.object({ eyebrow: text(40), headline: text(80).min(1), body: text(300), ctaLabel: text(30).min(1) }),
+  vault: z.object({
+    eyebrow: text(40),
+    headline: text(80).min(1),
+    body: text(300),
+    ctaLabel: text(30).min(1),
+  }),
   newsletter: z.object({ headline: text(80).min(1), body: text(300) }),
 });
 export type HomepageContent = z.infer<typeof homepageSchema>;
@@ -245,12 +319,42 @@ export const DEFAULT_LOOKBOOK: LookbookContent = {
   title: 'Lookbook',
   intro: 'Shot in studio for the current collection. Tap a look to shop it.',
   images: [
-    { url: `${CDN}/fiji-1.jpg`, alt: "Model in INFNITY's Reversible Obsidian Blank Hoodie, front", caption: 'Reversible Obsidian Blank Hoodie', productHandles: ['infnitys-reversible-obsidian-blank-hoodie'] },
-    { url: `${CDN}/RIRI-1.jpg`, alt: "Model in INFNITY's Iced Raven Tank", caption: 'Iced Raven Tank', productHandles: ['infnitys-iced-raven-tank'] },
-    { url: `${CDN}/tyson-1_065aaaf1-27b7-4e72-8886-da5e4ed8bf91.jpg`, alt: "Model in INFNI-TEE'S LeCaptain America", caption: 'Infni-Tee — LeCaptain America', productHandles: ['infni-tees-lecaptain-america'] },
-    { url: `${CDN}/camo-1_914b6df5-5613-4c6d-aad6-3907c28514c1.jpg`, alt: "Model in INFNITY's Recon Ops Jorts", caption: 'Recon Ops Jorts', productHandles: ['infnitys-stellar-ops-camo-jorts'] },
-    { url: `${CDN}/ivy-moss-1.jpg`, alt: "Model in INFNITY's Ivy Moss Jersey", caption: 'Ivy Moss Jersey', productHandles: ['infnitys-crimson-static-jersey-copy'] },
-    { url: `${CDN}/dein-1.jpg`, alt: "Model in INFNI-TEE'S Chaos", caption: 'Infni-Tee — Chaos', productHandles: ['infni-tees-chaos'] },
+    {
+      url: `${CDN}/fiji-1.jpg`,
+      alt: "Model in INFNITY's Reversible Obsidian Blank Hoodie, front",
+      caption: 'Reversible Obsidian Blank Hoodie',
+      productHandles: ['infnitys-reversible-obsidian-blank-hoodie'],
+    },
+    {
+      url: `${CDN}/RIRI-1.jpg`,
+      alt: "Model in INFNITY's Iced Raven Tank",
+      caption: 'Iced Raven Tank',
+      productHandles: ['infnitys-iced-raven-tank'],
+    },
+    {
+      url: `${CDN}/tyson-1_065aaaf1-27b7-4e72-8886-da5e4ed8bf91.jpg`,
+      alt: "Model in INFNI-TEE'S LeCaptain America",
+      caption: 'Infni-Tee — LeCaptain America',
+      productHandles: ['infni-tees-lecaptain-america'],
+    },
+    {
+      url: `${CDN}/camo-1_914b6df5-5613-4c6d-aad6-3907c28514c1.jpg`,
+      alt: "Model in INFNITY's Recon Ops Jorts",
+      caption: 'Recon Ops Jorts',
+      productHandles: ['infnitys-stellar-ops-camo-jorts'],
+    },
+    {
+      url: `${CDN}/ivy-moss-1.jpg`,
+      alt: "Model in INFNITY's Ivy Moss Jersey",
+      caption: 'Ivy Moss Jersey',
+      productHandles: ['infnitys-crimson-static-jersey-copy'],
+    },
+    {
+      url: `${CDN}/dein-1.jpg`,
+      alt: "Model in INFNI-TEE'S Chaos",
+      caption: 'Infni-Tee — Chaos',
+      productHandles: ['infni-tees-chaos'],
+    },
   ],
 };
 
@@ -261,7 +365,11 @@ export const DEFAULT_LOOKBOOK: LookbookContent = {
 export const CMS_DOCUMENTS = {
   hero: { schema: heroSchema, defaults: DEFAULT_HERO, label: 'Homepage hero' },
   homepage: { schema: homepageSchema, defaults: DEFAULT_HOMEPAGE, label: 'Homepage sections' },
-  announcement: { schema: announcementSchema, defaults: DEFAULT_ANNOUNCEMENT, label: 'Announcement bar' },
+  announcement: {
+    schema: announcementSchema,
+    defaults: DEFAULT_ANNOUNCEMENT,
+    label: 'Announcement bar',
+  },
   lookbook: { schema: lookbookSchema, defaults: DEFAULT_LOOKBOOK, label: 'Lookbook' },
 } as const;
 
@@ -269,7 +377,10 @@ export type CmsKey = keyof typeof CMS_DOCUMENTS;
 export type CmsValue<K extends CmsKey> = z.infer<(typeof CMS_DOCUMENTS)[K]['schema']>;
 
 /** Parses a stored value, falling back to defaults (never throws on read). */
-export function parseCms<K extends CmsKey>(key: K, value: unknown): { value: CmsValue<K>; valid: boolean } {
+export function parseCms<K extends CmsKey>(
+  key: K,
+  value: unknown,
+): { value: CmsValue<K>; valid: boolean } {
   const entry = CMS_DOCUMENTS[key];
   const result = entry.schema.safeParse(value);
   return result.success

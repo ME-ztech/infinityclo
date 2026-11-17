@@ -29,14 +29,19 @@ function configFrom(form: FormData) {
     kind,
     title: String(form.get('title') ?? ''),
     method: form.get('method') === 'code' ? 'code' : 'automatic',
-    code: String(form.get('code') ?? '').trim().toUpperCase(),
+    code: String(form.get('code') ?? '')
+      .trim()
+      .toUpperCase(),
     startsAt: date(form.get('startsAt')),
     endsAt: date(form.get('endsAt')),
     usageLimit: num(form.get('usageLimit')),
     oncePerCustomer: form.get('oncePerCustomer') === 'on',
     scope: {
       type: form.get('scopeType') === 'products' ? 'products' : 'all',
-      productHandles: String(form.get('productHandles') ?? '').split(/[\s,]+/).map((h) => h.trim()).filter(Boolean),
+      productHandles: String(form.get('productHandles') ?? '')
+        .split(/[\s,]+/)
+        .map((h) => h.trim())
+        .filter(Boolean),
       excludeSaleItems: form.get('excludeSaleItems') === 'on',
     },
     combinesWith: {
@@ -46,17 +51,29 @@ function configFrom(form: FormData) {
     },
   };
   if (kind === 'percentage') {
-    return { ...base, percent: num(form.get('percent')), eligibility: form.get('eligibility') === 'first_order' ? 'first_order' : 'all', minimumSubtotalCents: cents(form.get('minimumSubtotal')) };
+    return {
+      ...base,
+      percent: num(form.get('percent')),
+      eligibility: form.get('eligibility') === 'first_order' ? 'first_order' : 'all',
+      minimumSubtotalCents: cents(form.get('minimumSubtotal')),
+    };
   }
   if (kind === 'bundle') {
     const type = form.get('valueType') === 'amount_off_order' ? 'amount_off_order' : 'percentage';
     return {
       ...base,
       minimumQuantity: num(form.get('minimumQuantity')) ?? 2,
-      value: type === 'percentage' ? { type, percent: num(form.get('percent')) } : { type, amountCents: cents(form.get('amountOff')) },
+      value:
+        type === 'percentage'
+          ? { type, percent: num(form.get('percent')) }
+          : { type, amountCents: cents(form.get('amountOff')) },
     };
   }
-  return { ...base, minimumSubtotalCents: cents(form.get('minimumSubtotal')) ?? 0, giftProductHandle: String(form.get('giftProductHandle') ?? '').trim() };
+  return {
+    ...base,
+    minimumSubtotalCents: cents(form.get('minimumSubtotal')) ?? 0,
+    giftProductHandle: String(form.get('giftProductHandle') ?? '').trim(),
+  };
 }
 
 function refresh(id?: string) {
@@ -64,17 +81,27 @@ function refresh(id?: string) {
   if (id) revalidatePath(`/admin/promotions/${id}`);
 }
 
-export async function saveDraftAction(_state: ActionResult | null, form: FormData): Promise<ActionResult> {
+export async function saveDraftAction(
+  _state: ActionResult | null,
+  form: FormData,
+): Promise<ActionResult> {
   return runAction('promotions:write', async (user) => {
     const id = form.get('id') ? z.string().uuid().parse(form.get('id')) : null;
     const name = z.string().trim().min(2).max(120).parse(form.get('name'));
     const saved = await saveDraft(id, name, configFrom(form), actorOf(user));
     refresh(saved);
-    return { ok: true, message: 'Draft saved. Nothing is live until the owner approves and publishes it.', redirectTo: id ? undefined : `/admin/promotions/${saved}` };
+    return {
+      ok: true,
+      message: 'Draft saved. Nothing is live until the owner approves and publishes it.',
+      redirectTo: id ? undefined : `/admin/promotions/${saved}`,
+    };
   });
 }
 
-export async function approveAction(_state: ActionResult | null, form: FormData): Promise<ActionResult> {
+export async function approveAction(
+  _state: ActionResult | null,
+  form: FormData,
+): Promise<ActionResult> {
   return runAction('promotions:approve', async (user) => {
     const id = z.string().uuid().parse(form.get('id'));
     await approve(id, form.get('margin') === 'on', actorOf(user));
@@ -83,7 +110,10 @@ export async function approveAction(_state: ActionResult | null, form: FormData)
   });
 }
 
-export async function publishAction(_state: ActionResult | null, form: FormData): Promise<ActionResult> {
+export async function publishAction(
+  _state: ActionResult | null,
+  form: FormData,
+): Promise<ActionResult> {
   return runAction('promotions:approve', async (user) => {
     const id = z.string().uuid().parse(form.get('id'));
     await publish(id, actorOf(user));
@@ -93,7 +123,10 @@ export async function publishAction(_state: ActionResult | null, form: FormData)
   });
 }
 
-export async function pauseAction(_state: ActionResult | null, form: FormData): Promise<ActionResult> {
+export async function pauseAction(
+  _state: ActionResult | null,
+  form: FormData,
+): Promise<ActionResult> {
   return runAction('promotions:approve', async (user) => {
     const id = z.string().uuid().parse(form.get('id'));
     const paused = form.get('paused') === 'true';
@@ -104,7 +137,10 @@ export async function pauseAction(_state: ActionResult | null, form: FormData): 
   });
 }
 
-export async function endAction(_state: ActionResult | null, form: FormData): Promise<ActionResult> {
+export async function endAction(
+  _state: ActionResult | null,
+  form: FormData,
+): Promise<ActionResult> {
   return runAction('promotions:approve', async (user) => {
     const id = z.string().uuid().parse(form.get('id'));
     await end(id, actorOf(user));
@@ -114,7 +150,10 @@ export async function endAction(_state: ActionResult | null, form: FormData): Pr
   });
 }
 
-export async function deleteDraftAction(_state: ActionResult | null, form: FormData): Promise<ActionResult> {
+export async function deleteDraftAction(
+  _state: ActionResult | null,
+  form: FormData,
+): Promise<ActionResult> {
   return runAction('promotions:write', async (user) => {
     const id = z.string().uuid().parse(form.get('id'));
     await deleteDraft(id, actorOf(user));

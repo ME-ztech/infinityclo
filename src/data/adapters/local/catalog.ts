@@ -26,7 +26,11 @@ import type {
 } from '@/domain/types';
 import type { CatalogRepository } from '@/data/repositories';
 
-import { collections as snapshotCollections, products as snapshotProducts, sizeGuides as snapshotSizeGuides } from './snapshot';
+import {
+  collections as snapshotCollections,
+  products as snapshotProducts,
+  sizeGuides as snapshotSizeGuides,
+} from './snapshot';
 
 export interface CatalogData {
   readonly products: readonly Product[];

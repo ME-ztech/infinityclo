@@ -65,7 +65,12 @@ export async function createMessage(input: {
 
 export async function listMessages(statuses: string[] = ['new', 'open']) {
   const db = await getDb();
-  return db.select().from(messages).where(inArray(messages.status, statuses)).orderBy(desc(messages.createdAt)).limit(200);
+  return db
+    .select()
+    .from(messages)
+    .where(inArray(messages.status, statuses))
+    .orderBy(desc(messages.createdAt))
+    .limit(200);
 }
 
 export async function getMessage(id: string) {
@@ -74,14 +79,29 @@ export async function getMessage(id: string) {
   return row ?? null;
 }
 
-export async function updateMessage(id: string, update: { status?: string; note?: string }, actor: AuditActor) {
+export async function updateMessage(
+  id: string,
+  update: { status?: string; note?: string },
+  actor: AuditActor,
+) {
   const db = await getDb();
   const current = await getMessage(id);
   if (!current) throw new Error('Message not found.');
-  const notes = update.note ? [...current.notes, { at: new Date().toISOString(), by: actor.email ?? 'staff', text: update.note }] : current.notes;
+  const notes = update.note
+    ? [
+        ...current.notes,
+        { at: new Date().toISOString(), by: actor.email ?? 'staff', text: update.note },
+      ]
+    : current.notes;
   await db
     .update(messages)
     .set({ status: update.status ?? current.status, notes, updatedAt: new Date() })
     .where(eq(messages.id, id));
-  await audit({ actor, action: 'message.update', summary: `Updated message ${id}${update.status ? ` → ${update.status}` : ''}`, targetType: 'message', targetId: id });
+  await audit({
+    actor,
+    action: 'message.update',
+    summary: `Updated message ${id}${update.status ? ` → ${update.status}` : ''}`,
+    targetType: 'message',
+    targetId: id,
+  });
 }

@@ -7,7 +7,11 @@ export const SUPPORT = { email: 'support@e2e.test', password: 'e2e-support-pass-
 export function trackErrors(page: Page): string[] {
   const errors: string[] = [];
   page.on('console', (message) => {
-    if (message.type() === 'error' && !/cdn\.shopify\.com|Failed to load resource/.test(message.text())) errors.push(message.text());
+    if (
+      message.type() === 'error' &&
+      !/cdn\.shopify\.com|Failed to load resource/.test(message.text())
+    )
+      errors.push(message.text());
   });
   page.on('pageerror', (error) => errors.push(error.message));
   return errors;
@@ -22,6 +26,8 @@ export async function signIn(page: Page, who: { email: string; password: string 
 }
 
 export async function expectNoHorizontalScroll(page: Page) {
-  const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+  const overflow = await page.evaluate(
+    () => document.documentElement.scrollWidth - window.innerWidth,
+  );
   expect(overflow, 'page scrolls sideways').toBeLessThanOrEqual(1);
 }

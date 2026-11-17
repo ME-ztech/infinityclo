@@ -21,18 +21,26 @@ export function Footer({ settings }: { settings: StoreSettings }) {
         <div className="grid gap-14 lg:grid-cols-[1fr_2.2fr] lg:gap-20">
           <div className="flex flex-col items-center text-center lg:items-start lg:text-left">
             <BrandMark className="h-14" />
-            <p className="font-display mt-6 text-[clamp(1.8rem,4vw,2.6rem)] leading-[0.95]">Be the Statement</p>
+            <p className="font-display mt-6 text-[clamp(1.8rem,4vw,2.6rem)] leading-[0.95]">
+              Be the Statement
+            </p>
             <p className="text-fg-muted mt-4 max-w-xs text-sm leading-relaxed">
               Streetwear for the ones who don’t fold, don’t follow — and never settle.
             </p>
             <address className="text-fg-muted mt-6 flex flex-col gap-1 text-sm not-italic">
               {settings.publicEmail && (
-                <a href={`mailto:${settings.publicEmail}`} className="hover:text-fg underline-offset-4 hover:underline">
+                <a
+                  href={`mailto:${settings.publicEmail}`}
+                  className="hover:text-fg underline-offset-4 hover:underline"
+                >
                   {settings.publicEmail}
                 </a>
               )}
               {settings.publicPhone && (
-                <a href={`tel:${settings.publicPhone.replace(/[^\d+]/g, '')}`} className="hover:text-fg">
+                <a
+                  href={`tel:${settings.publicPhone.replace(/[^\d+]/g, '')}`}
+                  className="hover:text-fg"
+                >
                   {settings.publicPhone}
                 </a>
               )}
@@ -42,11 +50,16 @@ export function Footer({ settings }: { settings: StoreSettings }) {
           <nav aria-label="Footer" className="grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-4">
             {FOOTER_NAV.map((group) => (
               <div key={group.heading}>
-                <h2 className="text-fg-faint text-[0.64rem] font-semibold tracking-[0.24em] uppercase">{group.heading}</h2>
+                <h2 className="text-fg-faint text-[0.64rem] font-semibold tracking-[0.24em] uppercase">
+                  {group.heading}
+                </h2>
                 <ul className="mt-5 flex flex-col gap-1">
                   {group.links.map((link) => (
                     <li key={link.href}>
-                      <Link href={link.href} className="text-fg-muted hover:text-fg flex min-h-9 items-center text-sm transition-colors">
+                      <Link
+                        href={link.href}
+                        className="text-fg-muted hover:text-fg flex min-h-9 items-center text-sm transition-colors"
+                      >
                         {link.label}
                       </Link>
                     </li>
@@ -83,7 +96,10 @@ export function Footer({ settings }: { settings: StoreSettings }) {
           <ul className="flex flex-wrap justify-center gap-x-5">
             {LEGAL_NAV.map((link) => (
               <li key={link.href}>
-                <Link href={link.href} className="hover:text-fg flex min-h-11 items-center uppercase transition-colors">
+                <Link
+                  href={link.href}
+                  className="hover:text-fg flex min-h-11 items-center uppercase transition-colors"
+                >
                   {link.label}
                 </Link>
               </li>

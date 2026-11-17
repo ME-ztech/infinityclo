@@ -13,7 +13,12 @@ import { createRequire } from 'node:module';
 // `server-only` throws outside Next's server bundle; this CLI is server-side by definition.
 const require = createRequire(import.meta.url);
 const serverOnly = require.resolve('server-only');
-require.cache[serverOnly] = { id: serverOnly, filename: serverOnly, loaded: true, exports: {} } as NodeJS.Module;
+require.cache[serverOnly] = {
+  id: serverOnly,
+  filename: serverOnly,
+  loaded: true,
+  exports: {},
+} as NodeJS.Module;
 
 async function main() {
   const { createStaffUser, listStaff, passwordProblem } = await import('../src/server/auth/staff');

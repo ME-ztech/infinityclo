@@ -73,29 +73,52 @@ export const ORDER_STATE_LABELS: Record<OrderState, string> = {
   unknown: 'Status unavailable',
 };
 
-const SHIPPED_EVENTS = new Set(['CARRIER_PICKED_UP', 'IN_TRANSIT', 'CONFIRMED', 'LABEL_PURCHASED', 'LABEL_PRINTED', 'DELAYED']);
+const SHIPPED_EVENTS = new Set([
+  'CARRIER_PICKED_UP',
+  'IN_TRANSIT',
+  'CONFIRMED',
+  'LABEL_PURCHASED',
+  'LABEL_PRINTED',
+  'DELAYED',
+]);
 
 export function orderState(order: OrderSnapshot): OrderState {
   if (order.cancelledAt) return 'cancelled';
   const financial = order.financialStatus?.toUpperCase() ?? null;
   if (financial === 'REFUNDED') return 'refunded';
-  if (financial === 'PENDING' || financial === 'AUTHORIZED' || financial === 'EXPIRED' || financial === 'VOIDED') {
+  if (
+    financial === 'PENDING' ||
+    financial === 'AUTHORIZED' ||
+    financial === 'EXPIRED' ||
+    financial === 'VOIDED'
+  ) {
     return 'pending_payment';
   }
 
   const events = order.fulfillments.map((f) => f.latestShipmentStatus?.toUpperCase() ?? null);
-  const live = order.fulfillments.filter((f) => !['CANCELLED', 'ERROR', 'FAILURE'].includes(f.status?.toUpperCase() ?? ''));
+  const live = order.fulfillments.filter(
+    (f) => !['CANCELLED', 'ERROR', 'FAILURE'].includes(f.status?.toUpperCase() ?? ''),
+  );
 
-  if (events.some((event) => event === 'FAILURE' || event === 'ATTEMPTED_DELIVERY')) return 'delivery_issue';
-  if (live.length > 0 && events.length > 0 && events.every((event) => event === 'DELIVERED' || event === 'PICKED_UP')) {
+  if (events.some((event) => event === 'FAILURE' || event === 'ATTEMPTED_DELIVERY'))
+    return 'delivery_issue';
+  if (
+    live.length > 0 &&
+    events.length > 0 &&
+    events.every((event) => event === 'DELIVERED' || event === 'PICKED_UP')
+  ) {
     return 'delivered';
   }
-  if (events.some((event) => event === 'OUT_FOR_DELIVERY' || event === 'READY_FOR_PICKUP')) return 'out_for_delivery';
+  if (events.some((event) => event === 'OUT_FOR_DELIVERY' || event === 'READY_FOR_PICKUP'))
+    return 'out_for_delivery';
 
   const fulfillment = order.fulfillmentStatus?.toUpperCase() ?? null;
   if (fulfillment === 'PARTIALLY_FULFILLED') return 'partially_fulfilled';
   if (fulfillment === 'FULFILLED') {
-    if (events.some((event) => event && SHIPPED_EVENTS.has(event)) || live.some((f) => f.trackingNumbers.length > 0)) {
+    if (
+      events.some((event) => event && SHIPPED_EVENTS.has(event)) ||
+      live.some((f) => f.trackingNumbers.length > 0)
+    ) {
       return 'shipped';
     }
     return 'fulfilled';
@@ -114,7 +137,13 @@ export interface ProgressStep {
 /** Delivery progress for the customer order page. Steps only complete on evidence. */
 export function deliveryProgress(state: OrderState): ProgressStep[] | null {
   if (state === 'cancelled' || state === 'refunded' || state === 'unknown') return null;
-  const order: ProgressStep['key'][] = ['placed', 'preparing', 'shipped', 'out_for_delivery', 'delivered'];
+  const order: ProgressStep['key'][] = [
+    'placed',
+    'preparing',
+    'shipped',
+    'out_for_delivery',
+    'delivered',
+  ];
   const labels: Record<ProgressStep['key'], string> = {
     placed: 'Order placed',
     preparing: 'Preparing',
@@ -140,7 +169,12 @@ export function deliveryProgress(state: OrderState): ProgressStep[] | null {
   return order.map((key, index) => ({
     key,
     label: labels[key],
-    state: index < current || (index === current && key === 'delivered') ? 'complete' : index === current ? 'current' : 'upcoming',
+    state:
+      index < current || (index === current && key === 'delivered')
+        ? 'complete'
+        : index === current
+          ? 'current'
+          : 'upcoming',
   }));
 }
 

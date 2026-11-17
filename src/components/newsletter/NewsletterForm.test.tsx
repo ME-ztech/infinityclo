@@ -48,7 +48,10 @@ describe('NewsletterForm', () => {
     await user.click(screen.getByRole('button', { name: /join/i }));
 
     await waitFor(() => expect(fetch).toHaveBeenCalledOnce());
-    const body = JSON.parse(String(vi.mocked(fetch).mock.calls[0]?.[1]?.body)) as Record<string, unknown>;
+    const body = JSON.parse(String(vi.mocked(fetch).mock.calls[0]?.[1]?.body)) as Record<
+      string,
+      unknown
+    >;
     expect(body).toMatchObject({ email: 'someone@example.com', source: 'footer', consent: true });
     const message = await screen.findByTestId('newsletter-message');
     expect(message.textContent).toBe('Received.');

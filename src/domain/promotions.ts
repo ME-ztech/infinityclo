@@ -54,7 +54,11 @@ const baseSchema = z.object({
   usageLimit: z.number().int().positive().nullable().default(null),
   oncePerCustomer: z.boolean().default(false),
   scope: scopeSchema.default({ type: 'all', productHandles: [], excludeSaleItems: true }),
-  combinesWith: combinesSchema.default({ orderDiscounts: false, productDiscounts: false, shippingDiscounts: true }),
+  combinesWith: combinesSchema.default({
+    orderDiscounts: false,
+    productDiscounts: false,
+    shippingDiscounts: true,
+  }),
 });
 
 export const percentageConfigSchema = baseSchema.extend({
@@ -71,7 +75,10 @@ export const bundleConfigSchema = baseSchema.extend({
   /** Percent off each eligible item once the quantity is met, or a fixed amount off the order. */
   value: z.discriminatedUnion('type', [
     z.object({ type: z.literal('percentage'), percent: z.number().min(1).max(90).nullable() }),
-    z.object({ type: z.literal('amount_off_order'), amountCents: z.number().int().positive().nullable() }),
+    z.object({
+      type: z.literal('amount_off_order'),
+      amountCents: z.number().int().positive().nullable(),
+    }),
   ]),
 });
 
@@ -105,9 +112,15 @@ export interface PromotionRecord {
 /** Everything that must be true before an owner may approve. Empty = approvable. */
 export function approvalProblems(config: PromotionConfig, marginAcknowledged: boolean): string[] {
   const problems: string[] = [];
-  if (!marginAcknowledged) problems.push('Confirm you have checked the margin impact of this offer.');
-  if (config.method === 'code' && !config.code) problems.push('Set a discount code, or switch the method to automatic.');
-  if (config.startsAt && config.endsAt && Date.parse(config.endsAt) <= Date.parse(config.startsAt)) {
+  if (!marginAcknowledged)
+    problems.push('Confirm you have checked the margin impact of this offer.');
+  if (config.method === 'code' && !config.code)
+    problems.push('Set a discount code, or switch the method to automatic.');
+  if (
+    config.startsAt &&
+    config.endsAt &&
+    Date.parse(config.endsAt) <= Date.parse(config.startsAt)
+  ) {
     problems.push('The end date must be after the start date.');
   }
   if (config.scope.type === 'products' && config.scope.productHandles.length === 0) {
@@ -117,12 +130,16 @@ export function approvalProblems(config: PromotionConfig, marginAcknowledged: bo
     case 'percentage':
       if (config.percent === null) problems.push('Set the percentage.');
       if (config.eligibility === 'first_order' && config.method !== 'code') {
-        problems.push('First-order offers need a code so Shopify can check the customer at checkout.');
+        problems.push(
+          'First-order offers need a code so Shopify can check the customer at checkout.',
+        );
       }
       break;
     case 'bundle':
-      if (config.value.type === 'percentage' && config.value.percent === null) problems.push('Set the bundle percentage.');
-      if (config.value.type === 'amount_off_order' && config.value.amountCents === null) problems.push('Set the bundle amount.');
+      if (config.value.type === 'percentage' && config.value.percent === null)
+        problems.push('Set the bundle percentage.');
+      if (config.value.type === 'amount_off_order' && config.value.amountCents === null)
+        problems.push('Set the bundle amount.');
       break;
     case 'gift_with_purchase':
       break;
@@ -166,8 +183,13 @@ function isActiveNow(config: PromotionConfig, now: Date): boolean {
 
 function eligibleLines(config: PromotionConfig, lines: readonly PreviewLine[]): PreviewLine[] {
   return lines.filter((line) => {
-    if (config.scope.type === 'products' && !config.scope.productHandles.includes(line.productSlug)) return false;
-    if (config.scope.excludeSaleItems && line.compareAtUnitPrice && line.compareAtUnitPrice.amount > line.unitPrice.amount) {
+    if (config.scope.type === 'products' && !config.scope.productHandles.includes(line.productSlug))
+      return false;
+    if (
+      config.scope.excludeSaleItems &&
+      line.compareAtUnitPrice &&
+      line.compareAtUnitPrice.amount > line.unitPrice.amount
+    ) {
       return false;
     }
     return true;
@@ -195,13 +217,20 @@ export function previewOffers(
 
     const eligible = eligibleLines(config, lines);
     const eligibleQuantity = eligible.reduce((sum, line) => sum + line.quantity, 0);
-    const eligibleSubtotal = eligible.reduce((sum, line) => sum + line.unitPrice.amount * line.quantity, 0);
-    const cartSubtotal = lines.reduce((sum, line) => sum + line.unitPrice.amount * line.quantity, 0);
+    const eligibleSubtotal = eligible.reduce(
+      (sum, line) => sum + line.unitPrice.amount * line.quantity,
+      0,
+    );
+    const cartSubtotal = lines.reduce(
+      (sum, line) => sum + line.unitPrice.amount * line.quantity,
+      0,
+    );
     const code = config.method === 'code' ? config.code : null;
 
     if (config.kind === 'percentage') {
       if (config.percent === null) continue;
-      const meetsMinimum = config.minimumSubtotalCents === null || eligibleSubtotal >= config.minimumSubtotalCents;
+      const meetsMinimum =
+        config.minimumSubtotalCents === null || eligibleSubtotal >= config.minimumSubtotalCents;
       // First-order eligibility is decided by Shopify at checkout; never pre-promise it.
       const qualified = meetsMinimum && config.eligibility === 'all' && eligibleQuantity > 0;
       previews.push({
@@ -266,13 +295,20 @@ export function previewOffers(
  * not combine with product discounts are not added together; the best single
  * one is shown instead. Always labelled as an estimate in the UI.
  */
-export function estimatedTotalSaving(previews: readonly OfferPreview[], promotions: readonly PromotionRecord[]): number {
-  const qualified = previews.filter((preview) => preview.qualified && preview.estimatedSavingCents > 0);
+export function estimatedTotalSaving(
+  previews: readonly OfferPreview[],
+  promotions: readonly PromotionRecord[],
+): number {
+  const qualified = previews.filter(
+    (preview) => preview.qualified && preview.estimatedSavingCents > 0,
+  );
   if (qualified.length <= 1) return qualified[0]?.estimatedSavingCents ?? 0;
   const byId = new Map(promotions.map((promotion) => [promotion.id, promotion]));
   const allCombine = qualified.every((preview) => {
     const config = byId.get(preview.promotionId)?.config;
-    return config ? config.combinesWith.productDiscounts && config.combinesWith.orderDiscounts : false;
+    return config
+      ? config.combinesWith.productDiscounts && config.combinesWith.orderDiscounts
+      : false;
   });
   return allCombine
     ? qualified.reduce((sum, preview) => sum + preview.estimatedSavingCents, 0)
@@ -299,7 +335,10 @@ export interface ShopifyDiscountPlan {
 }
 
 /** Pure mapping from an approved promotion to a native Shopify discount input. */
-export function shopifyDiscountPlan(config: PromotionConfig, now: Date = new Date()): ShopifyDiscountPlan {
+export function shopifyDiscountPlan(
+  config: PromotionConfig,
+  now: Date = new Date(),
+): ShopifyDiscountPlan {
   const isCode = config.method === 'code';
   const common: Record<string, unknown> = {
     title: config.title,
@@ -307,7 +346,11 @@ export function shopifyDiscountPlan(config: PromotionConfig, now: Date = new Dat
     endsAt: config.endsAt,
     combinesWith: config.combinesWith,
     ...(isCode
-      ? { code: config.code, usageLimit: config.usageLimit, appliesOncePerCustomer: config.oncePerCustomer }
+      ? {
+          code: config.code,
+          usageLimit: config.usageLimit,
+          appliesOncePerCustomer: config.oncePerCustomer,
+        }
       : {}),
   };
   const items =
@@ -324,7 +367,11 @@ export function shopifyDiscountPlan(config: PromotionConfig, now: Date = new Dat
         customerGets: { value: { percentage: (config.percent ?? 0) / 100 }, items },
         minimumRequirement:
           config.minimumSubtotalCents !== null
-            ? { subtotal: { greaterThanOrEqualToSubtotal: (config.minimumSubtotalCents / 100).toFixed(2) } }
+            ? {
+                subtotal: {
+                  greaterThanOrEqualToSubtotal: (config.minimumSubtotalCents / 100).toFixed(2),
+                },
+              }
             : null,
       },
       productHandles: config.scope.productHandles,
@@ -336,14 +383,21 @@ export function shopifyDiscountPlan(config: PromotionConfig, now: Date = new Dat
     const value =
       config.value.type === 'percentage'
         ? { percentage: (config.value.percent ?? 0) / 100 }
-        : { discountAmount: { amount: ((config.value.amountCents ?? 0) / 100).toFixed(2), appliesOnEachItem: false } };
+        : {
+            discountAmount: {
+              amount: ((config.value.amountCents ?? 0) / 100).toFixed(2),
+              appliesOnEachItem: false,
+            },
+          };
     return {
       mutation: isCode ? 'discountCodeBasicCreate' : 'discountAutomaticBasicCreate',
       input: {
         ...common,
         ...(isCode ? { context: { all: 'ALL' } } : {}),
         customerGets: { value, items },
-        minimumRequirement: { quantity: { greaterThanOrEqualToQuantity: String(config.minimumQuantity) } },
+        minimumRequirement: {
+          quantity: { greaterThanOrEqualToQuantity: String(config.minimumQuantity) },
+        },
       },
       productHandles: config.scope.productHandles,
       needsFirstOrderSegment: false,
@@ -355,7 +409,10 @@ export function shopifyDiscountPlan(config: PromotionConfig, now: Date = new Dat
     input: {
       ...common,
       ...(isCode ? { context: { all: 'ALL' } } : {}),
-      customerBuys: { value: { amount: (config.minimumSubtotalCents / 100).toFixed(2) }, items: { all: true } },
+      customerBuys: {
+        value: { amount: (config.minimumSubtotalCents / 100).toFixed(2) },
+        items: { all: true },
+      },
       customerGets: {
         value: { discountOnQuantity: { quantity: '1', effect: { percentage: 1 } } },
         items: { products: { productsToAdd: [config.giftProductHandle] } },

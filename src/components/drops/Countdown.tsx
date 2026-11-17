@@ -17,8 +17,13 @@ export function Countdown({ target, className }: { target: string; className?: s
     };
   }, []);
   const end = Date.parse(target);
-  const date = new Intl.DateTimeFormat('en-CA', { dateStyle: 'full', timeStyle: 'short', timeZone: 'America/Winnipeg' }).format(end);
-  if (now === null) return <p className={cn('text-fg-muted text-sm', className)}>Releases {date}</p>;
+  const date = new Intl.DateTimeFormat('en-CA', {
+    dateStyle: 'full',
+    timeStyle: 'short',
+    timeZone: 'America/Winnipeg',
+  }).format(end);
+  if (now === null)
+    return <p className={cn('text-fg-muted text-sm', className)}>Releases {date}</p>;
   const remaining = Math.max(0, end - now);
   const parts = [
     ['days', Math.floor(remaining / 86_400_000)],

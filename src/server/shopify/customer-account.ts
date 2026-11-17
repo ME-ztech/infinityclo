@@ -39,7 +39,12 @@ export async function discovery(): Promise<OpenIdConfiguration> {
     headers: userAgentHeaders(),
     signal: AbortSignal.timeout(10_000),
   });
-  if (!response.ok) throw new ShopifyApiError(`OpenID discovery failed (${response.status})`, 'http', response.status);
+  if (!response.ok)
+    throw new ShopifyApiError(
+      `OpenID discovery failed (${response.status})`,
+      'http',
+      response.status,
+    );
   const value = (await response.json()) as OpenIdConfiguration;
   discoveryCache = { at: Date.now(), value };
   return value;
@@ -52,7 +57,12 @@ async function graphqlEndpoint(): Promise<string> {
     headers: userAgentHeaders(),
     signal: AbortSignal.timeout(10_000),
   });
-  if (!response.ok) throw new ShopifyApiError(`Customer API discovery failed (${response.status})`, 'http', response.status);
+  if (!response.ok)
+    throw new ShopifyApiError(
+      `Customer API discovery failed (${response.status})`,
+      'http',
+      response.status,
+    );
   const body = (await response.json()) as { graphql_api: string };
   apiCache = { at: Date.now(), graphqlApi: body.graphql_api };
   return body.graphql_api;
@@ -74,7 +84,8 @@ export async function authorizationUrl(params: {
   locale?: string;
 }): Promise<string> {
   const config = shopifyConfig();
-  if (!config.customerAccountClientId) throw new ShopifyApiError('Customer accounts are not configured.', 'not_configured');
+  if (!config.customerAccountClientId)
+    throw new ShopifyApiError('Customer accounts are not configured.', 'not_configured');
   const { authorization_endpoint } = await discovery();
   const url = new URL(authorization_endpoint);
   url.searchParams.set('scope', CUSTOMER_SCOPES);
@@ -108,11 +119,21 @@ async function tokenRequest(body: URLSearchParams, origin: string): Promise<Cust
   if (config.customerAccountClientSecret) {
     headers.authorization = `Basic ${Buffer.from(`${config.customerAccountClientId}:${config.customerAccountClientSecret}`).toString('base64')}`;
   }
-  const response = await fetch(token_endpoint, { method: 'POST', headers, body, signal: AbortSignal.timeout(10_000) });
+  const response = await fetch(token_endpoint, {
+    method: 'POST',
+    headers,
+    body,
+    signal: AbortSignal.timeout(10_000),
+  });
   if (!response.ok) {
     throw new ShopifyApiError(`Token request failed (${response.status})`, 'http', response.status);
   }
-  const json = (await response.json()) as { access_token: string; expires_in: number; id_token?: string; refresh_token?: string };
+  const json = (await response.json()) as {
+    access_token: string;
+    expires_in: number;
+    id_token?: string;
+    refresh_token?: string;
+  };
   return {
     accessToken: json.access_token,
     refreshToken: json.refresh_token ?? null,
@@ -121,7 +142,12 @@ async function tokenRequest(body: URLSearchParams, origin: string): Promise<Cust
   };
 }
 
-export async function exchangeCode(params: { code: string; redirectUri: string; verifier: string; origin: string }): Promise<CustomerTokens> {
+export async function exchangeCode(params: {
+  code: string;
+  redirectUri: string;
+  verifier: string;
+  origin: string;
+}): Promise<CustomerTokens> {
   const body = new URLSearchParams({
     grant_type: 'authorization_code',
     client_id: shopifyConfig().customerAccountClientId ?? '',
@@ -141,7 +167,10 @@ export async function refreshTokens(refreshToken: string, origin: string): Promi
   return tokenRequest(body, origin);
 }
 
-export async function logoutUrl(idToken: string | null, postLogoutRedirectUri: string): Promise<string | null> {
+export async function logoutUrl(
+  idToken: string | null,
+  postLogoutRedirectUri: string,
+): Promise<string | null> {
   if (!idToken) return null;
   const { end_session_endpoint } = await discovery();
   const url = new URL(end_session_endpoint);
@@ -155,7 +184,10 @@ export async function logoutUrl(idToken: string | null, postLogoutRedirectUri: s
  * endpoint over TLS (OIDC Core §3.1.3.7: TLS server validation may stand in for
  * signature checking on this back-channel). Checks nonce, audience and expiry.
  */
-export function validateIdTokenClaims(idToken: string, expected: { nonce: string; clientId: string; now?: number }): { email: string | null } {
+export function validateIdTokenClaims(
+  idToken: string,
+  expected: { nonce: string; clientId: string; now?: number },
+): { email: string | null } {
   const [, payloadPart] = idToken.split('.');
   if (!payloadPart) throw new Error('Malformed ID token.');
   const claims = JSON.parse(Buffer.from(payloadPart, 'base64url').toString('utf8')) as {
@@ -167,7 +199,8 @@ export function validateIdTokenClaims(idToken: string, expected: { nonce: string
   const audience = Array.isArray(claims.aud) ? claims.aud : [claims.aud];
   if (claims.nonce !== expected.nonce) throw new Error('ID token nonce mismatch.');
   if (!audience.includes(expected.clientId)) throw new Error('ID token audience mismatch.');
-  if (!claims.exp || claims.exp * 1000 < (expected.now ?? Date.now()) - 60_000) throw new Error('ID token expired.');
+  if (!claims.exp || claims.exp * 1000 < (expected.now ?? Date.now()) - 60_000)
+    throw new Error('ID token expired.');
   return { email: claims.email ?? null };
 }
 
@@ -175,7 +208,11 @@ export function validateIdTokenClaims(idToken: string, expected: { nonce: string
  * Queries
  * ------------------------------------------------------------------ */
 
-export async function customerQuery<T>(accessToken: string, query: string, variables?: Record<string, unknown>): Promise<T> {
+export async function customerQuery<T>(
+  accessToken: string,
+  query: string,
+  variables?: Record<string, unknown>,
+): Promise<T> {
   return shopifyGraphql<T>({
     endpoint: await graphqlEndpoint(),
     headers: { authorization: accessToken, ...userAgentHeaders() },

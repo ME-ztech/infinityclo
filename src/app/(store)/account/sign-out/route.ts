@@ -12,6 +12,8 @@ export async function POST(request: Request): Promise<Response> {
   if (!isSameOrigin(request)) return new Response('Cross-origin request refused.', { status: 403 });
   const session = await getCustomerSession();
   await clearCustomerSession();
-  const shopifyLogout = session ? await logoutUrl(session.idToken, `${origin}/`).catch(() => null) : null;
+  const shopifyLogout = session
+    ? await logoutUrl(session.idToken, `${origin}/`).catch(() => null)
+    : null;
   return NextResponse.redirect(shopifyLogout ?? new URL('/', origin), 303);
 }

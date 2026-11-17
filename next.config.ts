@@ -29,8 +29,20 @@ const nextConfig: NextConfig = {
           { key: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains' },
         ],
       },
-      { source: '/admin/:path*', headers: [{ key: 'X-Robots-Tag', value: 'noindex, nofollow' }, { key: 'Cache-Control', value: 'private, no-store' }] },
-      { source: '/account/:path*', headers: [{ key: 'X-Robots-Tag', value: 'noindex' }, { key: 'Cache-Control', value: 'private, no-store' }] },
+      {
+        source: '/admin/:path*',
+        headers: [
+          { key: 'X-Robots-Tag', value: 'noindex, nofollow' },
+          { key: 'Cache-Control', value: 'private, no-store' },
+        ],
+      },
+      {
+        source: '/account/:path*',
+        headers: [
+          { key: 'X-Robots-Tag', value: 'noindex' },
+          { key: 'Cache-Control', value: 'private, no-store' },
+        ],
+      },
     ];
   },
   /** Legacy Shopify theme URLs keep working (and keep their SEO) after cutover. */
@@ -49,7 +61,11 @@ const nextConfig: NextConfig = {
       { source: '/policies/shipping-policy', destination: '/shipping', permanent: true },
       { source: '/policies/privacy-policy', destination: '/privacy', permanent: true },
       { source: '/policies/terms-of-service', destination: '/terms', permanent: true },
-      { source: '/policies/contact-information', destination: '/contact-information', permanent: true },
+      {
+        source: '/policies/contact-information',
+        destination: '/contact-information',
+        permanent: true,
+      },
       { source: '/account/login', destination: '/account/sign-in', permanent: false },
       { source: '/account/register', destination: '/account/sign-in', permanent: false },
     ];

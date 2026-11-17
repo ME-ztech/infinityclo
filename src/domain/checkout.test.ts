@@ -21,16 +21,28 @@ function line(overrides: Partial<CartLine> = {}): CartLine {
 }
 
 function cart(lines: CartLine[]): Cart {
-  return { id: 'cart-1', lines, currency: 'CAD', subtotal: money(lines.length * 8500), updatedAt: '2026-08-12T00:00:00.000Z' };
+  return {
+    id: 'cart-1',
+    lines,
+    currency: 'CAD',
+    subtotal: money(lines.length * 8500),
+    updatedAt: '2026-08-12T00:00:00.000Z',
+  };
 }
 
 describe('checkoutAvailability', () => {
   it('is unavailable when checkout is not connected, however full the cart', () => {
-    expect(checkoutAvailability(cart([line()]), 'disabled')).toEqual({ status: 'unavailable', reason: 'not_connected' });
+    expect(checkoutAvailability(cart([line()]), 'disabled')).toEqual({
+      status: 'unavailable',
+      reason: 'not_connected',
+    });
   });
 
   it('refuses an empty cart', () => {
-    expect(checkoutAvailability(cart([]), 'storefront')).toEqual({ status: 'unavailable', reason: 'empty_cart' });
+    expect(checkoutAvailability(cart([]), 'storefront')).toEqual({
+      status: 'unavailable',
+      reason: 'empty_cart',
+    });
   });
 
   it('refuses sold-out and archived lines', () => {
@@ -38,7 +50,9 @@ describe('checkoutAvailability', () => {
       status: 'unavailable',
       reason: 'items_unavailable',
     });
-    expect(checkoutAvailability(cart([line({ availability: 'archived' })]), 'storefront').status).toBe('unavailable');
+    expect(
+      checkoutAvailability(cart([line({ availability: 'archived' })]), 'storefront').status,
+    ).toBe('unavailable');
   });
 
   it('is available for an in-stock cart in either connected mode', () => {
@@ -61,17 +75,29 @@ describe('buildCartPermalink', () => {
   });
 
   it('pre-applies a discount code when given one', () => {
-    const url = new URL(buildCartPermalink('shop.example.com', [{ variantId: '1', quantity: 1 }], { discountCode: 'WELCOME' }));
+    const url = new URL(
+      buildCartPermalink('shop.example.com', [{ variantId: '1', quantity: 1 }], {
+        discountCode: 'WELCOME',
+      }),
+    );
     expect(url.searchParams.get('discount')).toBe('WELCOME');
   });
 
   it('rejects anything that is not a numeric Shopify variant id, so nothing can be injected into the path', () => {
-    expect(() => buildCartPermalink('shop.example.com', [{ variantId: '1/../../admin', quantity: 1 }])).toThrow();
-    expect(() => buildCartPermalink('shop.example.com', [{ variantId: 'gid://shopify/ProductVariant/1', quantity: 1 }])).toThrow();
+    expect(() =>
+      buildCartPermalink('shop.example.com', [{ variantId: '1/../../admin', quantity: 1 }]),
+    ).toThrow();
+    expect(() =>
+      buildCartPermalink('shop.example.com', [
+        { variantId: 'gid://shopify/ProductVariant/1', quantity: 1 },
+      ]),
+    ).toThrow();
   });
 
   it('rejects empty carts and non-positive quantities', () => {
     expect(() => buildCartPermalink('shop.example.com', [])).toThrow();
-    expect(() => buildCartPermalink('shop.example.com', [{ variantId: '1', quantity: 0 }])).toThrow();
+    expect(() =>
+      buildCartPermalink('shop.example.com', [{ variantId: '1', quantity: 0 }]),
+    ).toThrow();
   });
 });

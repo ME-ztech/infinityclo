@@ -65,23 +65,30 @@ test.describe('routing integrity', () => {
 });
 
 test.describe('navigation and hero', () => {
-  test('header carries the brand mark, the owner’s menu and a live cart count', async ({ page, isMobile }) => {
+  test('header carries the brand mark, the owner’s menu and a live cart count', async ({
+    page,
+    isMobile,
+  }) => {
     await page.goto('/');
     const header = page.getByTestId('site-header');
     await expect(header.getByRole('link', { name: 'INFNITY.clo — home' })).toBeVisible();
     if (isMobile) {
       await header.getByRole('button', { name: 'Open menu' }).click();
       const menu = page.getByTestId('mobile-nav');
-      for (const label of ['Home', 'Shop', 'Styled By You', 'Contact']) await expect(menu.getByRole('link', { name: label, exact: true })).toBeVisible();
+      for (const label of ['Home', 'Shop', 'Styled By You', 'Contact'])
+        await expect(menu.getByRole('link', { name: label, exact: true })).toBeVisible();
       await menu.getByRole('button', { name: 'Close menu' }).click();
     } else {
-      for (const label of ['Home', 'Shop', 'Styled By You', 'Contact']) await expect(header.getByRole('link', { name: label, exact: true })).toBeVisible();
+      for (const label of ['Home', 'Shop', 'Styled By You', 'Contact'])
+        await expect(header.getByRole('link', { name: label, exact: true })).toBeVisible();
       await expect(header.getByRole('link', { name: 'Account' })).toBeVisible();
     }
     await expect(page.getByTestId('cart-button')).toHaveAccessibleName(/Cart/);
   });
 
-  test('hero shows the slogan, statements are selectable, and the slideshow pauses', async ({ page }) => {
+  test('hero shows the slogan, statements are selectable, and the slideshow pauses', async ({
+    page,
+  }) => {
     await page.goto('/');
     const hero = page.getByTestId('hero');
     await expect(hero.getByTestId('hero-slogan')).toHaveText(/Be the Statement/i);
@@ -89,13 +96,23 @@ test.describe('navigation and hero', () => {
     await pause.click();
     await expect(pause).toHaveAttribute('aria-pressed', 'true');
     await hero.getByRole('button', { name: /Slide 2 of/ }).click();
-    await expect(hero.getByRole('button', { name: /Slide 2 of/ })).toHaveAttribute('aria-current', 'true');
+    await expect(hero.getByRole('button', { name: /Slide 2 of/ })).toHaveAttribute(
+      'aria-current',
+      'true',
+    );
     await expect(hero.getByTestId('hero-cta')).toHaveAttribute('href', '/shop?group=hoodies');
   });
 
   test('homepage sections appear in the brief’s order', async ({ page }) => {
     await page.goto('/');
-    const ids = ['statement-heading', 'featured-heading', 'vault-heading', 'lookbook-heading', 'community-heading', 'newsletter-heading'];
+    const ids = [
+      'statement-heading',
+      'featured-heading',
+      'vault-heading',
+      'lookbook-heading',
+      'community-heading',
+      'newsletter-heading',
+    ];
     const tops: number[] = [];
     for (const id of ids) {
       const box = await page.locator(`#${id}`).boundingBox();
@@ -108,7 +125,9 @@ test.describe('navigation and hero', () => {
 
   test('every footer link resolves', async ({ page, request }) => {
     await page.goto('/');
-    const hrefs = await page.locator('footer a[href^="/"]').evaluateAll((links) => [...new Set(links.map((link) => link.getAttribute('href')!))]);
+    const hrefs = await page
+      .locator('footer a[href^="/"]')
+      .evaluateAll((links) => [...new Set(links.map((link) => link.getAttribute('href')!))]);
     expect(hrefs.length).toBeGreaterThan(15);
     for (const href of hrefs) expect((await request.get(href)).status(), href).toBeLessThan(400);
   });

@@ -29,7 +29,9 @@ export interface ShopifyConfig {
 }
 
 export function shopifyConfig(): ShopifyConfig {
-  const storeDomain = (process.env.SHOPIFY_STORE_DOMAIN ?? DEFAULT_STORE_DOMAIN).replace(/^https?:\/\//, '').replace(/\/$/, '');
+  const storeDomain = (process.env.SHOPIFY_STORE_DOMAIN ?? DEFAULT_STORE_DOMAIN)
+    .replace(/^https?:\/\//, '')
+    .replace(/\/$/, '');
   const privateToken = process.env.SHOPIFY_STOREFRONT_PRIVATE_TOKEN ?? null;
   return {
     storeDomain,
@@ -97,15 +99,22 @@ export function integrationStatuses(): IntegrationStatus[] {
       key: 'storefront',
       label: 'Shopify Storefront API',
       configured: Boolean(config.storefrontToken),
-      envVars: ['SHOPIFY_STORE_DOMAIN', 'SHOPIFY_STOREFRONT_ACCESS_TOKEN (or SHOPIFY_STOREFRONT_PRIVATE_TOKEN)'],
+      envVars: [
+        'SHOPIFY_STORE_DOMAIN',
+        'SHOPIFY_STOREFRONT_ACCESS_TOKEN (or SHOPIFY_STOREFRONT_PRIVATE_TOKEN)',
+      ],
       unlocks: 'Live products, prices and availability; Shopify carts and checkout hand-off.',
-      setup: 'Shopify admin → Sales channels → Headless → Create storefront → Storefront API → copy the access token.',
+      setup:
+        'Shopify admin → Sales channels → Headless → Create storefront → Storefront API → copy the access token.',
     },
     {
       key: 'customer-account',
       label: 'Shopify Customer Account API',
       configured: Boolean(config.customerAccountClientId),
-      envVars: ['SHOPIFY_CUSTOMER_ACCOUNT_CLIENT_ID', 'SHOPIFY_CUSTOMER_ACCOUNT_CLIENT_SECRET (confidential clients)'],
+      envVars: [
+        'SHOPIFY_CUSTOMER_ACCOUNT_CLIENT_ID',
+        'SHOPIFY_CUSTOMER_ACCOUNT_CLIENT_SECRET (confidential clients)',
+      ],
       unlocks: 'Native sign-in, order history, tracking, addresses and profile on /account.',
       setup:
         'Settings → Customer accounts → choose "Customer accounts"; Headless → Customer Account API settings → add the callback URL https://<site>/account/callback and logout URL https://<site>/.',
@@ -115,8 +124,10 @@ export function integrationStatuses(): IntegrationStatus[] {
       label: 'Shopify Admin API',
       configured: Boolean(config.adminToken),
       envVars: ['SHOPIFY_ADMIN_ACCESS_TOKEN'],
-      unlocks: 'Back-office products, media, inventory, orders, fulfilment, customers, live discounts and sales analytics.',
-      setup: 'Shopify admin → Settings → Apps and sales channels → Develop apps → create a custom app with the Admin API scopes listed in docs/launch-checklist.md, install it, and copy the Admin API access token.',
+      unlocks:
+        'Back-office products, media, inventory, orders, fulfilment, customers, live discounts and sales analytics.',
+      setup:
+        'Shopify admin → Settings → Apps and sales channels → Develop apps → create a custom app with the Admin API scopes listed in docs/launch-checklist.md, install it, and copy the Admin API access token.',
     },
     {
       key: 'webhooks',
@@ -124,7 +135,8 @@ export function integrationStatuses(): IntegrationStatus[] {
       configured: Boolean(config.webhookSecret),
       envVars: ['SHOPIFY_WEBHOOK_SECRET'],
       unlocks: 'Instant cache refresh and order/fulfilment activity feed, verified by HMAC.',
-      setup: 'Use the custom app’s client secret; subscribe topics to https://<site>/api/webhooks/shopify.',
+      setup:
+        'Use the custom app’s client secret; subscribe topics to https://<site>/api/webhooks/shopify.',
     },
   ];
 }

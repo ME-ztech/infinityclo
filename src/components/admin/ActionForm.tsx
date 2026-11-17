@@ -54,7 +54,10 @@ export function ActionForm({
       onSubmit={(event) => {
         if (confirm && !window.confirm(confirm)) event.preventDefault();
       }}
-      className={cn(inline ? 'flex flex-row flex-wrap items-center gap-2' : 'flex flex-col gap-4', className)}
+      className={cn(
+        inline ? 'flex flex-row flex-wrap items-center gap-2' : 'flex flex-col gap-4',
+        className,
+      )}
     >
       {children}
       {!hideSubmit && !inline && (
@@ -74,7 +77,17 @@ export function ActionForm({
   );
 }
 
-export function SubmitButton({ label, variant = 'primary', name, value }: { label: string; variant?: 'primary' | 'secondary' | 'danger'; name?: string; value?: string }) {
+export function SubmitButton({
+  label,
+  variant = 'primary',
+  name,
+  value,
+}: {
+  label: string;
+  variant?: 'primary' | 'secondary' | 'danger';
+  name?: string;
+  value?: string;
+}) {
   const { pending } = useFormStatus();
   return (
     <button

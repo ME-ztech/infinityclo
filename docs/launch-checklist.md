@@ -15,11 +15,11 @@
 
 ## NEEDS OWNER ACTION — Shopify access (exact steps)
 
-1. **Storefront API + Customer Account API** — Shopify admin → *Sales channels* → install **Headless** → *Create storefront*:
+1. **Storefront API + Customer Account API** — Shopify admin → _Sales channels_ → install **Headless** → _Create storefront_:
    - Copy the **Storefront API public access token** → `SHOPIFY_STOREFRONT_ACCESS_TOKEN`.
-   - *Customer Account API settings*: copy **Client ID** (and secret if "Confidential") → `SHOPIFY_CUSTOMER_ACCOUNT_CLIENT_ID` / `_SECRET`; add callback `https://<site>/account/callback`, logout URL `https://<site>/`, JavaScript origin `https://<site>`.
-2. **New customer accounts** — *Settings → Customer accounts → Edit → "Customer accounts"* (the store currently uses classic accounts; required for item 1's sign-in).
-3. **Admin API** — *Settings → Apps and sales channels → Develop apps → Create app* "INFNITY back office" → Admin API scopes:
+   - _Customer Account API settings_: copy **Client ID** (and secret if "Confidential") → `SHOPIFY_CUSTOMER_ACCOUNT_CLIENT_ID` / `_SECRET`; add callback `https://<site>/account/callback`, logout URL `https://<site>/`, JavaScript origin `https://<site>`.
+2. **New customer accounts** — _Settings → Customer accounts → Edit → "Customer accounts"_ (the store currently uses classic accounts; required for item 1's sign-in).
+3. **Admin API** — _Settings → Apps and sales channels → Develop apps → Create app_ "INFNITY back office" → Admin API scopes:
    `read_products, write_products, read_inventory, write_inventory, read_locations, read_orders, write_orders, read_merchant_managed_fulfillment_orders, write_merchant_managed_fulfillment_orders, read_customers, write_customers, read_discounts, write_discounts, read_publications, write_publications, read_reports, read_markets, write_files, read_files`
    → install → **Admin API access token** → `SHOPIFY_ADMIN_ACCESS_TOKEN`; **API secret key** → `SHOPIFY_WEBHOOK_SECRET`.
    (Orders older than 60 days need `read_all_orders`, which Shopify grants on request.)
@@ -44,7 +44,7 @@ Enter secrets only in Vercel's environment settings — never in chat or in the 
 
 ## NEEDS OWNER ACTION — assets
 
-See `assets-and-rights.md` → *Missing asset requests* (logo vectors, campaign originals, clean photos for sold-out pieces, missing garment facts and size charts incl. women's, next-drop details, founder story).
+See `assets-and-rights.md` → _Missing asset requests_ (logo vectors, campaign originals, clean photos for sold-out pieces, missing garment facts and size charts incl. women's, next-drop details, founder story).
 
 ## BLOCKED until Shopify access (items 1–4 above)
 

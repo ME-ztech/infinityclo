@@ -13,10 +13,16 @@ import { assertNoUserErrors, shopifyGraphql, ShopifyApiError, toGid } from './gr
  * safeguards.
  */
 
-export async function adminRequest<T>(query: string, variables?: Record<string, unknown>): Promise<T> {
+export async function adminRequest<T>(
+  query: string,
+  variables?: Record<string, unknown>,
+): Promise<T> {
   const config = shopifyConfig();
   if (!config.adminToken) {
-    throw new ShopifyApiError('The Shopify Admin API is not configured (SHOPIFY_ADMIN_ACCESS_TOKEN).', 'not_configured');
+    throw new ShopifyApiError(
+      'The Shopify Admin API is not configured (SHOPIFY_ADMIN_ACCESS_TOKEN).',
+      'not_configured',
+    );
   }
   return shopifyGraphql<T>({
     endpoint: `https://${config.storeDomain}/admin/api/${config.apiVersion}/graphql.json`,
@@ -40,14 +46,39 @@ type MoneyNode = { amount: string; currencyCode: string };
 
 export async function getShopInfo() {
   return adminRequest<{
-    shop: { name: string; currencyCode: string; myshopifyDomain: string; primaryDomain: { url: string }; contactEmail: string | null };
+    shop: {
+      name: string;
+      currencyCode: string;
+      myshopifyDomain: string;
+      primaryDomain: { url: string };
+      contactEmail: string | null;
+    };
     locations: { nodes: Array<{ id: string; name: string; isActive: boolean }> };
     publications: { nodes: Array<{ id: string; name: string }> };
   }>(/* GraphQL */ `
     query ShopInfo {
-      shop { name currencyCode myshopifyDomain primaryDomain { url } contactEmail }
-      locations(first: 20) { nodes { id name isActive } }
-      publications(first: 20) { nodes { id name } }
+      shop {
+        name
+        currencyCode
+        myshopifyDomain
+        primaryDomain {
+          url
+        }
+        contactEmail
+      }
+      locations(first: 20) {
+        nodes {
+          id
+          name
+          isActive
+        }
+      }
+      publications(first: 20) {
+        nodes {
+          id
+          name
+        }
+      }
     }
   `);
 }
@@ -88,12 +119,33 @@ export async function listProducts(search: string | null, after: string | null =
     /* GraphQL */ `
       query AdminProducts($query: String, $after: String) {
         products(first: 50, after: $after, query: $query, sortKey: UPDATED_AT, reverse: true) {
-          pageInfo { hasNextPage endCursor }
+          pageInfo {
+            hasNextPage
+            endCursor
+          }
           nodes {
-            id handle title status totalInventory updatedAt
-            featuredMedia { preview { image { url } } }
-            variantsCount { count }
-            priceRangeV2 { minVariantPrice { amount currencyCode } }
+            id
+            handle
+            title
+            status
+            totalInventory
+            updatedAt
+            featuredMedia {
+              preview {
+                image {
+                  url
+                }
+              }
+            }
+            variantsCount {
+              count
+            }
+            priceRangeV2 {
+              minVariantPrice {
+                amount
+                currencyCode
+              }
+            }
           }
         }
       }
@@ -102,19 +154,17 @@ export async function listProducts(search: string | null, after: string | null =
   );
   return {
     pageInfo: data.products.pageInfo,
-    products: data.products.nodes.map(
-      (node): AdminProductSummary => ({
-        id: node.id,
-        handle: node.handle,
-        title: node.title,
-        status: node.status,
-        totalInventory: node.totalInventory,
-        updatedAt: node.updatedAt,
-        featuredImage: node.featuredMedia?.preview?.image?.url ?? null,
-        variantsCount: node.variantsCount?.count ?? 0,
-        minPrice: node.priceRangeV2?.minVariantPrice ?? null,
-      }),
-    ),
+    products: data.products.nodes.map((node): AdminProductSummary => ({
+      id: node.id,
+      handle: node.handle,
+      title: node.title,
+      status: node.status,
+      totalInventory: node.totalInventory,
+      updatedAt: node.updatedAt,
+      featuredImage: node.featuredMedia?.preview?.image?.url ?? null,
+      variantsCount: node.variantsCount?.count ?? 0,
+      minPrice: node.priceRangeV2?.minVariantPrice ?? null,
+    })),
   };
 }
 
@@ -142,7 +192,14 @@ export interface AdminProductDetail {
     inventoryItemId: string;
     tracked: boolean;
     weight: { value: number; unit: string } | null;
-    inventory: Array<{ locationId: string; locationName: string; available: number; committed: number; onHand: number; reserved: number }>;
+    inventory: Array<{
+      locationId: string;
+      locationName: string;
+      available: number;
+      committed: number;
+      onHand: number;
+      reserved: number;
+    }>;
   }>;
   metafields: Record<string, string>;
 }
@@ -160,7 +217,12 @@ export async function getProduct(id: string): Promise<AdminProductDetail | null>
       tags: string[];
       onlineStoreUrl: string | null;
       seo: { title: string | null; description: string | null };
-      options: Array<{ id: string; name: string; position: number; optionValues: Array<{ name: string }> }>;
+      options: Array<{
+        id: string;
+        name: string;
+        position: number;
+        optionValues: Array<{ name: string }>;
+      }>;
       media: { nodes: Array<{ id: string; alt: string | null; image?: { url: string } | null }> };
       variants: {
         nodes: Array<{
@@ -176,7 +238,10 @@ export async function getProduct(id: string): Promise<AdminProductDetail | null>
             tracked: boolean;
             measurement: { weight: { value: number; unit: string } | null } | null;
             inventoryLevels: {
-              nodes: Array<{ location: { id: string; name: string }; quantities: Array<{ name: string; quantity: number }> }>;
+              nodes: Array<{
+                location: { id: string; name: string };
+                quantities: Array<{ name: string; quantity: number }>;
+              }>;
             };
           };
         }>;
@@ -187,27 +252,80 @@ export async function getProduct(id: string): Promise<AdminProductDetail | null>
     /* GraphQL */ `
       query AdminProduct($id: ID!) {
         product(id: $id) {
-          id handle title descriptionHtml productType vendor status tags onlineStoreUrl
-          seo { title description }
-          options { id name position optionValues { name } }
-          media(first: 30) { nodes { id alt ... on MediaImage { image { url } } } }
+          id
+          handle
+          title
+          descriptionHtml
+          productType
+          vendor
+          status
+          tags
+          onlineStoreUrl
+          seo {
+            title
+            description
+          }
+          options {
+            id
+            name
+            position
+            optionValues {
+              name
+            }
+          }
+          media(first: 30) {
+            nodes {
+              id
+              alt
+              ... on MediaImage {
+                image {
+                  url
+                }
+              }
+            }
+          }
           variants(first: 100) {
             nodes {
-              id title sku barcode price compareAtPrice
-              selectedOptions { name value }
+              id
+              title
+              sku
+              barcode
+              price
+              compareAtPrice
+              selectedOptions {
+                name
+                value
+              }
               inventoryItem {
-                id tracked
-                measurement { weight { value unit } }
+                id
+                tracked
+                measurement {
+                  weight {
+                    value
+                    unit
+                  }
+                }
                 inventoryLevels(first: 10) {
                   nodes {
-                    location { id name }
-                    quantities(names: ["available", "committed", "on_hand", "reserved"]) { name quantity }
+                    location {
+                      id
+                      name
+                    }
+                    quantities(names: ["available", "committed", "on_hand", "reserved"]) {
+                      name
+                      quantity
+                    }
                   }
                 }
               }
             }
           }
-          metafields(namespace: "infnity", first: 20) { nodes { key value } }
+          metafields(namespace: "infnity", first: 20) {
+            nodes {
+              key
+              value
+            }
+          }
         }
       }
     `,
@@ -232,7 +350,9 @@ export async function getProduct(id: string): Promise<AdminProductDetail | null>
       position: option.position,
       values: option.optionValues.map((value) => value.name),
     })),
-    media: product.media.nodes.filter((node) => node.image?.url).map((node) => ({ id: node.id, url: node.image!.url, alt: node.alt })),
+    media: product.media.nodes
+      .filter((node) => node.image?.url)
+      .map((node) => ({ id: node.id, url: node.image!.url, alt: node.alt })),
     variants: product.variants.nodes.map((variant) => ({
       id: variant.id,
       title: variant.title,
@@ -245,7 +365,8 @@ export async function getProduct(id: string): Promise<AdminProductDetail | null>
       tracked: variant.inventoryItem.tracked,
       weight: variant.inventoryItem.measurement?.weight ?? null,
       inventory: variant.inventoryItem.inventoryLevels.nodes.map((level) => {
-        const q = (name: string) => level.quantities.find((entry) => entry.name === name)?.quantity ?? 0;
+        const q = (name: string) =>
+          level.quantities.find((entry) => entry.name === name)?.quantity ?? 0;
         return {
           locationId: level.location.id,
           locationName: level.location.name,
@@ -256,7 +377,9 @@ export async function getProduct(id: string): Promise<AdminProductDetail | null>
         };
       }),
     })),
-    metafields: Object.fromEntries(product.metafields.nodes.map((field) => [field.key, field.value])),
+    metafields: Object.fromEntries(
+      product.metafields.nodes.map((field) => [field.key, field.value]),
+    ),
   };
 }
 
@@ -288,7 +411,12 @@ export interface ProductWriteInput {
   /** New images by URL (already uploaded to Shopify or publicly reachable). */
   newMedia: Array<{ url: string; alt: string }>;
   /** Brand-authored garment facts shown in the PDP accordions. */
-  facts: { fit: string | null; fabric: string | null; care: string | null; sizeGuide: string | null };
+  facts: {
+    fit: string | null;
+    fabric: string | null;
+    care: string | null;
+    sizeGuide: string | null;
+  };
 }
 
 /**
@@ -296,7 +424,9 @@ export interface ProductWriteInput {
  * "make the product look like this" mutation. Variants not listed are removed by
  * Shopify, so the editor always sends the full variant set it displays.
  */
-export async function saveProduct(input: ProductWriteInput): Promise<{ id: string; handle: string }> {
+export async function saveProduct(
+  input: ProductWriteInput,
+): Promise<{ id: string; handle: string }> {
   const metafields = (
     [
       ['fit', input.facts.fit],
@@ -306,16 +436,31 @@ export async function saveProduct(input: ProductWriteInput): Promise<{ id: strin
     ] as const
   )
     .filter(([, value]) => value !== null && value !== undefined)
-    .map(([key, value]) => ({ namespace: 'infnity', key, type: 'multi_line_text_field', value: value ?? '' }));
+    .map(([key, value]) => ({
+      namespace: 'infnity',
+      key,
+      type: 'multi_line_text_field',
+      value: value ?? '',
+    }));
 
   const data = await adminRequest<{
-    productSet: { product: { id: string; handle: string } | null; userErrors: Array<{ field: string[] | null; message: string; code: string | null }> };
+    productSet: {
+      product: { id: string; handle: string } | null;
+      userErrors: Array<{ field: string[] | null; message: string; code: string | null }>;
+    };
   }>(
     /* GraphQL */ `
       mutation SaveProduct($input: ProductSetInput!) {
         productSet(input: $input, synchronous: true) {
-          product { id handle }
-          userErrors { field message code }
+          product {
+            id
+            handle
+          }
+          userErrors {
+            field
+            message
+            code
+          }
         }
       }
     `,
@@ -345,33 +490,64 @@ export async function saveProduct(input: ProductWriteInput): Promise<{ id: strin
           barcode: variant.barcode,
           inventoryItem: {
             tracked: true,
-            ...(variant.weightGrams ? { measurement: { weight: { value: variant.weightGrams, unit: 'GRAMS' } } } : {}),
+            ...(variant.weightGrams
+              ? { measurement: { weight: { value: variant.weightGrams, unit: 'GRAMS' } } }
+              : {}),
           },
-          ...(!input.id && input.initialLocationId && variant.initialQuantity !== null && variant.initialQuantity !== undefined
-            ? { inventoryQuantities: [{ locationId: input.initialLocationId, name: 'available', quantity: variant.initialQuantity }] }
+          ...(!input.id &&
+          input.initialLocationId &&
+          variant.initialQuantity !== null &&
+          variant.initialQuantity !== undefined
+            ? {
+                inventoryQuantities: [
+                  {
+                    locationId: input.initialLocationId,
+                    name: 'available',
+                    quantity: variant.initialQuantity,
+                  },
+                ],
+              }
             : {}),
         })),
         ...(input.newMedia.length
-          ? { files: input.newMedia.map((media) => ({ originalSource: media.url, alt: media.alt, contentType: 'IMAGE' })) }
+          ? {
+              files: input.newMedia.map((media) => ({
+                originalSource: media.url,
+                alt: media.alt,
+                contentType: 'IMAGE',
+              })),
+            }
           : {}),
         ...(metafields.length ? { metafields } : {}),
       },
     },
   );
   assertNoUserErrors(data.productSet, 'Saving the product');
-  if (!data.productSet.product) throw new ShopifyApiError('Shopify did not return the saved product', 'graphql');
+  if (!data.productSet.product)
+    throw new ShopifyApiError('Shopify did not return the saved product', 'graphql');
   return data.productSet.product;
 }
 
-export async function duplicateProduct(id: string, newTitle: string): Promise<{ id: string } | null> {
+export async function duplicateProduct(
+  id: string,
+  newTitle: string,
+): Promise<{ id: string } | null> {
   const data = await adminRequest<{
-    productDuplicate: { newProduct: { id: string } | null; userErrors: Array<{ field: string[] | null; message: string }> };
+    productDuplicate: {
+      newProduct: { id: string } | null;
+      userErrors: Array<{ field: string[] | null; message: string }>;
+    };
   }>(
     /* GraphQL */ `
       mutation Duplicate($id: ID!, $title: String!) {
         productDuplicate(productId: $id, newTitle: $title, newStatus: DRAFT) {
-          newProduct { id }
-          userErrors { field message }
+          newProduct {
+            id
+          }
+          userErrors {
+            field
+            message
+          }
         }
       }
     `,
@@ -382,16 +558,25 @@ export async function duplicateProduct(id: string, newTitle: string): Promise<{ 
 }
 
 /** Publishes or unpublishes a product on the given sales channels (Online Store, Headless…). */
-export async function setPublished(productId: string, publicationIds: string[], publish: boolean): Promise<void> {
+export async function setPublished(
+  productId: string,
+  publicationIds: string[],
+  publish: boolean,
+): Promise<void> {
   if (publicationIds.length === 0) return;
   const mutation = publish ? 'publishablePublish' : 'publishableUnpublish';
-  const data = await adminRequest<Record<string, { userErrors: Array<{ field: string[] | null; message: string }> }>>(
+  const data = await adminRequest<
+    Record<string, { userErrors: Array<{ field: string[] | null; message: string }> }>
+  >(
     /* GraphQL */ `
       mutation Publish($id: ID!, $input: [PublicationInput!]!) {
         ${mutation}(id: $id, input: $input) { userErrors { field message } }
       }
     `,
-    { id: toGid('Product', productId), input: publicationIds.map((publicationId) => ({ publicationId })) },
+    {
+      id: toGid('Product', productId),
+      input: publicationIds.map((publicationId) => ({ publicationId })),
+    },
   );
   assertNoUserErrors(data[mutation], publish ? 'Publishing' : 'Unpublishing');
 }
@@ -400,22 +585,51 @@ export async function setPublished(productId: string, publicationIds: string[], 
  * Uploads an image to Shopify's CDN through a staged upload and returns the
  * `resourceUrl` to attach to a product or use in the CMS.
  */
-export async function uploadImage(file: { name: string; type: string; size: number; bytes: ArrayBuffer }): Promise<string> {
+export async function uploadImage(file: {
+  name: string;
+  type: string;
+  size: number;
+  bytes: ArrayBuffer;
+}): Promise<string> {
   const data = await adminRequest<{
     stagedUploadsCreate: {
-      stagedTargets: Array<{ url: string; resourceUrl: string; parameters: Array<{ name: string; value: string }> }>;
+      stagedTargets: Array<{
+        url: string;
+        resourceUrl: string;
+        parameters: Array<{ name: string; value: string }>;
+      }>;
       userErrors: Array<{ field: string[] | null; message: string }>;
     };
   }>(
     /* GraphQL */ `
       mutation Stage($input: [StagedUploadInput!]!) {
         stagedUploadsCreate(input: $input) {
-          stagedTargets { url resourceUrl parameters { name value } }
-          userErrors { field message }
+          stagedTargets {
+            url
+            resourceUrl
+            parameters {
+              name
+              value
+            }
+          }
+          userErrors {
+            field
+            message
+          }
         }
       }
     `,
-    { input: [{ resource: 'IMAGE', filename: file.name, mimeType: file.type, httpMethod: 'POST', fileSize: String(file.size) }] },
+    {
+      input: [
+        {
+          resource: 'IMAGE',
+          filename: file.name,
+          mimeType: file.type,
+          httpMethod: 'POST',
+          fileSize: String(file.size),
+        },
+      ],
+    },
   );
   assertNoUserErrors(data.stagedUploadsCreate, 'Preparing the upload');
   const target = data.stagedUploadsCreate.stagedTargets[0];
@@ -423,8 +637,13 @@ export async function uploadImage(file: { name: string; type: string; size: numb
   const form = new FormData();
   for (const parameter of target.parameters) form.append(parameter.name, parameter.value);
   form.append('file', new Blob([file.bytes], { type: file.type }), file.name);
-  const response = await fetch(target.url, { method: 'POST', body: form, signal: AbortSignal.timeout(60_000) });
-  if (!response.ok) throw new ShopifyApiError(`Image upload failed (${response.status})`, 'http', response.status);
+  const response = await fetch(target.url, {
+    method: 'POST',
+    body: form,
+    signal: AbortSignal.timeout(60_000),
+  });
+  if (!response.ok)
+    throw new ShopifyApiError(`Image upload failed (${response.status})`, 'http', response.status);
   return target.resourceUrl;
 }
 
@@ -447,11 +666,19 @@ export async function setAvailableQuantity(input: {
   referenceDocumentUri: string;
 }): Promise<void> {
   const data = await adminRequest<{
-    inventorySetQuantities: { userErrors: Array<{ field: string[] | null; message: string; code: string | null }> };
+    inventorySetQuantities: {
+      userErrors: Array<{ field: string[] | null; message: string; code: string | null }>;
+    };
   }>(
     /* GraphQL */ `
       mutation SetQuantity($input: InventorySetQuantitiesInput!) {
-        inventorySetQuantities(input: $input) { userErrors { field message code } }
+        inventorySetQuantities(input: $input) {
+          userErrors {
+            field
+            message
+            code
+          }
+        }
       }
     `,
     {
@@ -513,12 +740,29 @@ export async function listOrders(search: string | null, after: string | null = n
     /* GraphQL */ `
       query AdminOrders($query: String, $after: String) {
         orders(first: 50, after: $after, query: $query, sortKey: PROCESSED_AT, reverse: true) {
-          pageInfo { hasNextPage endCursor }
+          pageInfo {
+            hasNextPage
+            endCursor
+          }
           nodes {
-            id name processedAt displayFinancialStatus displayFulfillmentStatus cancelledAt test email
+            id
+            name
+            processedAt
+            displayFinancialStatus
+            displayFulfillmentStatus
+            cancelledAt
+            test
+            email
             currentSubtotalLineItemsQuantity
-            totalPriceSet { shopMoney { amount currencyCode } }
-            customer { displayName }
+            totalPriceSet {
+              shopMoney {
+                amount
+                currencyCode
+              }
+            }
+            customer {
+              displayName
+            }
           }
         }
       }
@@ -527,21 +771,19 @@ export async function listOrders(search: string | null, after: string | null = n
   );
   return {
     pageInfo: data.orders.pageInfo,
-    orders: data.orders.nodes.map(
-      (node): AdminOrderSummary => ({
-        id: node.id,
-        name: node.name,
-        processedAt: node.processedAt,
-        financialStatus: node.displayFinancialStatus,
-        fulfillmentStatus: node.displayFulfillmentStatus,
-        cancelledAt: node.cancelledAt,
-        total: node.totalPriceSet.shopMoney,
-        customerName: node.customer?.displayName ?? null,
-        email: node.email,
-        test: node.test,
-        itemCount: node.currentSubtotalLineItemsQuantity,
-      }),
-    ),
+    orders: data.orders.nodes.map((node): AdminOrderSummary => ({
+      id: node.id,
+      name: node.name,
+      processedAt: node.processedAt,
+      financialStatus: node.displayFinancialStatus,
+      fulfillmentStatus: node.displayFulfillmentStatus,
+      cancelledAt: node.cancelledAt,
+      total: node.totalPriceSet.shopMoney,
+      customerName: node.customer?.displayName ?? null,
+      email: node.email,
+      test: node.test,
+      itemCount: node.currentSubtotalLineItemsQuantity,
+    })),
   };
 }
 
@@ -581,7 +823,9 @@ export async function getOrder(id: string) {
           image: { url: string } | null;
         }>;
       };
-      fulfillmentOrders: { nodes: Array<{ id: string; status: string; supportedActions: Array<{ action: string }> }> };
+      fulfillmentOrders: {
+        nodes: Array<{ id: string; status: string; supportedActions: Array<{ action: string }> }>;
+      };
       fulfillments: Array<{
         id: string;
         status: string;
@@ -595,27 +839,113 @@ export async function getOrder(id: string) {
     /* GraphQL */ `
       query AdminOrder($id: ID!) {
         order(id: $id) {
-          id name processedAt cancelledAt cancelReason displayFinancialStatus displayFulfillmentStatus test note tags email
-          customer { id displayName }
-          shippingAddress { formatted(withName: true) }
-          subtotalPriceSet { shopMoney { amount currencyCode } }
-          totalShippingPriceSet { shopMoney { amount currencyCode } }
-          totalTaxSet { shopMoney { amount currencyCode } }
-          totalDiscountsSet { shopMoney { amount currencyCode } }
-          totalPriceSet { shopMoney { amount currencyCode } }
-          totalRefundedSet { shopMoney { amount currencyCode } }
+          id
+          name
+          processedAt
+          cancelledAt
+          cancelReason
+          displayFinancialStatus
+          displayFulfillmentStatus
+          test
+          note
+          tags
+          email
+          customer {
+            id
+            displayName
+          }
+          shippingAddress {
+            formatted(withName: true)
+          }
+          subtotalPriceSet {
+            shopMoney {
+              amount
+              currencyCode
+            }
+          }
+          totalShippingPriceSet {
+            shopMoney {
+              amount
+              currencyCode
+            }
+          }
+          totalTaxSet {
+            shopMoney {
+              amount
+              currencyCode
+            }
+          }
+          totalDiscountsSet {
+            shopMoney {
+              amount
+              currencyCode
+            }
+          }
+          totalPriceSet {
+            shopMoney {
+              amount
+              currencyCode
+            }
+          }
+          totalRefundedSet {
+            shopMoney {
+              amount
+              currencyCode
+            }
+          }
           discountCodes
           lineItems(first: 100) {
             nodes {
-              id title variantTitle sku quantity unfulfilledQuantity
-              originalUnitPriceSet { shopMoney { amount currencyCode } }
-              discountedTotalSet { shopMoney { amount currencyCode } }
-              image { url }
+              id
+              title
+              variantTitle
+              sku
+              quantity
+              unfulfilledQuantity
+              originalUnitPriceSet {
+                shopMoney {
+                  amount
+                  currencyCode
+                }
+              }
+              discountedTotalSet {
+                shopMoney {
+                  amount
+                  currencyCode
+                }
+              }
+              image {
+                url
+              }
             }
           }
-          fulfillmentOrders(first: 10) { nodes { id status supportedActions { action } } }
-          fulfillments(first: 10) { id status displayStatus createdAt trackingInfo(first: 5) { company number url } }
-          events(first: 30, sortKey: CREATED_AT, reverse: true) { nodes { id createdAt message } }
+          fulfillmentOrders(first: 10) {
+            nodes {
+              id
+              status
+              supportedActions {
+                action
+              }
+            }
+          }
+          fulfillments(first: 10) {
+            id
+            status
+            displayStatus
+            createdAt
+            trackingInfo(first: 5) {
+              company
+              number
+              url
+            }
+          }
+          events(first: 30, sortKey: CREATED_AT, reverse: true) {
+            nodes {
+              id
+              createdAt
+              message
+            }
+          }
         }
       }
     `,
@@ -624,11 +954,22 @@ export async function getOrder(id: string) {
   return data.order;
 }
 
-export async function updateOrderNoteAndTags(id: string, note: string | null, tags: string[]): Promise<void> {
-  const data = await adminRequest<{ orderUpdate: { userErrors: Array<{ field: string[] | null; message: string }> } }>(
+export async function updateOrderNoteAndTags(
+  id: string,
+  note: string | null,
+  tags: string[],
+): Promise<void> {
+  const data = await adminRequest<{
+    orderUpdate: { userErrors: Array<{ field: string[] | null; message: string }> };
+  }>(
     /* GraphQL */ `
       mutation UpdateOrder($input: OrderInput!) {
-        orderUpdate(input: $input) { userErrors { field message } }
+        orderUpdate(input: $input) {
+          userErrors {
+            field
+            message
+          }
+        }
       }
     `,
     { input: { id: toGid('Order', id), note, tags } },
@@ -643,19 +984,29 @@ export async function fulfillOrder(input: {
   notifyCustomer: boolean;
 }): Promise<string> {
   const data = await adminRequest<{
-    fulfillmentCreate: { fulfillment: { id: string } | null; userErrors: Array<{ field: string[] | null; message: string }> };
+    fulfillmentCreate: {
+      fulfillment: { id: string } | null;
+      userErrors: Array<{ field: string[] | null; message: string }>;
+    };
   }>(
     /* GraphQL */ `
       mutation Fulfil($fulfillment: FulfillmentInput!) {
         fulfillmentCreate(fulfillment: $fulfillment) {
-          fulfillment { id }
-          userErrors { field message }
+          fulfillment {
+            id
+          }
+          userErrors {
+            field
+            message
+          }
         }
       }
     `,
     {
       fulfillment: {
-        lineItemsByFulfillmentOrder: input.fulfillmentOrderIds.map((fulfillmentOrderId) => ({ fulfillmentOrderId })),
+        lineItemsByFulfillmentOrder: input.fulfillmentOrderIds.map((fulfillmentOrderId) => ({
+          fulfillmentOrderId,
+        })),
         notifyCustomer: input.notifyCustomer,
         trackingInfo: {
           company: input.tracking.company,
@@ -666,7 +1017,8 @@ export async function fulfillOrder(input: {
     },
   );
   assertNoUserErrors(data.fulfillmentCreate, 'Fulfilling the order');
-  if (!data.fulfillmentCreate.fulfillment) throw new ShopifyApiError('Shopify did not return a fulfilment', 'graphql');
+  if (!data.fulfillmentCreate.fulfillment)
+    throw new ShopifyApiError('Shopify did not return a fulfilment', 'graphql');
   return data.fulfillmentCreate.fulfillment.id;
 }
 
@@ -705,12 +1057,27 @@ export async function listCustomers(search: string | null, after: string | null 
     /* GraphQL */ `
       query AdminCustomers($query: String, $after: String) {
         customers(first: 50, after: $after, query: $query, sortKey: UPDATED_AT, reverse: true) {
-          pageInfo { hasNextPage endCursor }
+          pageInfo {
+            hasNextPage
+            endCursor
+          }
           nodes {
-            id displayName createdAt tags numberOfOrders
-            amountSpent { amount currencyCode }
-            lastOrder { processedAt }
-            defaultEmailAddress { emailAddress marketingState }
+            id
+            displayName
+            createdAt
+            tags
+            numberOfOrders
+            amountSpent {
+              amount
+              currencyCode
+            }
+            lastOrder {
+              processedAt
+            }
+            defaultEmailAddress {
+              emailAddress
+              marketingState
+            }
           }
         }
       }
@@ -719,19 +1086,17 @@ export async function listCustomers(search: string | null, after: string | null 
   );
   return {
     pageInfo: data.customers.pageInfo,
-    customers: data.customers.nodes.map(
-      (node): AdminCustomerSummary => ({
-        id: node.id,
-        displayName: node.displayName,
-        email: node.defaultEmailAddress?.emailAddress ?? null,
-        marketingState: node.defaultEmailAddress?.marketingState ?? null,
-        numberOfOrders: Number(node.numberOfOrders),
-        amountSpent: node.amountSpent,
-        lastOrderAt: node.lastOrder?.processedAt ?? null,
-        tags: node.tags,
-        createdAt: node.createdAt,
-      }),
-    ),
+    customers: data.customers.nodes.map((node): AdminCustomerSummary => ({
+      id: node.id,
+      displayName: node.displayName,
+      email: node.defaultEmailAddress?.emailAddress ?? null,
+      marketingState: node.defaultEmailAddress?.marketingState ?? null,
+      numberOfOrders: Number(node.numberOfOrders),
+      amountSpent: node.amountSpent,
+      lastOrderAt: node.lastOrder?.processedAt ?? null,
+      tags: node.tags,
+      createdAt: node.createdAt,
+    })),
   };
 }
 
@@ -745,22 +1110,63 @@ export async function getCustomer(id: string) {
       createdAt: string;
       numberOfOrders: string;
       amountSpent: MoneyNode | null;
-      defaultEmailAddress: { emailAddress: string; marketingState: string; marketingUpdatedAt: string | null } | null;
+      defaultEmailAddress: {
+        emailAddress: string;
+        marketingState: string;
+        marketingUpdatedAt: string | null;
+      } | null;
       defaultPhoneNumber: { phoneNumber: string } | null;
       defaultAddress: { formatted: string[] } | null;
-      orders: { nodes: Array<{ id: string; name: string; processedAt: string; displayFinancialStatus: string | null; displayFulfillmentStatus: string | null; totalPriceSet: { shopMoney: MoneyNode } }> };
+      orders: {
+        nodes: Array<{
+          id: string;
+          name: string;
+          processedAt: string;
+          displayFinancialStatus: string | null;
+          displayFulfillmentStatus: string | null;
+          totalPriceSet: { shopMoney: MoneyNode };
+        }>;
+      };
     } | null;
   }>(
     /* GraphQL */ `
       query AdminCustomer($id: ID!) {
         customer(id: $id) {
-          id displayName note tags createdAt numberOfOrders
-          amountSpent { amount currencyCode }
-          defaultEmailAddress { emailAddress marketingState marketingUpdatedAt }
-          defaultPhoneNumber { phoneNumber }
-          defaultAddress { formatted }
+          id
+          displayName
+          note
+          tags
+          createdAt
+          numberOfOrders
+          amountSpent {
+            amount
+            currencyCode
+          }
+          defaultEmailAddress {
+            emailAddress
+            marketingState
+            marketingUpdatedAt
+          }
+          defaultPhoneNumber {
+            phoneNumber
+          }
+          defaultAddress {
+            formatted
+          }
           orders(first: 25, sortKey: PROCESSED_AT, reverse: true) {
-            nodes { id name processedAt displayFinancialStatus displayFulfillmentStatus totalPriceSet { shopMoney { amount currencyCode } } }
+            nodes {
+              id
+              name
+              processedAt
+              displayFinancialStatus
+              displayFulfillmentStatus
+              totalPriceSet {
+                shopMoney {
+                  amount
+                  currencyCode
+                }
+              }
+            }
           }
         }
       }
@@ -770,11 +1176,22 @@ export async function getCustomer(id: string) {
   return data.customer;
 }
 
-export async function updateCustomerNoteAndTags(id: string, note: string | null, tags: string[]): Promise<void> {
-  const data = await adminRequest<{ customerUpdate: { userErrors: Array<{ field: string[] | null; message: string }> } }>(
+export async function updateCustomerNoteAndTags(
+  id: string,
+  note: string | null,
+  tags: string[],
+): Promise<void> {
+  const data = await adminRequest<{
+    customerUpdate: { userErrors: Array<{ field: string[] | null; message: string }> };
+  }>(
     /* GraphQL */ `
       mutation UpdateCustomer($input: CustomerInput!) {
-        customerUpdate(input: $input) { userErrors { field message } }
+        customerUpdate(input: $input) {
+          userErrors {
+            field
+            message
+          }
+        }
       }
     `,
     { input: { id: toGid('Customer', id), note, tags } },
@@ -790,12 +1207,22 @@ export async function resolveProductIdsByHandle(handles: readonly string[]): Pro
   if (handles.length === 0) return [];
   const query = handles.map((handle) => `handle:${JSON.stringify(handle)}`).join(' OR ');
   const data = await adminRequest<{ products: { nodes: Array<{ id: string; handle: string }> } }>(
-    /* GraphQL */ `query Handles($query: String!) { products(first: 100, query: $query) { nodes { id handle } } }`,
+    /* GraphQL */ `
+      query Handles($query: String!) {
+        products(first: 100, query: $query) {
+          nodes {
+            id
+            handle
+          }
+        }
+      }
+    `,
     { query },
   );
   const byHandle = new Map(data.products.nodes.map((node) => [node.handle, node.id]));
   const missing = handles.filter((handle) => !byHandle.has(handle));
-  if (missing.length) throw new ShopifyApiError(`Unknown product handle(s): ${missing.join(', ')}`, 'user');
+  if (missing.length)
+    throw new ShopifyApiError(`Unknown product handle(s): ${missing.join(', ')}`, 'user');
   return handles.map((handle) => byHandle.get(handle)!);
 }
 
@@ -803,14 +1230,36 @@ export async function resolveProductIdsByHandle(handles: readonly string[]): Pro
 export async function ensureFirstOrderSegment(): Promise<string> {
   const name = 'INFNITY — no orders yet';
   const existing = await adminRequest<{ segments: { nodes: Array<{ id: string; name: string }> } }>(
-    /* GraphQL */ `query Segments { segments(first: 100) { nodes { id name } } }`,
+    /* GraphQL */ `
+      query Segments {
+        segments(first: 100) {
+          nodes {
+            id
+            name
+          }
+        }
+      }
+    `,
   );
   const found = existing.segments.nodes.find((segment) => segment.name === name);
   if (found) return found.id;
-  const data = await adminRequest<{ segmentCreate: { segment: { id: string } | null; userErrors: Array<{ field: string[] | null; message: string }> } }>(
+  const data = await adminRequest<{
+    segmentCreate: {
+      segment: { id: string } | null;
+      userErrors: Array<{ field: string[] | null; message: string }>;
+    };
+  }>(
     /* GraphQL */ `
       mutation Segment($name: String!, $query: String!) {
-        segmentCreate(name: $name, query: $query) { segment { id } userErrors { field message } }
+        segmentCreate(name: $name, query: $query) {
+          segment {
+            id
+          }
+          userErrors {
+            field
+            message
+          }
+        }
       }
     `,
     { name, query: 'number_of_orders = 0' },
@@ -819,7 +1268,10 @@ export async function ensureFirstOrderSegment(): Promise<string> {
   return data.segmentCreate.segment!.id;
 }
 
-export async function createDiscount(mutation: string, input: Record<string, unknown>): Promise<string> {
+export async function createDiscount(
+  mutation: string,
+  input: Record<string, unknown>,
+): Promise<string> {
   const field = mutation.includes('Code') ? 'codeDiscountNode' : 'automaticDiscountNode';
   const inputName = mutation.includes('Bxgy')
     ? mutation.includes('Code')
@@ -835,7 +1287,15 @@ export async function createDiscount(mutation: string, input: Record<string, unk
     : mutation.includes('Code')
       ? 'DiscountCodeBasicInput'
       : 'DiscountAutomaticBasicInput';
-  const data = await adminRequest<Record<string, { userErrors: Array<{ field: string[] | null; message: string }> } & Record<string, { id: string } | null>>>(
+  const data = await adminRequest<
+    Record<
+      string,
+      { userErrors: Array<{ field: string[] | null; message: string }> } & Record<
+        string,
+        { id: string } | null
+      >
+    >
+  >(
     /* GraphQL */ `
       mutation CreateDiscount($input: ${inputType}!) {
         ${mutation}(${inputName}: $input) {
@@ -856,17 +1316,32 @@ export async function createDiscount(mutation: string, input: Record<string, unk
 export async function setDiscountActive(discountId: string, active: boolean): Promise<void> {
   const isCode = discountId.includes('DiscountCodeNode');
   const mutation = `discount${isCode ? 'Code' : 'Automatic'}${active ? 'Activate' : 'Deactivate'}`;
-  const data = await adminRequest<Record<string, { userErrors: Array<{ field: string[] | null; message: string }> }>>(
+  const data = await adminRequest<
+    Record<string, { userErrors: Array<{ field: string[] | null; message: string }> }>
+  >(
     /* GraphQL */ `mutation Toggle($id: ID!) { ${mutation}(id: $id) { userErrors { field message } } }`,
     { id: discountId },
   );
-  assertNoUserErrors(data[mutation], active ? 'Activating the discount' : 'Deactivating the discount');
+  assertNoUserErrors(
+    data[mutation],
+    active ? 'Activating the discount' : 'Deactivating the discount',
+  );
 }
 
 export async function listLiveDiscounts() {
   const data = await adminRequest<{
     discountNodes: {
-      nodes: Array<{ id: string; discount: { __typename: string; title: string; status: string; startsAt: string; endsAt: string | null; asyncUsageCount?: number } }>;
+      nodes: Array<{
+        id: string;
+        discount: {
+          __typename: string;
+          title: string;
+          status: string;
+          startsAt: string;
+          endsAt: string | null;
+          asyncUsageCount?: number;
+        };
+      }>;
     };
   }>(/* GraphQL */ `
     query Discounts {
@@ -875,12 +1350,48 @@ export async function listLiveDiscounts() {
           id
           discount {
             __typename
-            ... on DiscountAutomaticBasic { title status startsAt endsAt asyncUsageCount }
-            ... on DiscountCodeBasic { title status startsAt endsAt asyncUsageCount }
-            ... on DiscountAutomaticBxgy { title status startsAt endsAt asyncUsageCount }
-            ... on DiscountCodeBxgy { title status startsAt endsAt asyncUsageCount }
-            ... on DiscountCodeFreeShipping { title status startsAt endsAt asyncUsageCount }
-            ... on DiscountAutomaticFreeShipping { title status startsAt endsAt asyncUsageCount }
+            ... on DiscountAutomaticBasic {
+              title
+              status
+              startsAt
+              endsAt
+              asyncUsageCount
+            }
+            ... on DiscountCodeBasic {
+              title
+              status
+              startsAt
+              endsAt
+              asyncUsageCount
+            }
+            ... on DiscountAutomaticBxgy {
+              title
+              status
+              startsAt
+              endsAt
+              asyncUsageCount
+            }
+            ... on DiscountCodeBxgy {
+              title
+              status
+              startsAt
+              endsAt
+              asyncUsageCount
+            }
+            ... on DiscountCodeFreeShipping {
+              title
+              status
+              startsAt
+              endsAt
+              asyncUsageCount
+            }
+            ... on DiscountAutomaticFreeShipping {
+              title
+              status
+              startsAt
+              endsAt
+              asyncUsageCount
+            }
           }
         }
       }
@@ -894,9 +1405,20 @@ export async function listLiveDiscounts() {
  * ------------------------------------------------------------------ */
 
 /** Records newsletter consent on the matching Shopify customer, creating one if needed. */
-export async function syncEmailConsent(email: string, subscribed: boolean): Promise<'updated' | 'created'> {
+export async function syncEmailConsent(
+  email: string,
+  subscribed: boolean,
+): Promise<'updated' | 'created'> {
   const found = await adminRequest<{ customers: { nodes: Array<{ id: string }> } }>(
-    /* GraphQL */ `query Find($query: String!) { customers(first: 1, query: $query) { nodes { id } } }`,
+    /* GraphQL */ `
+      query Find($query: String!) {
+        customers(first: 1, query: $query) {
+          nodes {
+            id
+          }
+        }
+      }
+    `,
     { query: `email:${JSON.stringify(email)}` },
   );
   const consent = {
@@ -906,10 +1428,19 @@ export async function syncEmailConsent(email: string, subscribed: boolean): Prom
   };
   const existing = found.customers.nodes[0];
   if (existing) {
-    const data = await adminRequest<{ customerEmailMarketingConsentUpdate: { userErrors: Array<{ field: string[] | null; message: string }> } }>(
+    const data = await adminRequest<{
+      customerEmailMarketingConsentUpdate: {
+        userErrors: Array<{ field: string[] | null; message: string }>;
+      };
+    }>(
       /* GraphQL */ `
         mutation Consent($input: CustomerEmailMarketingConsentUpdateInput!) {
-          customerEmailMarketingConsentUpdate(input: $input) { userErrors { field message } }
+          customerEmailMarketingConsentUpdate(input: $input) {
+            userErrors {
+              field
+              message
+            }
+          }
         }
       `,
       { input: { customerId: existing.id, emailMarketingConsent: consent } },
@@ -917,9 +1448,18 @@ export async function syncEmailConsent(email: string, subscribed: boolean): Prom
     assertNoUserErrors(data.customerEmailMarketingConsentUpdate, 'Updating marketing consent');
     return 'updated';
   }
-  const data = await adminRequest<{ customerCreate: { userErrors: Array<{ field: string[] | null; message: string }> } }>(
+  const data = await adminRequest<{
+    customerCreate: { userErrors: Array<{ field: string[] | null; message: string }> };
+  }>(
     /* GraphQL */ `
-      mutation Create($input: CustomerInput!) { customerCreate(input: $input) { userErrors { field message } } }
+      mutation Create($input: CustomerInput!) {
+        customerCreate(input: $input) {
+          userErrors {
+            field
+            message
+          }
+        }
+      }
     `,
     { input: { email, emailMarketingConsent: consent, tags: ['newsletter'] } },
   );
@@ -941,7 +1481,14 @@ export async function salesSummary(sinceIso: string) {
     totalPriceSet: { shopMoney: MoneyNode };
     totalRefundedSet: { shopMoney: MoneyNode };
     discountCodes: string[];
-    lineItems: { nodes: Array<{ title: string; sku: string | null; quantity: number; discountedTotalSet: { shopMoney: MoneyNode } }> };
+    lineItems: {
+      nodes: Array<{
+        title: string;
+        sku: string | null;
+        quantity: number;
+        discountedTotalSet: { shopMoney: MoneyNode };
+      }>;
+    };
   }> = [];
   let after: string | null = null;
   for (let page = 0; page < 5; page += 1) {
@@ -954,12 +1501,42 @@ export async function salesSummary(sinceIso: string) {
       /* GraphQL */ `
         query Sales($query: String!, $after: String) {
           orders(first: 100, after: $after, query: $query, sortKey: PROCESSED_AT, reverse: true) {
-            pageInfo { hasNextPage endCursor }
+            pageInfo {
+              hasNextPage
+              endCursor
+            }
             nodes {
-              processedAt test cancelledAt displayFinancialStatus displayFulfillmentStatus discountCodes
-              totalPriceSet { shopMoney { amount currencyCode } }
-              totalRefundedSet { shopMoney { amount currencyCode } }
-              lineItems(first: 50) { nodes { title sku quantity discountedTotalSet { shopMoney { amount currencyCode } } } }
+              processedAt
+              test
+              cancelledAt
+              displayFinancialStatus
+              displayFulfillmentStatus
+              discountCodes
+              totalPriceSet {
+                shopMoney {
+                  amount
+                  currencyCode
+                }
+              }
+              totalRefundedSet {
+                shopMoney {
+                  amount
+                  currencyCode
+                }
+              }
+              lineItems(first: 50) {
+                nodes {
+                  title
+                  sku
+                  quantity
+                  discountedTotalSet {
+                    shopMoney {
+                      amount
+                      currencyCode
+                    }
+                  }
+                }
+              }
             }
           }
         }
@@ -986,7 +1563,15 @@ export interface InventoryRow {
   productHandle: string;
   inventoryItemId: string;
   tracked: boolean;
-  levels: Array<{ locationId: string; locationName: string; available: number; committed: number; onHand: number; reserved: number; incoming: number }>;
+  levels: Array<{
+    locationId: string;
+    locationName: string;
+    available: number;
+    committed: number;
+    onHand: number;
+    reserved: number;
+    incoming: number;
+  }>;
 }
 
 export async function listInventory(search: string | null, after: string | null = null) {
@@ -1001,7 +1586,12 @@ export async function listInventory(search: string | null, after: string | null 
         inventoryItem: {
           id: string;
           tracked: boolean;
-          inventoryLevels: { nodes: Array<{ location: { id: string; name: string }; quantities: Array<{ name: string; quantity: number }> }> };
+          inventoryLevels: {
+            nodes: Array<{
+              location: { id: string; name: string };
+              quantities: Array<{ name: string; quantity: number }>;
+            }>;
+          };
         };
       }>;
     };
@@ -1009,16 +1599,32 @@ export async function listInventory(search: string | null, after: string | null 
     /* GraphQL */ `
       query Inventory($query: String, $after: String) {
         productVariants(first: 100, after: $after, query: $query) {
-          pageInfo { hasNextPage endCursor }
+          pageInfo {
+            hasNextPage
+            endCursor
+          }
           nodes {
-            id title sku
-            product { id title handle }
+            id
+            title
+            sku
+            product {
+              id
+              title
+              handle
+            }
             inventoryItem {
-              id tracked
+              id
+              tracked
               inventoryLevels(first: 10) {
                 nodes {
-                  location { id name }
-                  quantities(names: ["available", "committed", "on_hand", "reserved", "incoming"]) { name quantity }
+                  location {
+                    id
+                    name
+                  }
+                  quantities(names: ["available", "committed", "on_hand", "reserved", "incoming"]) {
+                    name
+                    quantity
+                  }
                 }
               }
             }
@@ -1030,36 +1636,41 @@ export async function listInventory(search: string | null, after: string | null 
   );
   return {
     pageInfo: data.productVariants.pageInfo,
-    rows: data.productVariants.nodes.map(
-      (node): InventoryRow => ({
-        variantId: node.id,
-        variantTitle: node.title,
-        sku: node.sku,
-        productId: node.product.id,
-        productTitle: node.product.title,
-        productHandle: node.product.handle,
-        inventoryItemId: node.inventoryItem.id,
-        tracked: node.inventoryItem.tracked,
-        levels: node.inventoryItem.inventoryLevels.nodes.map((level) => {
-          const q = (name: string) => level.quantities.find((entry) => entry.name === name)?.quantity ?? 0;
-          return {
-            locationId: level.location.id,
-            locationName: level.location.name,
-            available: q('available'),
-            committed: q('committed'),
-            onHand: q('on_hand'),
-            reserved: q('reserved'),
-            incoming: q('incoming'),
-          };
-        }),
+    rows: data.productVariants.nodes.map((node): InventoryRow => ({
+      variantId: node.id,
+      variantTitle: node.title,
+      sku: node.sku,
+      productId: node.product.id,
+      productTitle: node.product.title,
+      productHandle: node.product.handle,
+      inventoryItemId: node.inventoryItem.id,
+      tracked: node.inventoryItem.tracked,
+      levels: node.inventoryItem.inventoryLevels.nodes.map((level) => {
+        const q = (name: string) =>
+          level.quantities.find((entry) => entry.name === name)?.quantity ?? 0;
+        return {
+          locationId: level.location.id,
+          locationName: level.location.name,
+          available: q('available'),
+          committed: q('committed'),
+          onHand: q('on_hand'),
+          reserved: q('reserved'),
+          incoming: q('incoming'),
+        };
       }),
-    ),
+    })),
   };
 }
 
 export async function countOrders(query: string): Promise<number> {
   const data = await adminRequest<{ ordersCount: { count: number } }>(
-    /* GraphQL */ `query Count($query: String) { ordersCount(query: $query) { count } }`,
+    /* GraphQL */ `
+      query Count($query: String) {
+        ordersCount(query: $query) {
+          count
+        }
+      }
+    `,
     { query },
   );
   return data.ordersCount.count;
@@ -1067,18 +1678,39 @@ export async function countOrders(query: string): Promise<number> {
 
 /** Adds tags to an order (used to record a cancellation/refund *request* for the owner). */
 export async function addOrderTags(id: string, tags: string[]): Promise<void> {
-  const data = await adminRequest<{ tagsAdd: { userErrors: Array<{ field: string[] | null; message: string }> } }>(
-    /* GraphQL */ `mutation Tag($id: ID!, $tags: [String!]!) { tagsAdd(id: $id, tags: $tags) { userErrors { field message } } }`,
+  const data = await adminRequest<{
+    tagsAdd: { userErrors: Array<{ field: string[] | null; message: string }> };
+  }>(
+    /* GraphQL */ `
+      mutation Tag($id: ID!, $tags: [String!]!) {
+        tagsAdd(id: $id, tags: $tags) {
+          userErrors {
+            field
+            message
+          }
+        }
+      }
+    `,
     { id: toGid('Order', id), tags },
   );
   assertNoUserErrors(data.tagsAdd, 'Tagging the order');
 }
 
-export async function setProductStatus(id: string, status: 'ACTIVE' | 'DRAFT' | 'ARCHIVED'): Promise<void> {
-  const data = await adminRequest<{ productUpdate: { userErrors: Array<{ field: string[] | null; message: string }> } }>(
+export async function setProductStatus(
+  id: string,
+  status: 'ACTIVE' | 'DRAFT' | 'ARCHIVED',
+): Promise<void> {
+  const data = await adminRequest<{
+    productUpdate: { userErrors: Array<{ field: string[] | null; message: string }> };
+  }>(
     /* GraphQL */ `
       mutation Status($product: ProductUpdateInput!) {
-        productUpdate(product: $product) { userErrors { field message } }
+        productUpdate(product: $product) {
+          userErrors {
+            field
+            message
+          }
+        }
       }
     `,
     { product: { id: toGid('Product', id), status } },

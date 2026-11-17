@@ -7,5 +7,8 @@ import { handleShopifyWebhook } from '@/server/shopify/webhooks';
 export async function POST(request: Request): Promise<Response> {
   const rawBody = await request.text();
   const outcome = await handleShopifyWebhook(rawBody, request.headers);
-  return new Response(outcome.body, { status: outcome.status, headers: { 'content-type': 'text/plain' } });
+  return new Response(outcome.body, {
+    status: outcome.status,
+    headers: { 'content-type': 'text/plain' },
+  });
 }

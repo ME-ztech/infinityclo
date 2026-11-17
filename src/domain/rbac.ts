@@ -121,4 +121,10 @@ export function permissionsFor(role: Role): readonly Permission[] {
  * a discount for Shopify. `promotions:approve` and `orders:cancel` are granted
  * to the owner role alone in the matrix above.
  */
-export const OWNER_ONLY: readonly Permission[] = ['promotions:approve', 'orders:cancel', 'staff:manage', 'settings:write', 'customers:export'];
+export const OWNER_ONLY: readonly Permission[] = [
+  'promotions:approve',
+  'orders:cancel',
+  'staff:manage',
+  'settings:write',
+  'customers:export',
+];

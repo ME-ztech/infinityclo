@@ -11,12 +11,20 @@ export function WaitlistForm({ slug, className }: { slug: string; className?: st
   const id = useId();
   const [email, setEmail] = useState('');
   const [consent, setConsent] = useState(false);
-  const [state, setState] = useState<{ status: 'idle' | 'submitting' | 'done' | 'error'; message?: string }>({ status: 'idle' });
+  const [state, setState] = useState<{
+    status: 'idle' | 'submitting' | 'done' | 'error';
+    message?: string;
+  }>({ status: 'idle' });
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!isValidEmail(email.trim())) return setState({ status: 'error', message: 'Enter a valid email address.' });
-    if (!consent) return setState({ status: 'error', message: 'Tick the box so we can email you about this drop.' });
+    if (!isValidEmail(email.trim()))
+      return setState({ status: 'error', message: 'Enter a valid email address.' });
+    if (!consent)
+      return setState({
+        status: 'error',
+        message: 'Tick the box so we can email you about this drop.',
+      });
     setState({ status: 'submitting' });
     try {
       const response = await fetch('/api/waitlist', {
@@ -25,7 +33,8 @@ export function WaitlistForm({ slug, className }: { slug: string; className?: st
         body: JSON.stringify({ slug, email: email.trim(), consent }),
       });
       const data = (await response.json()) as { message?: string; error?: string };
-      if (!response.ok) return setState({ status: 'error', message: data.error ?? 'Something went wrong.' });
+      if (!response.ok)
+        return setState({ status: 'error', message: data.error ?? 'Something went wrong.' });
       setState({ status: 'done', message: data.message });
       setEmail('');
     } catch {
@@ -35,14 +44,23 @@ export function WaitlistForm({ slug, className }: { slug: string; className?: st
 
   if (state.status === 'done') {
     return (
-      <p role="status" data-testid="waitlist-done" className={cn('text-fg text-sm font-medium', className)}>
+      <p
+        role="status"
+        data-testid="waitlist-done"
+        className={cn('text-fg text-sm font-medium', className)}
+      >
         {state.message}
       </p>
     );
   }
 
   return (
-    <form onSubmit={onSubmit} noValidate className={cn('w-full max-w-md', className)} data-testid="waitlist-form">
+    <form
+      onSubmit={onSubmit}
+      noValidate
+      className={cn('w-full max-w-md', className)}
+      data-testid="waitlist-form"
+    >
       <label htmlFor={id} className="sr-only">
         Email address
       </label>
@@ -62,7 +80,12 @@ export function WaitlistForm({ slug, className }: { slug: string; className?: st
         </Button>
       </div>
       <label className="text-fg-muted mt-3 flex cursor-pointer items-start gap-3 text-left text-xs leading-relaxed">
-        <input type="checkbox" checked={consent} onChange={(event) => setConsent(event.target.checked)} className="accent-fg mt-0.5 h-4 w-4 shrink-0" />
+        <input
+          type="checkbox"
+          checked={consent}
+          onChange={(event) => setConsent(event.target.checked)}
+          className="accent-fg mt-0.5 h-4 w-4 shrink-0"
+        />
         <span>{WAITLIST_CONSENT_TEXT}</span>
       </label>
       {state.status === 'error' && (

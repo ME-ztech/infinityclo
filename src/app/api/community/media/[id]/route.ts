@@ -2,7 +2,10 @@ import { getStaffSession } from '@/server/auth/staff';
 import { mediaFor } from '@/server/community';
 
 /** Serves re-encoded community uploads: public once approved, staff-only before. */
-export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }): Promise<Response> {
+export async function GET(
+  _request: Request,
+  { params }: { params: Promise<{ id: string }> },
+): Promise<Response> {
   const { id } = await params;
   if (!/^[a-zA-Z0-9_-]{1,80}$/.test(id)) return new Response('Not found', { status: 404 });
   const staff = await getStaffSession().catch(() => null);

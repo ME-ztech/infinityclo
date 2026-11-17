@@ -21,7 +21,9 @@ import { useStoreConfig } from '@/lib/store-config';
 export function CheckoutAction({ cart, disabled }: { cart: Cart; disabled?: boolean }) {
   const { checkoutMode } = useStoreConfig();
   const { persistedLines } = useCart();
-  const [state, setState] = useState<{ status: 'idle' | 'loading' } | { status: 'error'; message: string }>({
+  const [state, setState] = useState<
+    { status: 'idle' | 'loading' } | { status: 'error'; message: string }
+  >({
     status: 'idle',
   });
   const availability = checkoutAvailability(cart, checkoutMode);
@@ -32,9 +34,12 @@ export function CheckoutAction({ cart, disabled }: { cart: Cart; disabled?: bool
         <Button variant="primary" size="lg" fullWidth disabled aria-describedby="checkout-note">
           Checkout unavailable
         </Button>
-        <p id="checkout-note" className="text-fg-muted mt-3 text-center text-[0.72rem] leading-relaxed">
-          This preview is not connected to Shopify checkout, so no order can be placed and nothing will be
-          charged.
+        <p
+          id="checkout-note"
+          className="text-fg-muted mt-3 text-center text-[0.72rem] leading-relaxed"
+        >
+          This preview is not connected to Shopify checkout, so no order can be placed and nothing
+          will be charged.
         </p>
       </div>
     );
@@ -65,12 +70,18 @@ export function CheckoutAction({ cart, disabled }: { cart: Cart; disabled?: bool
       });
       const data = (await response.json()) as { url?: string; error?: string };
       if (!response.ok || !data.url) {
-        setState({ status: 'error', message: data.error ?? 'Checkout could not start. Please try again.' });
+        setState({
+          status: 'error',
+          message: data.error ?? 'Checkout could not start. Please try again.',
+        });
         return;
       }
       window.location.assign(data.url);
     } catch {
-      setState({ status: 'error', message: 'Checkout could not start. Check your connection and try again.' });
+      setState({
+        status: 'error',
+        message: 'Checkout could not start. Check your connection and try again.',
+      });
     }
   }
 

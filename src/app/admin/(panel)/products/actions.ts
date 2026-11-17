@@ -6,14 +6,28 @@ import { z } from 'zod';
 import { CATALOG_CACHE_TAG } from '@/data/adapters/shopify/catalog';
 import { audit } from '@/server/audit';
 import { actorOf, runAction, type ActionResult } from '@/server/admin/action';
-import { duplicateProduct, saveProduct, setProductStatus, setPublished, uploadImage } from '@/server/shopify/admin';
+import {
+  duplicateProduct,
+  saveProduct,
+  setProductStatus,
+  setPublished,
+  uploadImage,
+} from '@/server/shopify/admin';
 
-const money = z.string().trim().regex(/^\d{1,6}(\.\d{1,2})?$/, 'Use a price like 45 or 45.00');
+const money = z
+  .string()
+  .trim()
+  .regex(/^\d{1,6}(\.\d{1,2})?$/, 'Use a price like 45 or 45.00');
 
 const productSchema = z.object({
   id: z.string().nullable(),
   title: z.string().trim().min(1, 'Add a title').max(255),
-  handle: z.string().trim().regex(/^[a-z0-9-]*$/, 'Handles use lowercase letters, numbers and dashes').max(255).nullable(),
+  handle: z
+    .string()
+    .trim()
+    .regex(/^[a-z0-9-]*$/, 'Handles use lowercase letters, numbers and dashes')
+    .max(255)
+    .nullable(),
   description: z.string().max(20_000),
   productType: z.string().trim().max(255),
   vendor: z.string().trim().max(255),
@@ -21,7 +35,15 @@ const productSchema = z.object({
   tags: z.array(z.string().trim().min(1).max(255)).max(250),
   seoTitle: z.string().trim().max(70).nullable(),
   seoDescription: z.string().trim().max(320).nullable(),
-  options: z.array(z.object({ name: z.string().trim().min(1).max(255), values: z.array(z.string().trim().min(1).max(255)).min(1) })).min(1).max(3),
+  options: z
+    .array(
+      z.object({
+        name: z.string().trim().min(1).max(255),
+        values: z.array(z.string().trim().min(1).max(255)).min(1),
+      }),
+    )
+    .min(1)
+    .max(3),
   variants: z
     .array(
       z.object({
@@ -37,14 +59,27 @@ const productSchema = z.object({
     )
     .min(1, 'Add at least one variant')
     .max(100),
-  newMedia: z.array(z.object({ url: z.string().url().startsWith('https://'), alt: z.string().trim().min(3, 'Describe each new image').max(512) })).max(20),
-  facts: z.object({ fit: z.string().nullable(), fabric: z.string().nullable(), care: z.string().nullable(), sizeGuide: z.string().nullable() }),
+  newMedia: z
+    .array(
+      z.object({
+        url: z.string().url().startsWith('https://'),
+        alt: z.string().trim().min(3, 'Describe each new image').max(512),
+      }),
+    )
+    .max(20),
+  facts: z.object({
+    fit: z.string().nullable(),
+    fabric: z.string().nullable(),
+    care: z.string().nullable(),
+    sizeGuide: z.string().nullable(),
+  }),
   publicationIds: z.array(z.string()),
   initialLocationId: z.string().nullable(),
 });
 
 function toHtml(text: string): string {
-  const escape = (value: string) => value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  const escape = (value: string) =>
+    value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   return text
     .split(/\n{2,}/)
     .map((block) => block.trim())
@@ -60,16 +95,25 @@ function refreshStorefront(handle?: string) {
   if (handle) revalidatePath(`/products/${handle}`);
 }
 
-export async function saveProductAction(_state: ActionResult | null, form: FormData): Promise<ActionResult> {
+export async function saveProductAction(
+  _state: ActionResult | null,
+  form: FormData,
+): Promise<ActionResult> {
   // The clicked button decides the status: "Save as draft" or "Save & publish".
   const requested = form.get('$status') === 'ACTIVE' ? 'ACTIVE' : 'DRAFT';
   return runAction(requested === 'ACTIVE' ? 'products:publish' : 'products:write', async (user) => {
     const parsed = productSchema.parse(JSON.parse(String(form.get('payload') ?? '{}')));
-    const input = { ...parsed, status: requested, publicationIds: requested === 'ACTIVE' ? parsed.publicationIds : [] } as const;
+    const input = {
+      ...parsed,
+      status: requested,
+      publicationIds: requested === 'ACTIVE' ? parsed.publicationIds : [],
+    } as const;
     // A variant with a compare-at price at or below its price is not a sale; refuse it rather than show a false discount.
     for (const variant of input.variants) {
       if (variant.compareAtPrice && Number(variant.compareAtPrice) <= Number(variant.price)) {
-        throw new Error(`Compare-at price must be higher than the price (${variant.optionValues.map((v) => v.name).join(' / ')}), or left blank.`);
+        throw new Error(
+          `Compare-at price must be higher than the price (${variant.optionValues.map((v) => v.name).join(' / ')}), or left blank.`,
+        );
       }
     }
     const saved = await saveProduct({
@@ -100,28 +144,54 @@ export async function saveProductAction(_state: ActionResult | null, form: FormD
     });
     refreshStorefront(saved.handle);
     const numericId = saved.id.split('/').pop();
-    return { ok: true, message: `Saved to Shopify (${input.status.toLowerCase()}).`, redirectTo: input.id ? undefined : `/admin/products/${numericId}` };
+    return {
+      ok: true,
+      message: `Saved to Shopify (${input.status.toLowerCase()}).`,
+      redirectTo: input.id ? undefined : `/admin/products/${numericId}`,
+    };
   });
 }
 
-export async function setStatusAction(_state: ActionResult | null, form: FormData): Promise<ActionResult> {
+export async function setStatusAction(
+  _state: ActionResult | null,
+  form: FormData,
+): Promise<ActionResult> {
   return runAction('products:publish', async (user) => {
     const id = z.string().regex(/^\d+$/).parse(form.get('id'));
     const status = z.enum(['ACTIVE', 'DRAFT', 'ARCHIVED']).parse(form.get('status'));
     await setProductStatus(id, status);
-    await audit({ actor: actorOf(user), action: 'product.status', summary: `Set product ${id} to ${status}`, targetType: 'product', targetId: id });
+    await audit({
+      actor: actorOf(user),
+      action: 'product.status',
+      summary: `Set product ${id} to ${status}`,
+      targetType: 'product',
+      targetId: id,
+    });
     refreshStorefront();
     return `Product is now ${status.toLowerCase()}.`;
   });
 }
 
-export async function duplicateAction(_state: ActionResult | null, form: FormData): Promise<ActionResult> {
+export async function duplicateAction(
+  _state: ActionResult | null,
+  form: FormData,
+): Promise<ActionResult> {
   return runAction('products:write', async (user) => {
     const id = z.string().regex(/^\d+$/).parse(form.get('id'));
     const title = z.string().trim().min(1).max(255).parse(form.get('title'));
     const created = await duplicateProduct(id, title);
-    await audit({ actor: actorOf(user), action: 'product.duplicate', summary: `Duplicated product ${id} as draft "${title}"`, targetType: 'product', targetId: created?.id ?? id });
-    return { ok: true, message: 'Duplicated as a draft.', redirectTo: created ? `/admin/products/${created.id.split('/').pop()}` : undefined };
+    await audit({
+      actor: actorOf(user),
+      action: 'product.duplicate',
+      summary: `Duplicated product ${id} as draft "${title}"`,
+      targetType: 'product',
+      targetId: created?.id ?? id,
+    });
+    return {
+      ok: true,
+      message: 'Duplicated as a draft.',
+      redirectTo: created ? `/admin/products/${created.id.split('/').pop()}` : undefined,
+    };
   });
 }
 
@@ -131,8 +201,14 @@ export async function uploadImageAction(form: FormData): Promise<{ url?: string;
     const file = form.get('file');
     if (!(file instanceof File) || file.size === 0) throw new Error('Choose an image.');
     if (file.size > 20 * 1024 * 1024) throw new Error('Images must be 20 MB or smaller.');
-    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) throw new Error('Use JPEG, PNG or WebP.');
-    const url = await uploadImage({ name: file.name.replace(/[^\w.-]/g, '_'), type: file.type, size: file.size, bytes: await file.arrayBuffer() });
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type))
+      throw new Error('Use JPEG, PNG or WebP.');
+    const url = await uploadImage({
+      name: file.name.replace(/[^\w.-]/g, '_'),
+      type: file.type,
+      size: file.size,
+      bytes: await file.arrayBuffer(),
+    });
     return { ok: true, message: url };
   });
   return result.ok ? { url: result.message } : { error: result.error };
