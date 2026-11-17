@@ -2,7 +2,7 @@
   "name": "infnity-storefront",
   "version": "1.1.0",
   "private": true,
-  "description": "INFNITY — digital flagship storefront",
+  "description": "INFNITY \u2014 digital flagship storefront",
   "scripts": {
     "dev": "next dev",
     "prebuild": "node scripts/prepare-catalog.mjs",
@@ -17,7 +17,8 @@
     "e2e": "playwright test",
     "import:catalog": "NODE_USE_ENV_PROXY=1 tsx scripts/import-infnity-catalog.ts",
     "import:content": "NODE_USE_ENV_PROXY=1 tsx scripts/import-legacy-content.ts",
-    "db:generate": "drizzle-kit generate"
+    "db:generate": "drizzle-kit generate",
+    "admin:create-owner": "tsx scripts/create-owner.ts"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.5.16",
