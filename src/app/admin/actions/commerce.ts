@@ -118,7 +118,7 @@ export async function updateProductAction(form: FormData): Promise<void> {
     const existing = await need(gateway).getProduct(id);
     if (!existing) throw new GatewayError('Product not found.');
     // Only replace the stored HTML when the operator actually changed the text,
-    // so formatting authored in Shopify is not flattened by an unrelated save.
+    // so an unrelated save never rewrites the stored description.
     const text = field(form, 'description', 8000);
     const unchanged = text === (htmlToText(existing.descriptionHtml) ?? '');
     const product = await need(gateway).updateProduct(id, productInput(form, unchanged ? existing.descriptionHtml : textToHtml(text)));

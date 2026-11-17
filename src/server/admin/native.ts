@@ -49,6 +49,22 @@ const { products, productOptions, productVariants, productMedia, inventoryLevels
 
 const LOCATION = { id: 'main', name: 'Main stock' } as const;
 
+/**
+ * True when a write failed on a unique constraint. The driver's own error is
+ * wrapped by the query builder, so the cause chain is checked as well.
+ */
+function isUniqueViolation(error: unknown, constraint: string): boolean {
+  for (let current: unknown = error, depth = 0; current && depth < 5; depth += 1) {
+    const candidate = current as { message?: unknown; code?: unknown; constraint?: unknown; cause?: unknown };
+    const message = typeof candidate.message === 'string' ? candidate.message : '';
+    if (candidate.constraint === constraint) return true;
+    if (candidate.code === '23505' && (!candidate.constraint || candidate.constraint === constraint)) return true;
+    if (message.includes(constraint) || /duplicate key value|unique constraint/i.test(message)) return true;
+    current = candidate.cause;
+  }
+  return false;
+}
+
 type ProductRow = typeof products.$inferSelect;
 type OrderRow = typeof orders.$inferSelect;
 
@@ -312,7 +328,7 @@ export class NativeGateway implements CommerceGateway {
             })
             .where(and(eq(productVariants.id, variant.id), eq(productVariants.productId, productId)));
         } catch (error) {
-          if (/product_variants_sku_key|unique/i.test((error as Error).message)) {
+          if (isUniqueViolation(error, 'product_variants_sku_key')) {
             throw new GatewayError(`SKU "${variant.sku}" is already used by another variant.`);
           }
           throw error;
@@ -716,7 +732,7 @@ export class NativeGateway implements CommerceGateway {
         oncePerCustomer: offer.oncePerCustomer || offer.audience === 'first_order',
       });
     } catch (error) {
-      if (/discounts_code_key|unique/i.test((error as Error).message)) {
+      if (isUniqueViolation(error, 'discounts_code_key')) {
         throw new GatewayError(`The code "${offer.code}" is already in use by another discount.`);
       }
       throw error;

@@ -117,12 +117,16 @@ export default async function AdminInventoryPage({ searchParams }: { searchParam
                       <td className={`${td} tabular-nums`}>{row.unavailable ?? '—'}</td>
                       <td className={`${td} tabular-nums`}>{row.onHand ?? '—'}</td>
                       <td className={td}>
-                        {!row.tracked ? (
-                          <span className="text-xs text-neutral-600">Not tracked — turn on tracking for this variant in Shopify to manage stock.</span>
-                        ) : !canEdit ? (
-                          <span className="text-xs text-neutral-600">View only for your role.</span>
+                        {!canEdit ? (
+                          <span className="text-xs text-neutral-600">{row.tracked ? 'View only for your role.' : 'Not limited by stock. View only for your role.'}</span>
                         ) : (
                           <form action={setInventoryAction} className="flex flex-wrap items-center gap-2">
+                            {!row.tracked && (
+                              <span className="w-full text-xs leading-relaxed text-amber-900" data-testid="inventory-unverified">
+                                Quantity unverified: this variant sells without a stock limit. Save a counted quantity to
+                                start limiting it.
+                              </span>
+                            )}
                             <input type="hidden" name="back" value={back} />
                             <input type="hidden" name="inventoryItemId" value={row.inventoryItemId} />
                             <input type="hidden" name="locationId" value={row.locationId} />

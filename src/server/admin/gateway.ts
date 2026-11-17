@@ -1,13 +1,13 @@
 /**
  * Commerce gateway — the back office's only door to commerce data.
  *
- * Shopify is the system of record. The dashboard never keeps its own copy of
- * products, stock, orders or customers; it asks the gateway. Two
- * implementations satisfy this interface:
+ * INFNITY's own database is the system of record. The dashboard never keeps a
+ * second copy of products, stock, orders or customers; it asks the gateway.
+ * Two implementations satisfy this interface:
  *
- *   ShopifyAdminGateway   the real store, through the GraphQL Admin API.
+ *   NativeGateway         the real store: the commerce engine over PostgreSQL.
  *   SandboxAdminGateway   a clearly labelled local sandbox seeded from the
- *                         imported catalogue. Nothing leaves this machine.
+ *                         imported catalogue. Customers never see it.
  *
  * With neither available the mode is `disconnected` and commerce screens say
  * exactly what to configure instead of rendering invented data.
@@ -188,7 +188,7 @@ const FULFILLMENT_MAP: Readonly<Record<string, FulfillmentState>> = {
 /**
  * Maps the provider's own status fields onto the dashboard's vocabulary.
  *
- * Nothing is inferred. In particular there is no "delivered" state: Shopify's
+ * Nothing is inferred. In particular there is no "delivered" state: an
  * order-level status does not establish delivery, so the furthest this goes is
  * "fulfilled, with tracking". An unrecognised value maps to `unknown` and is
  * displayed as such rather than guessed at.
@@ -245,7 +245,7 @@ export interface AdminOrderSummary {
   readonly total: Money;
   readonly status: OrderStatus;
   readonly itemCount: number;
-  /** A Shopify test order, or an order created in the sandbox. */
+  /** Paid through a provider test mode, or created in the sandbox. Excluded from reports. */
   readonly test: boolean;
 }
 

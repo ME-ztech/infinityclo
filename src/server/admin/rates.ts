@@ -127,9 +127,9 @@ export function parseShippingRate(input: Record<string, unknown>): ShippingRateI
 
 export function parseTaxRate(input: Record<string, unknown>): TaxRateInput {
   const problems: string[] = [];
-  const country = text(input.country, 2).toUpperCase();
+  const country = text(input.country, 10).toUpperCase();
   if (!/^[A-Z]{2}$/.test(country)) problems.push('Enter a two-letter country code, for example CA.');
-  const province = text(input.province, 3).toUpperCase();
+  const province = text(input.province, 10).toUpperCase();
   if (province && !/^[A-Z0-9]{1,3}$/.test(province)) problems.push('The province is a short code such as MB, or left empty for the whole country.');
   const name = text(input.name, 40);
   if (!name) problems.push('Name the tax as it should appear on the order, for example GST.');

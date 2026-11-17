@@ -2,7 +2,7 @@
  * Sandbox gateway.
  *
  * A local stand-in for the store, so the back office can be learned and tested
- * without a Shopify token and without touching real data. The dashboard labels
+ * without a database and without touching real data. The dashboard labels
  * it SANDBOX on every screen.
  *
  * What it contains, and what it deliberately does not:
@@ -14,7 +14,7 @@
  *              Every such order is flagged TEST.
  *   Customers  none. Customer records are personal data and are never invented.
  *
- * Nothing here is visible to shoppers and nothing here reaches Shopify.
+ * Nothing here is visible to shoppers and nothing here reaches the live database.
  */
 import 'server-only';
 

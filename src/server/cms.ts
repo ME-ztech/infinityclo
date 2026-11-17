@@ -10,6 +10,7 @@
  * description) and photographs already in the imported catalogue. Where no
  * authentic asset exists the default is empty and the section does not render.
  */
+/* eslint-disable @typescript-eslint/no-explicit-any -- `normaliseContent` exists to coerce untyped, untrusted input field by field. */
 import 'server-only';
 
 import { products as snapshotProducts } from '@/data/adapters/local/snapshot';

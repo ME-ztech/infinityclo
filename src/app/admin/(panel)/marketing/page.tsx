@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 
 import { unsubscribeAction } from '@/app/admin/actions/local';
 import { Badge, Button, Card, Empty, Flash, LinkButton, PageHeader, Stat, TableWrap, formatDate, td, th } from '@/components/admin/ui';
+import { defaultRange } from '@/server/admin/metrics';
 import { requirePage, type SearchParams } from '@/server/admin/page';
 import { can } from '@/server/admin/permissions';
 import { config } from '@/server/config';
@@ -14,7 +15,7 @@ export default async function AdminMarketingPage({ searchParams }: { searchParam
   const params = await searchParams;
   const [subscribers, waitlist, drops] = await Promise.all([listSubscribers(), listWaitlist(), listDrops()]);
   const active = subscribers.filter((subscriber) => subscriber.status === 'subscribed');
-  const since = new Date(Date.now() - 30 * 86_400_000).toISOString();
+  const since = `${defaultRange(30).from}T00:00:00.000Z`;
   const recent = active.filter((subscriber) => subscriber.subscribedAt >= since).length;
   const canExport = can(session.role, 'marketing.export');
   const sources = new Map<string, number>();

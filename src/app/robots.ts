@@ -10,7 +10,7 @@ export default function robots(): MetadataRoute.Robots {
       // Admin, account and cart are private or per-visitor; API routes are not
       // pages; search fragments the catalogue's canonical identity across query
       // permutations; drop previews are unpublished.
-      disallow: ['/admin', '/account', '/api/', '/cart', '/search', '/preview'],
+      disallow: ['/admin', '/account', '/api/', '/cart', '/checkout', '/search', '/drops/preview'],
     },
     sitemap: `${SITE_URL}/sitemap.xml`,
     host: SITE_URL,

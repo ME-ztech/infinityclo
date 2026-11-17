@@ -1,7 +1,7 @@
 // @vitest-environment node
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { isValidUnsubscribeToken, signUpForNewsletter, unsubscribePath, unsubscribeToken } from '@/server/customer/newsletter';
+import { isValidUnsubscribeToken, unsubscribePath, unsubscribeToken } from '@/server/customer/newsletter';
 import { jsonRequest, TEST_ORIGIN, uniqueAddress } from '@/server/customer/test-helpers';
 import { listSubscribers, NEWSLETTER_CONSENT_TEXT } from '@/server/records';
 import { resetRateLimitsForTesting } from '@/server/security';

@@ -81,7 +81,7 @@ export default async function AdminProductsPage({ searchParams }: { searchParams
                     <td className={td}>
                       <Link href={`/admin/products/${product.id}`} className="flex items-center gap-3 font-semibold underline-offset-4 hover:underline">
                         {product.image ? (
-                          // eslint-disable-next-line @next/next/no-img-element -- operator thumbnail; may be any Shopify CDN size
+                          // eslint-disable-next-line @next/next/no-img-element -- operator thumbnail; source size is not known
                           <img src={product.image.url} alt="" width={40} height={40} loading="lazy" className="size-10 shrink-0 border border-neutral-200 bg-neutral-50 object-cover" />
                         ) : (
                           <span aria-hidden className="size-10 shrink-0 border border-dashed border-neutral-300 bg-neutral-50" />

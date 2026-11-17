@@ -258,7 +258,6 @@ export function maskEmail(email: string): string {
 /** Trimmed, length-capped plain text with control characters removed. */
 export function cleanText(input: unknown, maxLength: number): string {
   if (typeof input !== 'string') return '';
-  // eslint-disable-next-line no-control-regex
   return input.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, '').trim().slice(0, maxLength);
 }
 

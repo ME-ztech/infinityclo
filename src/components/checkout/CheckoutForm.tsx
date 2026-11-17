@@ -80,7 +80,7 @@ type Payment =
 export function CheckoutForm({ initial, countries }: Props) {
   const [checkout, setCheckout] = useState(initial);
   const [email, setEmail] = useState(initial.email ?? '');
-  const [consent, setConsent] = useState(initial.recoveryConsent);
+  const consent = initial.recoveryConsent;
   const [address, setAddress] = useState({
     firstName: initial.shippingAddress?.firstName ?? '',
     lastName: initial.shippingAddress?.lastName ?? '',
@@ -209,7 +209,7 @@ export function CheckoutForm({ initial, countries }: Props) {
         body: '{}',
       });
       if (response.ok) {
-        window.location.assign('/checkout/complete');
+        window.location.href = '/checkout/complete';
         return;
       }
       setError('The test payment did not complete.');
@@ -228,11 +228,11 @@ export function CheckoutForm({ initial, countries }: Props) {
   // Hand the stock back if the customer deliberately returns to the cart.
   async function backToCart() {
     await fetch('/api/checkout/session', { method: 'DELETE' }).catch(() => undefined);
-    window.location.assign('/cart');
+    window.location.href = '/cart';
   }
 
   useEffect(() => {
-    if (checkout.status !== 'open') window.location.assign('/cart');
+    if (checkout.status !== 'open') window.location.href = '/cart';
   }, [checkout.status]);
 
   const field = (name: keyof typeof address, label: string, props: React.InputHTMLAttributes<HTMLInputElement> = {}) => (
@@ -244,8 +244,9 @@ export function CheckoutForm({ initial, countries }: Props) {
         id={`co-${name}`}
         name={name}
         className={FIELD}
-        value={address[name]}
-        onChange={(event) => setAddress((current) => ({ ...current, [name]: event.target.value }))}
+        // Uncontrolled on purpose: React must not overwrite what the customer
+        // (or their browser's autofill) entered before this component loaded.
+        defaultValue={address[name]}
         {...props}
       />
     </div>
@@ -266,16 +267,14 @@ export function CheckoutForm({ initial, countries }: Props) {
             autoComplete="email"
             required
             className={FIELD}
-            value={email}
-            onChange={(event) => setEmail(event.target.value)}
+            defaultValue={email}
           />
           <label className="text-fg-muted mt-4 flex items-start gap-3 text-sm leading-snug">
             <input
               type="checkbox"
               name="recoveryConsent"
               className="mt-1 h-4 w-4"
-              checked={consent}
-              onChange={(event) => setConsent(event.target.checked)}
+              defaultChecked={consent}
             />
             <span>Email me a reminder if I don’t finish checking out. Optional.</span>
           </label>

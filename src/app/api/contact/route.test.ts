@@ -82,6 +82,7 @@ describe('POST /api/contact', () => {
     process.env.RESEND_API_KEY = 're_test';
     process.env.CONTACT_TO_EMAIL = 'team@infnity.test';
     process.env.EMAIL_FROM = 'INFNITY <site@infnity.test>';
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- captured provider payloads, inspected loosely
     const sent: Array<Record<string, any>> = [];
     vi.stubGlobal('fetch', (async (url: string, init?: RequestInit) => {
       expect(url).toBe('https://api.resend.com/emails');

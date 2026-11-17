@@ -29,12 +29,13 @@ export function multiplyMoney(value: Money, factor: number): Money {
  * reads as "$85", not "$85.00" — while anything with cents keeps them.
  */
 export function formatMoney(value: Money, locale = 'en-CA'): string {
-  const hasCents = value.amount % 100 !== 0;
+  // Always two decimals: "$60.00", never "$60". A price is read against a cart
+  // total and a card statement, and those always carry cents.
   return new Intl.NumberFormat(locale, {
     style: 'currency',
     currency: value.currency,
-    minimumFractionDigits: hasCents ? 2 : 0,
-    maximumFractionDigits: hasCents ? 2 : 0,
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
   }).format(value.amount / 100);
 }
 

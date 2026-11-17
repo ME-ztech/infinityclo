@@ -78,15 +78,15 @@ export default async function AdminProductPage({ params, searchParams }: { param
           <>
             <LinkButton href="/admin/products">All products</LinkButton>
             {product.status === 'ACTIVE' && !isSandboxOnly && <LinkButton href={`/products/${product.handle}`} external testId="view-on-storefront">View on storefront</LinkButton>}
-            {external && <LinkButton href={external} external>Open in Shopify</LinkButton>}
+            {external && <LinkButton href={external} external>Open in source system</LinkButton>}
           </>
         }
       />
       <Flash params={flash} />
       {isSandboxOnly && (
         <p className="mb-5 border border-amber-600 bg-amber-50 px-4 py-3 text-sm text-amber-950">
-          This product exists only in the sandbox. It is not on the storefront and never will be: connect the Shopify
-          Admin API to create real products.
+          This product exists only in the sandbox. It is not on the storefront and never will be: turn sandbox mode
+          off to create real products in the INFNITY database.
         </p>
       )}
 
@@ -177,8 +177,9 @@ export default async function AdminProductPage({ params, searchParams }: { param
           {canEdit && <div className="mt-4"><Button testId="variants-save">Save variants</Button></div>}
         </form>
         <p className="mt-3 text-xs leading-relaxed text-neutral-600">
-          Adding or removing sizes and colours on an existing product is done in Shopify (Open in Shopify → Variants),
-          because removing a variant also removes its sales history links and stock records.
+          Sizes and colours are fixed when a product is created, because removing a variant would also remove its
+          stock records and its links to past orders. To offer a different set, duplicate the product as a draft with
+          the options you want, then archive this one.
         </p>
       </Card>
 
@@ -205,9 +206,9 @@ export default async function AdminProductPage({ params, searchParams }: { param
           </form>
         )}
         <p className="mt-3 text-xs leading-relaxed text-neutral-600">
-          To upload files from your computer, reorder photos, or add video, use Shopify
-          {external ? ' (Open in Shopify → Media)' : ''}. Uploads go straight to Shopify’s storage, so this dashboard
-          never handles original files.
+          Photos are added by link: put the file in the site’s <code className="font-mono">public/products/</code> folder
+          (or any https location you control) and paste its address. Uploading files from your computer and reordering
+          photos are not available in this dashboard yet.
         </p>
       </Card>
 
