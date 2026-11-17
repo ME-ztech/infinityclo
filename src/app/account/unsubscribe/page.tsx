@@ -1,12 +1,14 @@
 import type { Metadata } from 'next';
 
 import { SUBMIT } from '@/components/account/AccountShell';
-import { firstParam } from '@/components/account/GuestAccount';
 import { ButtonLink } from '@/components/ui/Button';
 import { isValidUnsubscribeToken } from '@/server/customer/newsletter';
 import { maskEmail, normaliseEmail } from '@/server/security';
 
 export const metadata: Metadata = { title: 'Unsubscribe' };
+
+const firstParam = (value: string | string[] | undefined): string | undefined =>
+  Array.isArray(value) ? value[0] : value;
 
 /**
  * Unsubscribe confirmation.

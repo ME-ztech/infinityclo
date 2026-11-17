@@ -1,21 +1,20 @@
 /**
- * Checkout handoff.
+ * Start a checkout.
  *
- * The browser posts cart identities (slug, variant id, quantity). This route
- * re-resolves every line against the live catalogue, refuses the handoff if any
- * line is sold out or no longer exists, and returns the Shopify-hosted checkout
- * URL. Prices are never accepted from the client and no order is created here:
- * Shopify owns payment, tax, shipping, discounts and the order itself.
+ * The browser posts cart identities (variant ids and quantities). This route
+ * prices them from the database, reserves the stock, and puts an opaque
+ * checkout token in an httpOnly cookie. The response is just where to go next.
+ * No price is accepted from the client and no order exists yet.
  */
 import { NextResponse } from 'next/server';
 
-import { buildCheckoutUrl, checkoutAvailability } from '@/domain/checkout';
-import { resolveCart } from '@/lib/cart/resolve';
 import { parsePersistedCartValue } from '@/lib/cart/storage';
 import { CHECKOUT_ENABLED } from '@/lib/site';
-import { config } from '@/server/config';
+import { CheckoutError, createCheckout, updateCheckout } from '@/server/commerce/checkout';
+import { InsufficientStockError } from '@/server/commerce/inventory';
+import { checkoutReadiness } from '@/server/commerce/service';
+import { currentCustomer, setCheckoutCookie } from '@/server/commerce/session';
 import { clientAddress, isSameOrigin, rateLimit } from '@/server/security';
-import { activeCheckoutCode } from '@/server/offers';
 
 export const dynamic = 'force-dynamic';
 
@@ -23,7 +22,7 @@ export async function POST(request: Request): Promise<NextResponse> {
   if (!isSameOrigin(request)) {
     return NextResponse.json({ error: 'Cross-site request refused.' }, { status: 403 });
   }
-  const limit = rateLimit('checkout', clientAddress(request), 30, 60);
+  const limit = rateLimit('checkout', clientAddress(request), 20, 60);
   if (!limit.allowed) {
     return NextResponse.json(
       { error: 'Too many attempts. Try again shortly.' },
@@ -31,41 +30,46 @@ export async function POST(request: Request): Promise<NextResponse> {
     );
   }
 
-  let body: unknown;
+  if (!CHECKOUT_ENABLED) {
+    return NextResponse.json({ error: 'Checkout is switched off on this preview.', code: 'disabled' }, { status: 409 });
+  }
+  const readiness = await checkoutReadiness();
+  if (!readiness.open) {
+    return NextResponse.json({ error: readiness.message, code: 'closed' }, { status: 409 });
+  }
+
+  let body: { cart?: unknown; discountCode?: unknown };
   try {
-    body = await request.json();
+    body = (await request.json()) as typeof body;
   } catch {
     return NextResponse.json({ error: 'Invalid request.' }, { status: 400 });
   }
 
-  const persisted = parsePersistedCartValue((body as { cart?: unknown })?.cart);
-  const { cart, droppedLines } = await resolveCart(persisted);
+  const persisted = parsePersistedCartValue(body.cart);
+  const customer = await currentCustomer();
 
-  if (droppedLines.length > 0) {
-    return NextResponse.json(
-      { error: 'Some items in your cart are no longer available. Review your cart and try again.', code: 'cart_changed' },
-      { status: 409 },
-    );
+  try {
+    const { token } = await createCheckout({
+      lines: persisted.lines.map((line) => ({ variantId: line.variantId, quantity: line.quantity })),
+      customerId: customer?.id ?? null,
+      email: customer?.email ?? null,
+    });
+    if (typeof body.discountCode === 'string' && body.discountCode.trim()) {
+      await updateCheckout(token, { discountCode: body.discountCode });
+    }
+    await setCheckoutCookie(token);
+    return NextResponse.json({ url: '/checkout' });
+  } catch (error) {
+    if (error instanceof InsufficientStockError) {
+      return NextResponse.json(
+        { error: 'An item in your cart just sold out or there are not enough left. Review your cart and try again.', code: 'cart_changed' },
+        { status: 409 },
+      );
+    }
+    if (error instanceof CheckoutError) {
+      return NextResponse.json({ error: error.message, code: error.code }, { status: 409 });
+    }
+    console.error(`[checkout] could not start: ${(error as Error).message}`);
+    return NextResponse.json({ error: 'Checkout could not be started. Try again.' }, { status: 500 });
   }
-
-  const availability = checkoutAvailability(cart, CHECKOUT_ENABLED);
-  if (availability.status === 'unavailable') {
-    const messages = {
-      disabled: 'Checkout is not available on this preview.',
-      empty_cart: 'Your cart is empty.',
-      items_unavailable: 'Remove the sold-out items from your cart to continue.',
-    } as const;
-    return NextResponse.json({ error: messages[availability.reason], code: availability.reason }, { status: 409 });
-  }
-
-  const requestedCode = (body as { discountCode?: unknown })?.discountCode;
-  const discountCode = await activeCheckoutCode(typeof requestedCode === 'string' ? requestedCode : null);
-
-  const url = buildCheckoutUrl({
-    checkoutDomain: config.shopify.checkoutDomain,
-    lines: cart.lines.map((line) => ({ variantId: line.variantId, quantity: line.quantity })),
-    discountCode,
-  });
-
-  return NextResponse.json({ url });
 }

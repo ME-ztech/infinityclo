@@ -12,7 +12,6 @@
  */
 import { NextResponse } from 'next/server';
 
-import { originFromHeaders } from '@/server/customer/context';
 import { json } from '@/server/customer/forms';
 import { isValidUnsubscribeToken, unsubscribeFromNewsletter } from '@/server/customer/newsletter';
 import { clientAddress, normaliseEmail, rateLimit } from '@/server/security';
@@ -21,7 +20,7 @@ export const dynamic = 'force-dynamic';
 
 export function GET(request: Request) {
   const params = new URL(request.url).searchParams;
-  const target = new URL('/account/unsubscribe', originFromHeaders(request.headers));
+  const target = new URL('/account/unsubscribe', request.url);
   for (const key of ['email', 'token']) {
     const value = params.get(key);
     if (value) target.searchParams.set(key, value.slice(0, 300));
@@ -56,7 +55,7 @@ export async function POST(request: Request) {
 
   // A form post from the confirmation page (not a mail client's one-click POST) goes back to it.
   if (wantsRedirect && request.headers.get('origin')) {
-    const target = new URL('/account/unsubscribe', originFromHeaders(request.headers));
+    const target = new URL('/account/unsubscribe', request.url);
     target.searchParams.set('done', valid ? '1' : '0');
     return NextResponse.redirect(target, 303);
   }

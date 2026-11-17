@@ -1,102 +1,95 @@
 import type { Metadata } from 'next';
 
-import { AccountShell, SECONDARY_SUBMIT, SUBMIT, Unavailable } from '@/components/account/AccountShell';
-import { AddressFields } from '@/components/account/AddressFields';
-import { GuestAccount } from '@/components/account/GuestAccount';
-import { accountContext, loadForPage } from '@/server/customer/context';
-import { readFlash } from '@/server/customer/session';
+import { AccountShell, FIELD, LABEL, SECONDARY_SUBMIT, SUBMIT, param, type SearchParams } from '@/components/account/AccountShell';
+import { listAddresses, type CustomerAddress } from '@/server/commerce/customers';
+import { requireCustomerPage } from '@/server/commerce/session';
 
-export const metadata: Metadata = { title: 'Addresses' };
+import { deleteAddressAction, saveAddressAction } from '../actions';
 
-const PAGE = '/account/addresses';
-const ACTION = '/api/account/addresses';
+export const metadata: Metadata = { title: 'Addresses', robots: { index: false, follow: false } };
+export const dynamic = 'force-dynamic';
 
-/**
- * Address book. Every form posts to the account API, which writes through the
- * customer's own Shopify token; this page only ever lists what Shopify returns
- * for that token.
- */
-export default async function AddressesPage() {
-  const context = await accountContext(PAGE);
-  if (context.state !== 'signed_in') return <GuestAccount title="Addresses" current={PAGE} context={context} />;
+function AddressForm({ address }: { address?: CustomerAddress }) {
+  const id = address?.id ?? 'new';
+  const input = (name: keyof CustomerAddress & string, label: string, autoComplete: string, required = false) => (
+    <div>
+      <label htmlFor={`${id}-${name}`} className={LABEL}>
+        {label}
+      </label>
+      <input
+        id={`${id}-${name}`}
+        name={name}
+        autoComplete={autoComplete}
+        required={required}
+        defaultValue={(address?.[name] as string | null | undefined) ?? ''}
+        className={FIELD}
+      />
+    </div>
+  );
+  return (
+    <form action={saveAddressAction} className="grid gap-4 sm:grid-cols-2" data-testid={address ? 'address-edit-form' : 'address-new-form'}>
+      {address && <input type="hidden" name="addressId" value={address.id} />}
+      {input('firstName', 'First name', 'given-name', true)}
+      {input('lastName', 'Last name', 'family-name', true)}
+      <div className="sm:col-span-2">{input('line1', 'Address', 'address-line1', true)}</div>
+      <div className="sm:col-span-2">{input('line2', 'Apartment, suite (optional)', 'address-line2')}</div>
+      {input('city', 'City', 'address-level2', true)}
+      {input('province', 'Province / state code (e.g. MB)', 'address-level1')}
+      {input('postalCode', 'Postal / ZIP code', 'postal-code', true)}
+      {input('country', 'Country code (e.g. CA)', 'country', true)}
+      <div className="sm:col-span-2">{input('phone', 'Phone (optional)', 'tel')}</div>
+      <label className="text-fg-muted flex items-center gap-3 text-sm sm:col-span-2">
+        <input type="checkbox" name="isDefault" defaultChecked={address?.isDefault ?? false} className="h-4 w-4" />
+        Use as my default address
+      </label>
+      <div className="sm:col-span-2">
+        <button type="submit" className={SUBMIT}>
+          {address ? 'Save changes' : 'Add address'}
+        </button>
+      </div>
+    </form>
+  );
+}
 
-  const loaded = await loadForPage(PAGE, () => context.gateway.listAddresses(context.session.accessToken));
-  if ('error' in loaded) {
-    return (
-      <AccountShell title="Addresses" current={PAGE} signedIn>
-        <Unavailable message={loaded.error} />
-      </AccountShell>
-    );
-  }
-
-  const addresses = loaded.data;
-  const flash = await readFlash();
+export default async function AddressesPage({ searchParams }: { searchParams: SearchParams }) {
+  const customer = await requireCustomerPage('/account/addresses');
+  const params = await searchParams;
+  const addresses = await listAddresses(customer.id);
 
   return (
-    <AccountShell title="Addresses" current={PAGE} signedIn notice={flash.notice} error={flash.error}>
-      {addresses.length === 0 ? (
-        <p className="border-line text-fg-muted border p-6 text-sm">You have no saved addresses.</p>
-      ) : (
-        <ul className="grid gap-4 md:grid-cols-2" data-testid="address-list">
-          {addresses.map((address) => (
-            <li key={address.id} className="border-line border p-5 text-sm">
-              {address.isDefault && (
-                <p className="text-fg mb-2 text-[0.68rem] font-semibold uppercase tracking-[0.16em]">Default address</p>
-              )}
-              <address className="text-fg-muted not-italic leading-relaxed">
-                {address.formatted.map((line, index) => (
-                  <span key={index} className="block">
-                    {line}
-                  </span>
-                ))}
-                {address.phoneNumber && <span className="block">{address.phoneNumber}</span>}
-              </address>
-
-              <details className="mt-4">
-                <summary className="text-fg cursor-pointer text-xs font-semibold uppercase tracking-[0.16em]">Edit</summary>
-                <form action={ACTION} method="post" className="mt-4 space-y-4">
-                  <input type="hidden" name="intent" value="update" />
+    <AccountShell title="Addresses" current="/account/addresses" signedIn notice={param(params, 'notice')} error={param(params, 'error')}>
+      <ul className="space-y-4" data-testid="address-list">
+        {addresses.map((address) => (
+          <li key={address.id} className="border-line border p-5">
+            <details>
+              <summary className="cursor-pointer text-sm">
+                <span className="text-fg font-semibold">
+                  {address.firstName} {address.lastName}
+                </span>
+                {address.isDefault && <span className="text-fg-muted ml-2 text-xs uppercase">Default</span>}
+                <span className="text-fg-muted block">
+                  {address.line1}, {address.city} {address.province} {address.postalCode}, {address.country}
+                </span>
+              </summary>
+              <div className="mt-6">
+                <AddressForm address={address} />
+                <form action={deleteAddressAction} className="mt-4">
                   <input type="hidden" name="addressId" value={address.id} />
-                  <AddressFields prefix={`edit-${address.id}`} address={address} />
-                  {!address.isDefault && (
-                    <label className="text-fg-muted flex items-center gap-2 text-sm">
-                      <input type="checkbox" name="makeDefault" value="yes" className="h-4 w-4" />
-                      Make this my default address
-                    </label>
-                  )}
-                  <button type="submit" className={SUBMIT}>
-                    Save address
+                  <button type="submit" className={SECONDARY_SUBMIT}>
+                    Remove this address
                   </button>
                 </form>
-              </details>
+              </div>
+            </details>
+          </li>
+        ))}
+      </ul>
 
-              <form action={ACTION} method="post" className="mt-3">
-                <input type="hidden" name="intent" value="delete" />
-                <input type="hidden" name="addressId" value={address.id} />
-                <button type="submit" className="text-fg-muted hover:text-signal cursor-pointer text-xs font-semibold uppercase tracking-[0.16em]">
-                  Remove<span className="sr-only"> address {address.formatted[0] ?? ''}</span>
-                </button>
-              </form>
-            </li>
-          ))}
-        </ul>
-      )}
-
-      <section className="border-line mt-10 border p-6 md:p-8" aria-labelledby="add-address">
-        <h2 id="add-address" className="font-display text-fg mb-6 text-xl">
+      <section className="mt-12" aria-labelledby="new-address-heading">
+        <h2 id="new-address-heading" className="font-display text-fg mb-6 text-2xl">
           Add an address
         </h2>
-        <form action={ACTION} method="post" className="space-y-4">
-          <input type="hidden" name="intent" value="create" />
-          <AddressFields prefix="new" />
-          <label className="text-fg-muted flex items-center gap-2 text-sm">
-            <input type="checkbox" name="makeDefault" value="yes" className="h-4 w-4" />
-            Make this my default address
-          </label>
-          <button type="submit" className={addresses.length === 0 ? SUBMIT : SECONDARY_SUBMIT}>
-            Add address
-          </button>
-        </form>
+        <AddressForm />
       </section>
     </AccountShell>
   );

@@ -54,7 +54,7 @@ export async function runAction(
   work: (context: ActionContext) => Promise<ActionOutcome>,
 ): Promise<never> {
   const back = safeAdminPath(options.back);
-  const mode = options.commerce ? (gatewayMode() === 'shopify' ? 'shopify' : 'sandbox') : 'local';
+  const mode = options.commerce ? (gatewayMode() === 'sandbox' ? 'sandbox' : 'native') : 'local';
   let destination: string;
 
   let session: AdminSession;

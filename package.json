@@ -15,7 +15,13 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "e2e": "playwright test",
-    "import:catalog": "tsx scripts/import-infnity-catalog.ts"
+    "import:catalog": "tsx scripts/import-infnity-catalog.ts",
+    "admin:setup": "node scripts/admin-setup.mjs",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "tsx --conditions=react-server scripts/db.ts migrate",
+    "db:seed": "tsx --conditions=react-server scripts/db.ts seed",
+    "db:status": "tsx --conditions=react-server scripts/db.ts status",
+    "db:inventory": "tsx --conditions=react-server scripts/db.ts inventory"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.5.16",

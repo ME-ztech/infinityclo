@@ -39,6 +39,9 @@ const LEGACY_REDIRECTS: ReadonlyArray<readonly [source: string, destination: str
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  // Database drivers are loaded by Node at runtime rather than bundled: the
+  // embedded engine ships WebAssembly and `pg` has optional native bindings.
+  serverExternalPackages: ['@electric-sql/pglite', 'pg'],
   // Lets a second dev server or build run beside the main one without sharing
   // (and locking) the same output directory.
   ...(process.env.NEXT_DIST_DIR && { distDir: process.env.NEXT_DIST_DIR }),

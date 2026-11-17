@@ -9,7 +9,7 @@
  */
 import { revalidatePath, revalidateTag } from 'next/cache';
 
-import { CATALOG_TAG } from '@/data/adapters/shopify/catalog';
+import { CATALOG_TAG } from '@/server/commerce/catalog';
 import { htmlToText } from '@/domain/text';
 import { checked, field, integer, list, priceCents, runAction } from '@/server/admin/action';
 import {

@@ -39,7 +39,7 @@ export type Collection =
   | 'sandbox';
 
 export interface DocumentStore {
-  readonly kind: 'kv' | 'file' | 'memory';
+  readonly kind: 'postgres' | 'kv' | 'file' | 'memory';
   /** False when writes may vanish (serverless filesystem). */
   readonly durable: boolean;
   get<T>(collection: Collection, id: string): Promise<T | null>;
@@ -235,6 +235,62 @@ export class KvStore implements DocumentStore {
 }
 
 /* ------------------------------------------------------------------ *
+ * PostgreSQL
+ * ------------------------------------------------------------------ */
+
+/**
+ * Documents in the commerce database (`documents` table), so the whole
+ * platform — relational commerce data and these looser records — lives in one
+ * database with one backup.
+ */
+export class PostgresStore implements DocumentStore {
+  readonly kind = 'postgres' as const;
+  readonly durable = true;
+
+  private async table() {
+    const { getDb, schema } = await import('./db/client');
+    return { db: await getDb(), documents: schema.documents };
+  }
+
+  async get<T>(collection: Collection, id: string): Promise<T | null> {
+    const { db, documents } = await this.table();
+    const { and, eq } = await import('drizzle-orm');
+    const [row] = await db
+      .select({ data: documents.data })
+      .from(documents)
+      .where(and(eq(documents.collection, collection), eq(documents.id, id)));
+    return row ? (row.data as T) : null;
+  }
+  async list<T>(collection: Collection): Promise<T[]> {
+    const { db, documents } = await this.table();
+    const { eq } = await import('drizzle-orm');
+    const rows = await db.select({ data: documents.data }).from(documents).where(eq(documents.collection, collection));
+    return rows.map((row) => row.data as T);
+  }
+  async put<T>(collection: Collection, id: string, value: T): Promise<void> {
+    const { db, documents } = await this.table();
+    await db
+      .insert(documents)
+      .values({ collection, id, data: value as object })
+      .onConflictDoUpdate({ target: [documents.collection, documents.id], set: { data: value as object, updatedAt: new Date() } });
+  }
+  async putIfAbsent<T>(collection: Collection, id: string, value: T): Promise<boolean> {
+    const { db, documents } = await this.table();
+    const inserted = await db
+      .insert(documents)
+      .values({ collection, id, data: value as object })
+      .onConflictDoNothing()
+      .returning({ id: documents.id });
+    return inserted.length > 0;
+  }
+  async delete(collection: Collection, id: string): Promise<void> {
+    const { db, documents } = await this.table();
+    const { and, eq } = await import('drizzle-orm');
+    await db.delete(documents).where(and(eq(documents.collection, collection), eq(documents.id, id)));
+  }
+}
+
+/* ------------------------------------------------------------------ *
  * Composition
  * ------------------------------------------------------------------ */
 
@@ -246,6 +302,9 @@ export function getStore(): DocumentStore {
   let store: DocumentStore;
   if (process.env.INFNITY_STORE === 'memory') {
     store = new MemoryStore();
+  } else if (process.env.INFNITY_STORE !== 'file' && !(kvUrl && kvToken) && config.database.available) {
+    // The default: everything in the one commerce database.
+    store = new PostgresStore();
   } else if (kvUrl && kvToken) {
     store = new KvStore(kvUrl, kvToken);
   } else if (process.env.VERCEL) {

@@ -6,6 +6,10 @@
  * The admin "Settings" screen renders `integrationStatus()` directly: it reports
  * variable NAMES and whether they are set, never a value.
  *
+ * INFNITY owns its commerce system. The services below are infrastructure —
+ * a database host, a payment processor, an email sender, object storage — and
+ * each is replaceable without changing a business rule.
+ *
  * Nothing in this file throws when a variable is missing. A missing integration
  * degrades to a clearly labelled "not connected" state; it never degrades to a
  * fake success.
@@ -17,78 +21,58 @@ const env = (name: string): string | null => {
   return value ? value : null;
 };
 
-/**
- * Public facts about the store, read from the legacy storefront's own
- * `/meta.json` during the source audit (docs/source-audit.md). They identify the
- * shop; they grant no access. Each can be overridden per environment.
- */
-const PUBLIC_DEFAULTS = {
-  storeDomain: 'apparelinifinty85.myshopify.com',
-  shopId: '60570697948',
-  storefrontApiVersion: '2026-10',
-  adminApiVersion: '2026-10',
-} as const;
+export type AppEnvironment = 'development' | 'staging' | 'production';
 
 export const config = {
   get isProduction() {
     return process.env.NODE_ENV === 'production';
   },
 
-  shopify: {
-    /** The permanent `*.myshopify.com` domain. Survives any DNS cutover. */
-    get storeDomain() {
-      return env('SHOPIFY_STORE_DOMAIN') ?? PUBLIC_DEFAULTS.storeDomain;
+  /**
+   * Which deployment this is. `APP_ENV` is explicit; otherwise Vercel's own
+   * environment is used, and a local run is `development`. Staging is a
+   * production *build* that must never be mistaken for the live store.
+   */
+  get environment(): AppEnvironment {
+    const explicit = env('APP_ENV');
+    if (explicit === 'production' || explicit === 'staging' || explicit === 'development') return explicit;
+    if (process.env.VERCEL_ENV === 'production') return 'production';
+    if (process.env.VERCEL_ENV === 'preview') return 'staging';
+    return process.env.NODE_ENV === 'production' ? 'production' : 'development';
+  },
+
+  database: {
+    get url() {
+      return env('DATABASE_URL');
     },
-    get shopId() {
-      return env('SHOPIFY_SHOP_ID') ?? PUBLIC_DEFAULTS.shopId;
+    /** True when a database is reachable: configured, or the dev fallback applies. */
+    get available() {
+      return Boolean(env('DATABASE_URL')) || process.env.NODE_ENV !== 'production';
     },
-    /**
-     * Host that serves Shopify checkout and cart permalinks. Defaults to the
-     * permanent domain, which keeps working after `infinityclo.ca` is pointed at
-     * this storefront.
-     */
-    get checkoutDomain() {
-      return env('SHOPIFY_CHECKOUT_DOMAIN') ?? this.storeDomain;
+  },
+
+  payments: {
+    get stripeSecretKey() {
+      return env('STRIPE_SECRET_KEY');
     },
-    get storefrontApiVersion() {
-      return env('SHOPIFY_STOREFRONT_API_VERSION') ?? PUBLIC_DEFAULTS.storefrontApiVersion;
+    get stripePublishableKey() {
+      return env('NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY');
     },
-    get adminApiVersion() {
-      return env('SHOPIFY_ADMIN_API_VERSION') ?? PUBLIC_DEFAULTS.adminApiVersion;
-    },
-    /** Optional. Without it the Storefront API is used in its tokenless mode. */
-    get storefrontToken() {
-      return env('SHOPIFY_STOREFRONT_PRIVATE_TOKEN');
-    },
-    /** Admin API access token of a custom app. Server-side only. */
-    get adminToken() {
-      return env('SHOPIFY_ADMIN_ACCESS_TOKEN');
-    },
-    get webhookSecret() {
-      return env('SHOPIFY_WEBHOOK_SECRET');
-    },
-    get customerAccountClientId() {
-      return env('SHOPIFY_CUSTOMER_ACCOUNT_CLIENT_ID');
-    },
-    /** `off` disables the live price/stock overlay (tests, offline builds). */
-    get liveCatalog() {
-      return env('SHOPIFY_LIVE_CATALOG') !== 'off';
+    get stripeWebhookSecret() {
+      return env('STRIPE_WEBHOOK_SECRET');
     },
   },
 
   admin: {
     /**
-     * `shopify`  — the dashboard reads and writes the real store (needs the
-     *              Admin token).
-     * `sandbox`  — the dashboard runs against a clearly labelled local sandbox
-     *              seeded from the imported catalogue. No real store is touched.
-     * Unset     — `shopify` when a token is present, otherwise `disconnected`.
+     * `native`   — the dashboard reads and writes INFNITY's own database.
+     * `sandbox`  — a clearly labelled local sandbox for training; nothing it
+     *              does is visible to shoppers. Opt-in via COMMERCE_ADMIN_MODE.
+     * `disconnected` — no database configured.
      */
-    get mode(): 'shopify' | 'sandbox' | 'disconnected' {
-      const requested = env('COMMERCE_ADMIN_MODE');
-      if (requested === 'sandbox') return 'sandbox';
-      if (config.shopify.adminToken) return 'shopify';
-      return 'disconnected';
+    get mode(): 'native' | 'sandbox' | 'disconnected' {
+      if (env('COMMERCE_ADMIN_MODE') === 'sandbox') return 'sandbox';
+      return config.database.available ? 'native' : 'disconnected';
     },
     get ownerEmail() {
       return env('ADMIN_OWNER_EMAIL')?.toLowerCase() ?? null;
@@ -117,7 +101,7 @@ export const config = {
   },
 
   email: {
-    /** Transactional sender for contact-form routing. Optional. */
+    /** Transactional email (order confirmation, verification, reset, contact). */
     get resendKey() {
       return env('RESEND_API_KEY');
     },
@@ -127,6 +111,14 @@ export const config = {
     get from() {
       return env('EMAIL_FROM');
     },
+    get configured() {
+      return Boolean(env('RESEND_API_KEY') && env('EMAIL_FROM'));
+    },
+  },
+
+  /** Shared secret for the scheduled maintenance route (`/api/cron/maintenance`). */
+  get cronSecret() {
+    return env('CRON_SECRET');
   },
 } as const;
 
@@ -143,75 +135,65 @@ const variable = (name: string, required = true) => ({ name, set: env(name) !== 
 
 /** What is actually wired up, for the admin Settings screen and the docs. */
 export function integrationStatus(): readonly IntegrationState[] {
-  const kv = Boolean(config.storage.kvUrl && config.storage.kvToken);
-  const onServerless = Boolean(process.env.VERCEL);
+  const stripeKey = config.payments.stripeSecretKey;
+  const stripeLive = stripeKey?.startsWith('sk_live_') ?? false;
+  const stripeComplete = Boolean(stripeKey && config.payments.stripePublishableKey && config.payments.stripeWebhookSecret);
+  const testPayments = !stripeKey && env('PAYMENTS_PROVIDER') === 'test' && (!config.isProduction || env('INFNITY_E2E') === '1');
+
   return [
     {
-      id: 'storefront',
-      label: 'Shopify Storefront API (catalogue, live price and stock)',
-      status: 'connected',
-      detail: config.shopify.storefrontToken
-        ? `Authenticated access to ${config.shopify.storeDomain}.`
-        : `Tokenless public access to ${config.shopify.storeDomain}. Sufficient for products, prices and availability; a private token raises rate limits.`,
-      variables: [variable('SHOPIFY_STORE_DOMAIN', false), variable('SHOPIFY_STOREFRONT_PRIVATE_TOKEN', false)],
+      id: 'database',
+      label: 'Commerce database (catalogue, stock, customers, orders)',
+      status: config.database.url ? 'connected' : config.isProduction ? 'not_connected' : 'partial',
+      detail: config.database.url
+        ? config.database.url.startsWith('pglite://')
+          ? 'Embedded PostgreSQL. Suitable for development and tests only.'
+          : 'PostgreSQL connected.'
+        : config.isProduction
+          ? 'No database. Nothing can be sold or managed until DATABASE_URL is set and migrations are run.'
+          : 'No DATABASE_URL: using an embedded development database under ./.data. Set DATABASE_URL before deploying.',
+      variables: [variable('DATABASE_URL')],
     },
     {
-      id: 'checkout',
-      label: 'Shopify checkout handoff',
-      status: 'connected',
-      detail: `Carts are handed to Shopify-hosted checkout on ${config.shopify.checkoutDomain}. Payment, tax, shipping and discounts are computed there.`,
-      variables: [variable('SHOPIFY_CHECKOUT_DOMAIN', false)],
+      id: 'payments',
+      label: 'Payments (Stripe)',
+      status: stripeComplete ? 'connected' : stripeKey || testPayments ? 'partial' : 'not_connected',
+      detail: stripeComplete
+        ? stripeLive
+          ? 'Stripe LIVE mode. Real cards are charged.'
+          : 'Stripe TEST mode. No real money moves; orders are flagged as test.'
+        : stripeKey
+          ? 'Stripe secret key present but the publishable key or webhook secret is missing. Checkout cannot complete an order without all three.'
+          : testPayments
+            ? 'Simulated payments for local development and automated tests. Not available in production.'
+            : 'No payment provider. Customers can browse and build a cart; checkout is closed.',
+      variables: [
+        variable('STRIPE_SECRET_KEY'),
+        variable('NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY'),
+        variable('STRIPE_WEBHOOK_SECRET'),
+      ],
     },
     {
-      id: 'admin',
-      label: 'Shopify Admin API (products, inventory, orders, customers, discounts)',
-      status: config.shopify.adminToken ? 'connected' : 'not_connected',
-      detail: config.shopify.adminToken
-        ? 'Admin token present. The dashboard reads and writes the real store.'
-        : config.admin.mode === 'sandbox'
-          ? 'No Admin token. The dashboard is running in SANDBOX mode against local data; nothing reaches the real store.'
-          : 'No Admin token. Commerce modules are disabled until a custom-app token is configured.',
-      variables: [variable('SHOPIFY_ADMIN_ACCESS_TOKEN')],
-    },
-    {
-      id: 'customer-accounts',
-      label: 'Shopify Customer Account API (sign-in, orders, addresses)',
-      status: config.shopify.customerAccountClientId ? 'connected' : 'not_connected',
-      detail: config.shopify.customerAccountClientId
-        ? 'OAuth client configured. Customers sign in with Shopify passwordless login.'
-        : "No OAuth client id. /account links to the store's Shopify-hosted account page instead.",
-      variables: [variable('SHOPIFY_CUSTOMER_ACCOUNT_CLIENT_ID'), variable('SHOPIFY_SHOP_ID', false)],
-    },
-    {
-      id: 'webhooks',
-      label: 'Shopify webhooks',
-      status: config.shopify.webhookSecret ? 'connected' : 'not_connected',
-      detail: config.shopify.webhookSecret
-        ? 'Signing secret present. Deliveries are HMAC-verified and processed idempotently.'
-        : 'No signing secret. The webhook endpoint rejects every delivery.',
-      variables: [variable('SHOPIFY_WEBHOOK_SECRET')],
+      id: 'email',
+      label: 'Transactional email (order confirmation, verification, password reset)',
+      status: config.email.configured ? 'connected' : 'not_connected',
+      detail: config.email.configured
+        ? 'Email provider connected.'
+        : config.isProduction
+          ? 'No email provider. Customers cannot verify an account or reset a password, and no order confirmation is sent.'
+          : 'No email provider. In development, verification and reset links are written to the server log instead of being emailed.',
+      variables: [variable('RESEND_API_KEY'), variable('EMAIL_FROM'), variable('CONTACT_TO_EMAIL', false)],
     },
     {
       id: 'sessions',
-      label: 'Session signing',
+      label: 'Session signing (staff sign-in)',
       status: config.session.secret ? 'connected' : config.isProduction ? 'not_connected' : 'partial',
       detail: config.session.secret
         ? 'Session secret present.'
         : config.isProduction
-          ? 'No session secret. Admin and customer sign-in are disabled in production until one is set.'
+          ? 'No session secret. Staff sign-in is disabled in production until one is set.'
           : 'No session secret. A development-only secret is generated locally; set SESSION_SECRET before deploying.',
       variables: [variable('SESSION_SECRET')],
-    },
-    {
-      id: 'storage',
-      label: 'Durable storage (content, offers, subscribers, community, audit log)',
-      status: kv ? 'connected' : onServerless ? 'not_connected' : 'partial',
-      detail: kv
-        ? 'Redis-compatible KV store connected.'
-        : onServerless
-          ? 'No KV store. This host has no durable filesystem, so admin changes will not persist. Connect a KV store before using the dashboard here.'
-          : `File store at ./${config.storage.dataDir}. Durable on a single server or laptop; use a KV store on serverless hosts.`,
-      variables: [variable('KV_REST_API_URL', onServerless), variable('KV_REST_API_TOKEN', onServerless)],
     },
     {
       id: 'admin-login',
@@ -224,14 +206,13 @@ export function integrationStatus(): readonly IntegrationState[] {
       variables: [variable('ADMIN_OWNER_EMAIL'), variable('ADMIN_OWNER_PASSWORD_HASH')],
     },
     {
-      id: 'email',
-      label: 'Contact-form email routing',
-      status: config.email.resendKey && config.email.contactTo && config.email.from ? 'connected' : 'not_connected',
-      detail:
-        config.email.resendKey && config.email.contactTo && config.email.from
-          ? 'Messages are stored in the admin inbox and emailed to the configured address.'
-          : 'No email provider. Messages are stored in the admin inbox only; nothing is emailed.',
-      variables: [variable('RESEND_API_KEY', false), variable('CONTACT_TO_EMAIL', false), variable('EMAIL_FROM', false)],
+      id: 'maintenance',
+      label: 'Scheduled maintenance (expired stock holds, abandoned checkouts)',
+      status: config.cronSecret ? 'connected' : 'partial',
+      detail: config.cronSecret
+        ? 'Cron secret present. Schedule /api/cron/maintenance every 10 minutes.'
+        : 'No cron secret. Expired stock holds are still released whenever a new checkout starts, but nothing runs on a schedule.',
+      variables: [variable('CRON_SECRET', false)],
     },
   ];
 }

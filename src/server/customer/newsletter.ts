@@ -2,13 +2,10 @@
  * Newsletter signup and unsubscribe.
  *
  * Consent is the record. Each signup stores the exact wording agreed to, when,
- * and from which form (`records.subscribe`). When the Shopify Admin API is
- * connected the same consent is written to the Shopify customer, so Shopify
- * stays the one marketing list and nothing is ever sent from two systems.
- *
- * The Shopify write is best-effort *after* the local record exists: if Shopify
- * is unreachable the consent is not lost, it is simply left unsynced
- * (`syncedToShopifyAt: null`) for the admin to see and retry.
+ * and from which form (`records.subscribe`). There is one marketing list: if
+ * the address also has a customer account, the account's consent flag is kept
+ * in step, so a person never appears subscribed in one place and unsubscribed
+ * in the other.
  *
  * Unsubscribe links carry an HMAC of the address, so nobody can unsubscribe
  * (or probe for) an address they were not sent a link for.
@@ -17,110 +14,48 @@ import 'server-only';
 
 import { createHmac } from 'node:crypto';
 
+import { eq } from 'drizzle-orm';
+
+import { isDatabaseConfigured } from '../db/client';
 import { subscribe, unsubscribe, type Subscriber } from '../records';
-import { maskEmail, safeEqual, sessionSecret } from '../security';
-import { adminQuery, assertNoUserErrors, isAdminConfigured, type UserError } from '../shopify/client';
-import { getStore } from '../store';
+import { safeEqual, sessionSecret } from '../security';
 
-type MarketingState = 'SUBSCRIBED' | 'UNSUBSCRIBED';
-
-const FIND_CUSTOMER = /* GraphQL */ `
-  query FindCustomerByEmail($query: String!) {
-    customers(first: 1, query: $query) { nodes { id } }
+/** Mirrors newsletter consent onto a customer account with the same address. */
+async function syncAccountConsent(email: string, consent: boolean, source: string): Promise<void> {
+  if (!isDatabaseConfigured()) return;
+  try {
+    const { getDb, schema } = await import('../db/client');
+    const db = await getDb();
+    await db
+      .update(schema.customers)
+      .set({
+        marketingConsent: consent,
+        marketingConsentAt: new Date(),
+        marketingConsentSource: source,
+        updatedAt: new Date(),
+      })
+      .where(eq(schema.customers.email, email));
+  } catch (error) {
+    // The consent record itself is already stored; the mirror is best-effort.
+    console.error(`[newsletter] could not mirror consent to the account: ${(error as Error).message}`);
   }
-`;
-
-const UPDATE_CONSENT = /* GraphQL */ `
-  mutation UpdateEmailConsent($input: CustomerEmailMarketingConsentUpdateInput!) {
-    customerEmailMarketingConsentUpdate(input: $input) {
-      customer { id }
-      userErrors { field message }
-    }
-  }
-`;
-
-const CREATE_CUSTOMER = /* GraphQL */ `
-  mutation CreateSubscriber($input: CustomerInput!) {
-    customerCreate(input: $input) {
-      customer { id }
-      userErrors { field message }
-    }
-  }
-`;
-
-/**
- * Writes email-marketing consent to the Shopify customer with this address,
- * creating the customer when subscribing and none exists. Unsubscribing an
- * address Shopify has never seen is a no-op.
- */
-export async function syncConsentToShopify(
-  email: string,
-  state: MarketingState,
-  at: string,
-  fetcher?: typeof fetch,
-): Promise<void> {
-  const options = fetcher ? { fetcher, maxAttempts: 2 } : { maxAttempts: 2 };
-  const consent = {
-    marketingState: state,
-    consentUpdatedAt: at,
-    ...(state === 'SUBSCRIBED' ? { marketingOptInLevel: 'SINGLE_OPT_IN' } : {}),
-  };
-  const found = await adminQuery<{ customers: { nodes: Array<{ id: string }> } }>(FIND_CUSTOMER, {
-    ...options,
-    variables: { query: `email:"${email.replace(/["\\]/g, '')}"` },
-  });
-  const customerId = found.customers.nodes[0]?.id;
-
-  if (customerId) {
-    const data = await adminQuery<{ customerEmailMarketingConsentUpdate: { userErrors: UserError[] } }>(UPDATE_CONSENT, {
-      ...options,
-      variables: { input: { customerId, emailMarketingConsent: consent } },
-    });
-    assertNoUserErrors(data.customerEmailMarketingConsentUpdate.userErrors);
-    return;
-  }
-  if (state === 'UNSUBSCRIBED') return;
-
-  const data = await adminQuery<{ customerCreate: { userErrors: UserError[] } }>(CREATE_CUSTOMER, {
-    ...options,
-    variables: { input: { email, emailMarketingConsent: consent } },
-  });
-  assertNoUserErrors(data.customerCreate.userErrors);
 }
 
 export interface SignupResult {
   readonly created: boolean;
   readonly subscriber: Subscriber;
-  /** `skipped` when Shopify is not connected; `failed` when it is but the write did not land. */
-  readonly shopify: 'synced' | 'skipped' | 'failed';
 }
 
-export async function signUpForNewsletter(email: string, source: string, fetcher?: typeof fetch): Promise<SignupResult> {
+export async function signUpForNewsletter(email: string, source: string): Promise<SignupResult> {
   const { subscriber, created } = await subscribe(email, source);
-  if (!isAdminConfigured() || subscriber.syncedToShopifyAt) {
-    return { created, subscriber, shopify: subscriber.syncedToShopifyAt ? 'synced' : 'skipped' };
-  }
-  try {
-    await syncConsentToShopify(email, 'SUBSCRIBED', subscriber.subscribedAt, fetcher);
-    const synced = { ...subscriber, syncedToShopifyAt: new Date().toISOString() };
-    await getStore().put('subscribers', synced.id, synced);
-    return { created, subscriber: synced, shopify: 'synced' };
-  } catch (error) {
-    console.error(`[newsletter] Shopify consent sync failed for ${maskEmail(email)}: ${(error as Error).message}`);
-    return { created, subscriber, shopify: 'failed' };
-  }
+  if (created) await syncAccountConsent(email, true, `newsletter:${source}`.slice(0, 60));
+  return { created, subscriber };
 }
 
-export async function unsubscribeFromNewsletter(email: string, fetcher?: typeof fetch): Promise<{ changed: boolean; shopify: SignupResult['shopify'] }> {
+export async function unsubscribeFromNewsletter(email: string): Promise<{ changed: boolean }> {
   const changed = await unsubscribe(email);
-  if (!isAdminConfigured()) return { changed, shopify: 'skipped' };
-  try {
-    await syncConsentToShopify(email, 'UNSUBSCRIBED', new Date().toISOString(), fetcher);
-    return { changed, shopify: 'synced' };
-  } catch (error) {
-    console.error(`[newsletter] Shopify unsubscribe sync failed for ${maskEmail(email)}: ${(error as Error).message}`);
-    return { changed, shopify: 'failed' };
-  }
+  await syncAccountConsent(email, false, 'unsubscribe-link');
+  return { changed };
 }
 
 /* ------------------------------------------------------------------ *

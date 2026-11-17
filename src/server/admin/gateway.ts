@@ -382,8 +382,23 @@ export class GatewayNotFoundError extends GatewayError {
  * Interface
  * ------------------------------------------------------------------ */
 
+export interface RefundRequest {
+  readonly amountCents: number;
+  readonly reason: string;
+  /** Reusing a key returns the first result instead of refunding again. */
+  readonly idempotencyKey: string;
+  readonly actor: string;
+}
+
+export interface CancelRequest {
+  readonly reason: string;
+  /** Also return whatever is still refundable. */
+  readonly refund: boolean;
+  readonly actor: string;
+}
+
 export interface CommerceGateway {
-  readonly mode: 'shopify' | 'sandbox';
+  readonly mode: 'native' | 'sandbox';
   /** Human label for where this data lives, shown beside every figure. */
   readonly sourceLabel: string;
 
@@ -403,6 +418,10 @@ export interface CommerceGateway {
   getOrder(id: string): Promise<AdminOrder | null>;
   updateOrderNote(id: string, note: string): Promise<void>;
   fulfillOrder(id: string, input: FulfillInput): Promise<void>;
+  /** Returns money through the payment provider and records it on the order. */
+  refundOrder(id: string, input: RefundRequest): Promise<void>;
+  /** Cancels an unshipped order and puts its stock back on sale. */
+  cancelOrder(id: string, input: CancelRequest): Promise<void>;
 
   listCustomers(query?: { search?: string }): Promise<AdminCustomerSummary[]>;
   getCustomer(id: string): Promise<AdminCustomer | null>;
@@ -424,21 +443,17 @@ export interface CommerceGateway {
   externalUrl(kind: 'order' | 'product' | 'customer' | 'settings', idOrPath: string): string | null;
 }
 
-/** Scopes the custom app needs. Shown verbatim on the "connect" screen. */
+/**
+ * What the "not connected" screen tells the operator to configure. Kept under
+ * its historical name because the commerce screens import it.
+ */
 export const REQUIRED_ADMIN_SCOPES = [
-  'read_products, write_products',
-  'read_inventory, write_inventory',
-  'read_locations',
-  'read_orders, write_orders',
-  'read_merchant_managed_fulfillment_orders, write_merchant_managed_fulfillment_orders',
-  'read_customers, write_customers',
-  'read_discounts, write_discounts',
-  'read_price_rules, write_price_rules',
-  'read_publications, write_publications',
-  'read_analytics',
+  'DATABASE_URL — a PostgreSQL connection string (for example a Neon database)',
+  'then run `npm run db:migrate` once to create the tables',
+  'and `npm run db:seed` to load the catalogue',
 ] as const;
 
-export type GatewayMode = 'shopify' | 'sandbox' | 'disconnected';
+export type GatewayMode = 'native' | 'sandbox' | 'disconnected';
 
 export function gatewayMode(): GatewayMode {
   return config.admin.mode;
@@ -450,7 +465,7 @@ export function gatewayMode(): GatewayMode {
  */
 export async function getGateway(): Promise<CommerceGateway | null> {
   const mode = gatewayMode();
-  if (mode === 'shopify') return new (await import('./shopify')).ShopifyAdminGateway();
+  if (mode === 'native') return new (await import('./native')).NativeGateway();
   if (mode === 'sandbox') return new (await import('./sandbox')).SandboxAdminGateway();
   return null;
 }

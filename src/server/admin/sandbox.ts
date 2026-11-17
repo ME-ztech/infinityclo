@@ -398,6 +398,33 @@ export class SandboxAdminGateway implements CommerceGateway {
     await getStore().put('sandbox', orderKey(id), { ...order, note });
   }
 
+  /** Sandbox orders were never paid, so a "refund" only updates the record. */
+  async refundOrder(id: string, input: { amountCents: number }): Promise<void> {
+    const order = await this.mustGetOrder(id);
+    const refundable = order.total.amount - order.refunded.amount;
+    if (!Number.isInteger(input.amountCents) || input.amountCents <= 0 || input.amountCents > refundable) {
+      throw new GatewayError('That is more than the amount left to refund on this order.');
+    }
+    const refunded = order.refunded.amount + input.amountCents;
+    await getStore().put('sandbox', orderKey(id), {
+      ...order,
+      refunded: cents(refunded),
+      financialStatus: refunded >= order.total.amount ? 'REFUNDED' : 'PARTIALLY_REFUNDED',
+    });
+  }
+
+  async cancelOrder(id: string, input: { reason: string; refund: boolean }): Promise<void> {
+    const order = await this.mustGetOrder(id);
+    if (order.cancelledAt) return;
+    if (order.fulfillments.length > 0) throw new GatewayError('Items on this order have shipped. Refund instead of cancelling.');
+    await getStore().put('sandbox', orderKey(id), {
+      ...order,
+      cancelledAt: new Date().toISOString(),
+      cancelReason: input.reason,
+      ...(input.refund ? { refunded: order.total, financialStatus: 'REFUNDED' } : {}),
+    });
+  }
+
   async fulfillOrder(id: string, input: FulfillInput): Promise<void> {
     const order = await this.mustGetOrder(id);
     if (order.cancelledAt) throw new GatewayError('A cancelled order cannot be fulfilled.');

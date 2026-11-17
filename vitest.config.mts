@@ -16,5 +16,9 @@ export default defineConfig({
     globals: true,
     include: ['src/**/*.test.ts', 'src/**/*.test.tsx'],
     setupFiles: ['./vitest.setup.ts'],
+    // Tests never touch a database on disk or over the network: each worker
+    // gets its own in-memory PostgreSQL.
+    env: { DATABASE_URL: 'pglite://memory', INFNITY_AUTO_SEED: 'off' },
+    testTimeout: 20_000,
   },
 });

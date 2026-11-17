@@ -1,15 +1,11 @@
 import Link from 'next/link';
 import type { ReactNode } from 'react';
 
-import { ButtonLink } from '@/components/ui/Button';
+import { logoutAction } from '@/app/account/actions';
 
 /**
- * Account surfaces.
- *
- * Sign-in is Shopify's hosted, passwordless login — there is no password form
- * anywhere on this site, by design. These components render the three honest
- * states an account page can be in: signed in, signed out, and "this store's
- * account pages are hosted by Shopify" when no OAuth client is configured.
+ * Account surfaces: the signed-in shell with its navigation, and the narrow
+ * card used by the sign-in, registration and password pages.
  */
 const ACCOUNT_NAV = [
   { label: 'Overview', href: '/account' },
@@ -21,7 +17,8 @@ const ACCOUNT_NAV = [
 ];
 
 const GUEST_NAV = [
-  { label: 'Account', href: '/account' },
+  { label: 'Sign in', href: '/account/login' },
+  { label: 'Create account', href: '/account/register' },
   { label: 'Wishlist', href: '/account/wishlist' },
 ];
 
@@ -30,18 +27,43 @@ export const FIELD =
   'focus:border-fg focus:outline-none';
 export const LABEL = 'text-fg-muted mb-2 block text-[0.68rem] font-semibold tracking-[0.16em] uppercase';
 export const SUBMIT =
-  'bg-inverse-surface text-inverse-fg inline-flex h-12 items-center justify-center rounded-(--radius-control) px-6 ' +
+  'bg-inverse-surface text-inverse-fg inline-flex h-12 cursor-pointer items-center justify-center rounded-(--radius-control) px-6 ' +
   'text-[0.72rem] font-semibold tracking-[0.18em] uppercase transition-opacity hover:opacity-85';
 export const SECONDARY_SUBMIT =
-  'border-fg/25 text-fg hover:border-fg inline-flex h-12 items-center justify-center rounded-(--radius-control) border px-6 ' +
+  'border-fg/25 text-fg hover:border-fg inline-flex h-12 cursor-pointer items-center justify-center rounded-(--radius-control) border px-6 ' +
   'text-[0.72rem] font-semibold tracking-[0.18em] uppercase transition-colors';
+
+export type SearchParams = Promise<Record<string, string | string[] | undefined>>;
+
+/** First value of a query parameter, length-capped, for `?notice=` / `?error=`. */
+export function param(params: Record<string, string | string[] | undefined>, name: string): string | null {
+  const value = params[name];
+  const first = Array.isArray(value) ? value[0] : value;
+  return first ? first.slice(0, 300) : null;
+}
+
+export function Messages({ notice, error }: { notice?: string | null; error?: string | null }) {
+  return (
+    <>
+      {notice && (
+        <p role="status" data-testid="account-notice" className="border-fg text-fg mb-6 border-l-2 py-1 pl-4 text-left text-sm">
+          {notice}
+        </p>
+      )}
+      {error && (
+        <p role="alert" data-testid="account-error" className="border-signal text-signal mb-6 border-l-2 py-1 pl-4 text-left text-sm">
+          {error}
+        </p>
+      )}
+    </>
+  );
+}
 
 interface ShellProps {
   title: string;
   /** Path of the current page, used to mark the active nav item. */
   current: string;
   signedIn: boolean;
-  /** Success message carried back from a form post. */
   notice?: string | null;
   error?: string | null;
   children: ReactNode;
@@ -74,9 +96,10 @@ export function AccountShell({ title, current, signedIn, notice, error, children
             })}
             {signedIn && (
               <li>
-                <form action="/api/auth/customer/logout" method="post">
+                <form action={logoutAction}>
                   <button
                     type="submit"
+                    data-testid="account-sign-out"
                     className="text-fg-muted hover:text-fg cursor-pointer text-[0.72rem] font-semibold tracking-[0.16em] uppercase"
                   >
                     Sign out
@@ -88,16 +111,7 @@ export function AccountShell({ title, current, signedIn, notice, error, children
         </nav>
 
         <div className="min-w-0">
-          {notice && (
-            <p role="status" className="border-fg text-fg mb-6 border-l-2 py-1 pl-4 text-sm">
-              {notice}
-            </p>
-          )}
-          {error && (
-            <p role="alert" className="border-signal text-signal mb-6 border-l-2 py-1 pl-4 text-sm">
-              {error}
-            </p>
-          )}
+          <Messages notice={notice} error={error} />
           {children}
         </div>
       </div>
@@ -105,75 +119,33 @@ export function AccountShell({ title, current, signedIn, notice, error, children
   );
 }
 
-/** Messages for the `?error=` codes the sign-in routes redirect with. */
-const AUTH_ERRORS: Record<string, string> = {
-  state: 'That sign-in attempt could not be verified. Please try again.',
-  code: 'That sign-in attempt could not be completed. Please try again.',
-  token: 'That sign-in attempt could not be completed. Please try again.',
-  signin: 'Sign-in did not complete. Please try again.',
-  cancelled: 'Sign-in was cancelled.',
-  expired: 'Your session ended. Sign in again to continue.',
-  rate_limited: 'Too many sign-in attempts. Try again in a minute.',
-  unavailable: 'Sign-in is unavailable right now.',
-};
-
-export function authErrorMessage(code: string | undefined): string | null {
-  if (!code) return null;
-  // Form handlers send a full sentence; sign-in routes send a short code.
-  return AUTH_ERRORS[code] ?? (/\s/.test(code) ? code.slice(0, 300) : null);
-}
-
-interface SignedOutProps {
-  /** True when this storefront runs its own Shopify OAuth sign-in. */
-  configured: boolean;
-  /** Shopify-hosted account page, used when it does not. */
-  hostedAccountUrl: string;
-  returnTo?: string;
-}
-
-/**
- * The signed-out panel. One button, and it always leads to Shopify's own login:
- * either through this site's OAuth flow, or straight to the store's hosted
- * account page. No email or password field is rendered here.
- */
-export function SignedOutPanel({ configured, hostedAccountUrl, returnTo = '/account' }: SignedOutProps) {
+/** Centred card for sign-in, registration and password pages. */
+export function AuthCard({
+  title,
+  intro,
+  notice,
+  error,
+  children,
+  footer,
+}: {
+  title: string;
+  intro?: string;
+  notice?: string | null;
+  error?: string | null;
+  children: ReactNode;
+  footer?: ReactNode;
+}) {
   return (
-    <div className="border-line border p-8 text-center md:p-12" data-testid="account-signed-out">
-      <p className="font-display text-fg text-2xl">Sign in to your account</p>
-      <p className="text-fg-muted mx-auto mt-4 max-w-md text-sm leading-relaxed">
-        See your orders and tracking, manage addresses and ask for help with an order. Sign-in is
-        handled securely by Shopify with a one-time code sent to your email — there is no password
-        to remember.
-      </p>
-
-      <div className="mt-8 flex flex-wrap justify-center gap-3">
-        {/* A plain anchor: this is a full navigation to Shopify, not a client route. */}
-        <a
-          href={
-            configured
-              ? `/api/auth/customer/login?returnTo=${encodeURIComponent(returnTo)}`
-              : hostedAccountUrl
-          }
-          rel="noopener"
-          data-testid="account-sign-in"
-          className="bg-inverse-surface text-inverse-fg inline-flex h-12 items-center justify-center rounded-(--radius-control) px-6 text-[0.72rem] font-semibold tracking-[0.18em] uppercase transition-opacity hover:opacity-85"
-        >
-          Sign in with Shopify
-        </a>
-        <ButtonLink href="/shop" variant="secondary" size="md">
-          Continue shopping
-        </ButtonLink>
+    <div className="edge pt-14 pb-(--spacing-section) md:pt-20">
+      <div className="mx-auto max-w-md text-center">
+        <h1 className="font-display text-headline text-fg">{title}</h1>
+        {intro && <p className="text-fg-muted mt-4 text-sm leading-relaxed">{intro}</p>}
+        <div className="mt-10 text-left">
+          <Messages notice={notice} error={error} />
+          {children}
+        </div>
+        {footer && <div className="text-fg-muted mt-8 space-y-2 text-sm">{footer}</div>}
       </div>
-
-      {!configured && (
-        <p className="text-fg-muted mx-auto mt-6 max-w-md text-xs leading-relaxed">
-          This opens our store’s secure account page, hosted by Shopify, where your orders and
-          tracking live.
-        </p>
-      )}
-      <p className="text-fg-muted mx-auto mt-6 max-w-md text-xs leading-relaxed">
-        You don’t need an account to shop — checkout works as a guest.
-      </p>
     </div>
   );
 }

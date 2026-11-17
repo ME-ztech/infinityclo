@@ -43,7 +43,6 @@ describe('POST /api/newsletter', () => {
       status: 'subscribed',
       consentText: NEWSLETTER_CONSENT_TEXT,
       source: 'footer',
-      syncedToShopifyAt: null,
     });
     expect(Date.parse(subscriber!.subscribedAt)).not.toBeNaN();
   });
@@ -86,73 +85,6 @@ describe('POST /api/newsletter', () => {
   it('rejects malformed JSON', async () => {
     expect((await post('{not json')).status).toBe(400);
     expect((await post('[]')).status).toBe(400);
-  });
-});
-
-describe('Shopify consent sync', () => {
-  beforeEach(() => {
-    process.env.SHOPIFY_ADMIN_ACCESS_TOKEN = 'shpat_test';
-  });
-
-  it('creates the Shopify customer with SUBSCRIBED consent and marks the record synced', async () => {
-    const bodies: Array<{ query: string; variables: Record<string, any> }> = [];
-    const fetcher = (async (_url: string, init?: RequestInit) => {
-      const body = JSON.parse(String(init?.body));
-      bodies.push(body);
-      if (body.query.includes('FindCustomerByEmail')) return Response.json({ data: { customers: { nodes: [] } } });
-      return Response.json({ data: { customerCreate: { customer: { id: 'gid://shopify/Customer/1' }, userErrors: [] } } });
-    }) as unknown as typeof fetch;
-
-    const result = await signUpForNewsletter('fan@example.com', 'footer', fetcher);
-    expect(result.shopify).toBe('synced');
-    expect(bodies[1]!.variables.input).toMatchObject({
-      email: 'fan@example.com',
-      emailMarketingConsent: { marketingState: 'SUBSCRIBED', marketingOptInLevel: 'SINGLE_OPT_IN' },
-    });
-    expect(Date.parse(bodies[1]!.variables.input.emailMarketingConsent.consentUpdatedAt)).not.toBeNaN();
-    expect((await listSubscribers())[0]!.syncedToShopifyAt).not.toBeNull();
-  });
-
-  it('updates consent on an existing Shopify customer instead of creating a duplicate', async () => {
-    const queries: string[] = [];
-    const fetcher = (async (_url: string, init?: RequestInit) => {
-      const body = JSON.parse(String(init?.body));
-      queries.push(body.query);
-      if (body.query.includes('FindCustomerByEmail')) return Response.json({ data: { customers: { nodes: [{ id: 'gid://shopify/Customer/9' }] } } });
-      expect(body.variables.input.customerId).toBe('gid://shopify/Customer/9');
-      return Response.json({ data: { customerEmailMarketingConsentUpdate: { customer: { id: 'gid://shopify/Customer/9' }, userErrors: [] } } });
-    }) as unknown as typeof fetch;
-
-    expect((await signUpForNewsletter('fan@example.com', 'footer', fetcher)).shopify).toBe('synced');
-    expect(queries.some((query) => query.includes('customerCreate'))).toBe(false);
-  });
-
-  it('keeps the local consent record when Shopify is unreachable', async () => {
-    vi.spyOn(console, 'error').mockImplementation(() => undefined);
-    const fetcher = (async () => new Response('', { status: 503 })) as unknown as typeof fetch;
-    const result = await signUpForNewsletter('fan@example.com', 'footer', fetcher);
-    expect(result).toMatchObject({ created: true, shopify: 'failed' });
-    const [subscriber] = await listSubscribers();
-    expect(subscriber).toMatchObject({ email: 'fan@example.com', status: 'subscribed', syncedToShopifyAt: null });
-  });
-
-  it('keeps the local consent record when Shopify returns userErrors', async () => {
-    vi.spyOn(console, 'error').mockImplementation(() => undefined);
-    const fetcher = (async (_url: string, init?: RequestInit) => {
-      const body = JSON.parse(String(init?.body));
-      if (body.query.includes('FindCustomerByEmail')) return Response.json({ data: { customers: { nodes: [] } } });
-      return Response.json({ data: { customerCreate: { customer: null, userErrors: [{ field: ['email'], message: 'Email is invalid' }] } } });
-    }) as unknown as typeof fetch;
-    expect((await signUpForNewsletter('fan@example.com', 'footer', fetcher)).shopify).toBe('failed');
-    expect(await listSubscribers()).toHaveLength(1);
-  });
-
-  it('still answers the visitor with success when the sync fails', async () => {
-    vi.spyOn(console, 'error').mockImplementation(() => undefined);
-    vi.stubGlobal('fetch', (async () => new Response('', { status: 401 })) as unknown as typeof fetch);
-    const response = await post({ email: 'fan@example.com', consent: true });
-    expect(response.status).toBe(200);
-    expect(await listSubscribers()).toHaveLength(1);
   });
 });
 

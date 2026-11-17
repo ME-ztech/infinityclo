@@ -23,7 +23,7 @@ export interface AuditEntry {
   readonly target: string;
   readonly outcome: 'ok' | 'denied' | 'failed';
   readonly detail: string;
-  readonly mode: 'shopify' | 'sandbox' | 'local';
+  readonly mode: 'native' | 'sandbox' | 'local';
 }
 
 export async function audit(entry: Omit<AuditEntry, 'id' | 'at'>): Promise<void> {

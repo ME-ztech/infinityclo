@@ -376,7 +376,7 @@ export async function saveAddress(
     }
     const [created] = await tx
       .insert(customerAddresses)
-      .values({ id: newId('adr'), customerId, ...parsed.address, isDefault })
+      .values({ id: newId('adr'), customerId, ...fields, isDefault })
       .returning();
     return { address: created!, problems: [] };
   });

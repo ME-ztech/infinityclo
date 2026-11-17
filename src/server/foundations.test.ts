@@ -9,7 +9,6 @@ import { defaultContent, normaliseContent, safeHref, safeImageUrl } from './cms'
 import { joinWaitlist, subscribe, unsubscribe, listSubscribers, DROP_TRANSITIONS } from './records';
 import {
   hashPassword,
-  hmacSha256Base64,
   isSameOrigin,
   maskEmail,
   normaliseEmail,
@@ -19,8 +18,6 @@ import {
   unseal,
   verifyPassword,
 } from './security';
-import { ShopifyError, assertNoUserErrors, storefrontQuery } from './shopify/client';
-import { processWebhook, verifyWebhookSignature } from './shopify/webhooks';
 import { FileStore, KvStore, MemoryStore, setStoreForTesting } from './store';
 
 beforeEach(() => {
@@ -159,110 +156,6 @@ describe('document stores', () => {
     expect(await store.putIfAbsent('offers', 'a', { n: 3 })).toBe(false);
     await store.put('offers', 'c', { n: 3 });
     expect(calls.at(-1)).toEqual(['HSET', 'infnity:offers', 'c', '{"n":3}']);
-  });
-});
-
-describe('webhooks', () => {
-  const secret = 'whsec_test';
-  const body = JSON.stringify({ id: 1001, name: '#1001' });
-  const signed = (raw: string) => hmacSha256Base64(secret, raw);
-  const delivery = (overrides: Partial<Parameters<typeof processWebhook>[0]> = {}) => ({
-    rawBody: body,
-    signature: signed(body),
-    topic: 'orders/paid',
-    webhookId: 'wh_1',
-    shopDomain: 'example.myshopify.com',
-    ...overrides,
-  });
-
-  it('verifies the HMAC of the raw body', () => {
-    expect(verifyWebhookSignature(body, signed(body), secret)).toBe(true);
-    expect(verifyWebhookSignature(body + ' ', signed(body), secret)).toBe(false);
-    expect(verifyWebhookSignature(body, signed(body), null)).toBe(false);
-    expect(verifyWebhookSignature(body, null, secret)).toBe(false);
-  });
-
-  it('refuses an unsigned or wrongly signed delivery without running the handler', async () => {
-    const handler = vi.fn();
-    const outcome = await processWebhook(delivery({ signature: 'AAAA' }), { 'orders/paid': handler }, secret);
-    expect(outcome).toEqual({ status: 401, result: 'invalid_signature' });
-    expect(handler).not.toHaveBeenCalled();
-  });
-
-  it('processes a delivery once and acknowledges a replay without re-running it', async () => {
-    const handler = vi.fn();
-    expect(await processWebhook(delivery(), { 'orders/paid': handler }, secret)).toEqual({
-      status: 200,
-      result: 'processed',
-    });
-    expect(await processWebhook(delivery(), { 'orders/paid': handler }, secret)).toEqual({
-      status: 200,
-      result: 'duplicate',
-    });
-    expect(handler).toHaveBeenCalledTimes(1);
-  });
-
-  it('returns 500 when the handler fails, then processes the retry', async () => {
-    const handler = vi.fn().mockRejectedValueOnce(new Error('downstream down')).mockResolvedValue(undefined);
-    const quiet = vi.spyOn(console, 'error').mockImplementation(() => undefined);
-    expect((await processWebhook(delivery(), { 'orders/paid': handler }, secret)).status).toBe(500);
-    expect(await processWebhook(delivery(), { 'orders/paid': handler }, secret)).toEqual({
-      status: 200,
-      result: 'processed',
-    });
-    expect(handler).toHaveBeenCalledTimes(2);
-    quiet.mockRestore();
-  });
-
-  it('acknowledges topics it has no handler for', async () => {
-    expect(await processWebhook(delivery({ topic: 'themes/publish' }), {}, secret)).toEqual({
-      status: 200,
-      result: 'ignored',
-    });
-  });
-
-  it('rejects a delivery with no id or unparseable body', async () => {
-    expect((await processWebhook(delivery({ webhookId: null }), {}, secret)).status).toBe(400);
-    expect(
-      (await processWebhook(delivery({ rawBody: '{nope', signature: signed('{nope') }), {}, secret)).status,
-    ).toBe(400);
-  });
-});
-
-describe('shopify client', () => {
-  const ok = (data: unknown) => new Response(JSON.stringify({ data }), { status: 200 });
-
-  it('retries a throttled request and then succeeds', async () => {
-    const fetcher = vi
-      .fn()
-      .mockResolvedValueOnce(new Response('', { status: 429, headers: { 'retry-after': '0' } }))
-      .mockResolvedValueOnce(ok({ shop: { name: 'INFNITY' } })) as unknown as typeof fetch;
-    const data = await storefrontQuery<{ shop: { name: string } }>('{ shop { name } }', { fetcher });
-    expect(data.shop.name).toBe('INFNITY');
-    expect(fetcher).toHaveBeenCalledTimes(2);
-  });
-
-  it('does not retry rejected credentials', async () => {
-    const fetcher = vi.fn().mockResolvedValue(new Response('', { status: 401 })) as unknown as typeof fetch;
-    await expect(storefrontQuery('{ shop { name } }', { fetcher })).rejects.toMatchObject({
-      code: 'unauthorized',
-    });
-    expect(fetcher).toHaveBeenCalledTimes(1);
-  });
-
-  it('gives up after bounded attempts on a failing upstream', async () => {
-    const fetcher = vi.fn().mockResolvedValue(new Response('', { status: 503 })) as unknown as typeof fetch;
-    await expect(storefrontQuery('{ shop { name } }', { fetcher, maxAttempts: 2 })).rejects.toBeInstanceOf(
-      ShopifyError,
-    );
-    expect(fetcher).toHaveBeenCalledTimes(2);
-  });
-
-  it('turns mutation userErrors into a thrown error', () => {
-    expect(() => assertNoUserErrors([])).not.toThrow();
-    expect(() => assertNoUserErrors([{ field: ['price'], message: 'Price is invalid' }])).toThrow(
-      'Price is invalid',
-    );
   });
 });
 

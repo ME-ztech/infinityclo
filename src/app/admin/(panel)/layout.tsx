@@ -40,16 +40,21 @@ function ModeBanner() {
       </div>
     );
   }
-  if (mode === 'shopify') {
-    return (
-      <div role="status" data-testid="mode-banner" data-mode="shopify" className={`${bannerBase} bg-red-700 text-white`}>
-        Live — connected to {config.shopify.storeDomain}
+  if (mode === 'native') {
+    const environment = config.environment;
+    return environment === 'production' ? (
+      <div role="status" data-testid="mode-banner" data-mode="native" className={`${bannerBase} bg-red-700 text-white`}>
+        Live — INFNITY database. Changes are visible to customers.
+      </div>
+    ) : (
+      <div role="status" data-testid="mode-banner" data-mode="native" className={`${bannerBase} bg-sky-700 text-white`}>
+        {environment} — INFNITY database for this environment, not the live store
       </div>
     );
   }
   return (
     <div role="status" data-testid="mode-banner" data-mode="disconnected" className={`${bannerBase} bg-neutral-300 text-neutral-950`}>
-      Shopify Admin API not connected — commerce modules are disabled
+      Commerce database not configured — commerce modules are disabled
     </div>
   );
 }
