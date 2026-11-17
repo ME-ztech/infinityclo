@@ -7,9 +7,10 @@ import { SITE_URL } from '@/lib/site';
 const STATIC_ROUTES: ReadonlyArray<{ path: string; priority: number }> = [
   { path: '/', priority: 1 },
   { path: '/shop', priority: 0.9 },
-  { path: '/collections', priority: 0.8 },
-  { path: '/vault', priority: 0.7 },
-  { path: '/troop', priority: 0.7 },
+  { path: '/styled-by-you', priority: 0.7 },
+  { path: '/lookbook', priority: 0.6 },
+  { path: '/coming-soon', priority: 0.6 },
+  { path: '/size-guide', priority: 0.5 },
   { path: '/about', priority: 0.6 },
   { path: '/contact', priority: 0.5 },
   { path: '/faq', priority: 0.5 },
@@ -17,6 +18,7 @@ const STATIC_ROUTES: ReadonlyArray<{ path: string; priority: number }> = [
   { path: '/returns', priority: 0.4 },
   { path: '/privacy', priority: 0.3 },
   { path: '/terms', priority: 0.3 },
+  { path: '/contact-information', priority: 0.3 },
 ];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

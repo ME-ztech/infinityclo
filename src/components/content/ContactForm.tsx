@@ -1,134 +1,127 @@
 'use client';
 
-/**
- * Contact form.
- *
- * The form and its validation are real so the surface can be reviewed and so
- * Phase 2 only has to add a transport. What it deliberately does not do is
- * claim delivery: with no mail provider connected, submitting reports plainly
- * that the message was not sent. A "thanks, we'll be in touch" confirmation
- * here would be a straightforward lie to a customer waiting on a reply.
- */
 import { useId, useState } from 'react';
 
 import { Button } from '@/components/ui/Button';
+import { isValidEmail } from '@/domain/consent';
 import { cn } from '@/lib/cn';
 
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const KINDS = [
+  { value: 'contact', label: 'General question' },
+  { value: 'order_help', label: 'Help with an order' },
+  { value: 'return', label: 'Start a return' },
+  { value: 'exchange', label: 'Exchange a size' },
+] as const;
 
-interface Errors {
-  name?: string;
-  email?: string;
-  message?: string;
-}
+/**
+ * Contact form → staff inbox (Admin → Inbox). Return and exchange requests are
+ * reviewed by a person against the published refund policy; nothing is
+ * refunded automatically.
+ */
+export function ContactForm({ defaultKind = 'contact', defaultOrder = '' }: { defaultKind?: string; defaultOrder?: string }) {
+  const id = useId();
+  const [values, setValues] = useState({ kind: defaultKind, name: '', email: '', orderNumber: defaultOrder, message: '', website: '' });
+  const [state, setState] = useState<{ status: 'idle' | 'sending' | 'sent' | 'error'; message?: string }>({ status: 'idle' });
+  const needsOrder = values.kind !== 'contact';
 
-export function ContactForm() {
-  const baseId = useId();
-  const [values, setValues] = useState({ name: '', email: '', message: '' });
-  const [errors, setErrors] = useState<Errors>({});
-  const [isBlocked, setIsBlocked] = useState(false);
-
-  function validate(): Errors {
-    const next: Errors = {};
-    if (!values.name.trim()) next.name = 'Enter your name.';
-    if (!EMAIL_PATTERN.test(values.email.trim())) next.email = 'Enter a valid email address.';
-    if (values.message.trim().length < 10) next.message = 'Message must be at least 10 characters.';
-    return next;
+  function set<K extends keyof typeof values>(key: K, value: string) {
+    setValues((current) => ({ ...current, [key]: value }));
+    if (state.status === 'error') setState({ status: 'idle' });
   }
 
-  function onSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const found = validate();
-    setErrors(found);
-    setIsBlocked(Object.keys(found).length === 0);
+    if (!values.name.trim()) return setState({ status: 'error', message: 'Add your name.' });
+    if (!isValidEmail(values.email.trim())) return setState({ status: 'error', message: 'Enter a valid email address.' });
+    if (needsOrder && !values.orderNumber.trim()) return setState({ status: 'error', message: 'Add your order number (e.g. #1042).' });
+    if (values.message.trim().length < 10) return setState({ status: 'error', message: 'Tell us a little more (10 characters or more).' });
+    setState({ status: 'sending' });
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify(values),
+      });
+      const data = (await response.json()) as { message?: string; error?: string };
+      if (!response.ok) return setState({ status: 'error', message: data.error ?? 'Your message could not be sent.' });
+      setState({ status: 'sent', message: data.message });
+    } catch {
+      setState({ status: 'error', message: 'Network error. Try again.' });
+    }
   }
 
-  const fields = [
-    { key: 'name' as const, label: 'Name', type: 'text', autoComplete: 'name' },
-    { key: 'email' as const, label: 'Email', type: 'email', autoComplete: 'email' },
-  ];
+  if (state.status === 'sent') {
+    return (
+      <div role="status" data-testid="contact-sent" className="border-line border p-8 text-center">
+        <p className="font-display text-2xl">Message received</p>
+        <p className="text-fg-muted mt-3 text-sm">{state.message}</p>
+      </div>
+    );
+  }
 
+  const field = 'border-field focus:border-fg text-fg h-12 w-full border bg-transparent px-4 text-sm outline-none';
   return (
-    <form onSubmit={onSubmit} noValidate data-testid="contact-form" className="flex flex-col gap-6">
-      {fields.map((field) => (
-        <div key={field.key}>
-          <label
-            htmlFor={`${baseId}-${field.key}`}
-            className="text-fg-faint mb-2 block text-[0.68rem] font-semibold tracking-[0.16em] uppercase"
-          >
-            {field.label}
+    <form onSubmit={onSubmit} noValidate data-testid="contact-form" className="flex flex-col gap-5">
+      <div>
+        <label htmlFor={`${id}-kind`} className="text-fg-faint mb-2 block text-[0.66rem] font-semibold tracking-[0.2em] uppercase">
+          What do you need?
+        </label>
+        <select id={`${id}-kind`} value={values.kind} onChange={(event) => set('kind', event.target.value)} className={field}>
+          {KINDS.map((kind) => (
+            <option key={kind.value} value={kind.value}>
+              {kind.label}
+            </option>
+          ))}
+        </select>
+      </div>
+      {(
+        [
+          ['name', 'Name', 'text', 'name'],
+          ['email', 'Email', 'email', 'email'],
+        ] as const
+      ).map(([key, label, type, autoComplete]) => (
+        <div key={key}>
+          <label htmlFor={`${id}-${key}`} className="text-fg-faint mb-2 block text-[0.66rem] font-semibold tracking-[0.2em] uppercase">
+            {label}
           </label>
-          <input
-            id={`${baseId}-${field.key}`}
-            type={field.type}
-            autoComplete={field.autoComplete}
-            value={values[field.key]}
-            onChange={(event) => {
-              setValues((current) => ({ ...current, [field.key]: event.target.value }));
-              setIsBlocked(false);
-            }}
-            aria-invalid={Boolean(errors[field.key])}
-            aria-describedby={errors[field.key] ? `${baseId}-${field.key}-error` : undefined}
-            className={cn(
-              'text-fg-muted h-12 w-full border bg-transparent px-4 text-sm transition-colors outline-none',
-              errors[field.key] ? 'border-signal' : 'border-field focus:border-fg',
-            )}
-          />
-          {errors[field.key] && (
-            <p
-              id={`${baseId}-${field.key}-error`}
-              role="alert"
-              className="text-signal mt-2 text-xs"
-            >
-              {errors[field.key]}
+          <input id={`${id}-${key}`} type={type} autoComplete={autoComplete} value={values[key]} onChange={(event) => set(key, event.target.value)} className={field} />
+        </div>
+      ))}
+      {needsOrder && (
+        <div>
+          <label htmlFor={`${id}-order`} className="text-fg-faint mb-2 block text-[0.66rem] font-semibold tracking-[0.2em] uppercase">
+            Order number
+          </label>
+          <input id={`${id}-order`} value={values.orderNumber} onChange={(event) => set('orderNumber', event.target.value)} placeholder="#1042" className={field} />
+          {(values.kind === 'return' || values.kind === 'exchange') && (
+            <p className="text-fg-faint mt-2 text-xs leading-relaxed">
+              Returns are accepted within 10 days of delivery for unworn items with tags, in original packaging; sale items are final. We’ll reply
+              with next steps — please don’t send anything back before we do.
             </p>
           )}
         </div>
-      ))}
-
+      )}
       <div>
-        <label
-          htmlFor={`${baseId}-message`}
-          className="text-fg-faint mb-2 block text-[0.68rem] font-semibold tracking-[0.16em] uppercase"
-        >
+        <label htmlFor={`${id}-message`} className="text-fg-faint mb-2 block text-[0.66rem] font-semibold tracking-[0.2em] uppercase">
           Message
         </label>
-        <textarea
-          id={`${baseId}-message`}
-          rows={6}
-          value={values.message}
-          onChange={(event) => {
-            setValues((current) => ({ ...current, message: event.target.value }));
-            setIsBlocked(false);
-          }}
-          aria-invalid={Boolean(errors.message)}
-          aria-describedby={errors.message ? `${baseId}-message-error` : undefined}
-          className={cn(
-            'text-fg-muted w-full resize-y border bg-transparent p-4 text-sm transition-colors outline-none',
-            errors.message ? 'border-signal' : 'border-field focus:border-fg',
-          )}
-        />
-        {errors.message && (
-          <p id={`${baseId}-message-error`} role="alert" className="text-signal mt-2 text-xs">
-            {errors.message}
-          </p>
-        )}
+        <textarea id={`${id}-message`} rows={5} value={values.message} onChange={(event) => set('message', event.target.value)} className={cn(field, 'h-auto py-3')} />
       </div>
-
-      <Button type="submit" variant="primary" size="lg" fullWidth>
-        Send
-      </Button>
-
-      {isBlocked && (
-        <p
-          role="status"
-          data-testid="contact-blocked"
-          className="border-line text-fg-muted border-l-2 py-1 pl-4 text-sm leading-relaxed"
-        >
-          Your message was not sent. Messaging is not connected in this preview build, so there is
-          nowhere for it to go yet — nothing has been stored.
+      {/* Honeypot for bots; hidden from people and assistive technology. */}
+      <div aria-hidden className="absolute -left-[9999px]">
+        <label>
+          Website
+          <input tabIndex={-1} autoComplete="off" value={values.website} onChange={(event) => set('website', event.target.value)} />
+        </label>
+      </div>
+      {state.status === 'error' && (
+        <p role="alert" className="text-signal text-sm">
+          {state.message}
         </p>
       )}
+      <Button type="submit" size="lg" disabled={state.status === 'sending'}>
+        {state.status === 'sending' ? 'Sending…' : 'Send message'}
+      </Button>
     </form>
   );
 }

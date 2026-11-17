@@ -83,9 +83,9 @@ export function Hero({ content }: { content: HeroContent }) {
       <div
         aria-hidden
         className={cn(
-          'pointer-events-none absolute inset-x-0 bottom-0 h-[62%] transition-colors duration-700',
+          'pointer-events-none absolute inset-x-0 bottom-0 h-[46%] transition-colors duration-700 md:h-[60%]',
           tone === 'light'
-            ? 'bg-gradient-to-t from-white via-white/75 to-transparent md:from-white/95 md:via-white/40'
+            ? 'bg-gradient-to-t from-white via-white/70 to-transparent md:from-white/95 md:via-white/40'
             : 'bg-gradient-to-t from-black/85 via-black/45 to-transparent',
         )}
       />
@@ -95,17 +95,17 @@ export function Hero({ content }: { content: HeroContent }) {
 
       <div
         className={cn(
-          'edge absolute inset-x-0 bottom-0 flex items-end justify-between gap-6 pb-8 md:pb-12',
+          'edge absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 pb-6 md:gap-6 md:pb-12',
           tone === 'light' ? 'text-ink' : 'text-paper',
         )}
       >
         <div className="max-w-xl">
-          <p className="font-display text-[clamp(2.4rem,9vw,5.6rem)] leading-[0.88]" data-testid="hero-slogan">
+          <p className="font-display text-[clamp(1.9rem,8vw,5.6rem)] leading-[0.88]" data-testid="hero-slogan">
             {content.slogan}
           </p>
 
           {/* The stacked statements: each one is a slide; the lit one is current. */}
-          <ul className="mt-5 flex flex-col gap-0.5" aria-label="Choose a slide">
+          <ul className="mt-3 flex flex-col md:mt-5 md:gap-0.5" aria-label="Choose a slide">
             {slides.map((slide, index) => (
               <li key={slide.id}>
                 <button
@@ -114,7 +114,7 @@ export function Hero({ content }: { content: HeroContent }) {
                   aria-current={index === active ? 'true' : undefined}
                   aria-label={`Slide ${index + 1} of ${slides.length}: ${slide.label}`}
                   className={cn(
-                    'font-display min-h-8 text-left text-[clamp(1rem,3.6vw,1.45rem)] leading-tight transition-opacity duration-300',
+                    'font-display min-h-7 text-left text-[0.92rem] leading-tight transition-opacity duration-300 md:min-h-8 md:text-[1.45rem]',
                     index === active ? 'opacity-100' : 'opacity-35 hover:opacity-70',
                   )}
                 >
@@ -124,16 +124,16 @@ export function Hero({ content }: { content: HeroContent }) {
             ))}
           </ul>
 
-          <p className="mt-4 max-w-sm text-sm leading-snug font-medium opacity-80" aria-live={isPlaying ? 'off' : 'polite'}>
+          <p className="mt-4 hidden max-w-sm text-sm leading-snug font-medium opacity-80 md:block" aria-live={isPlaying ? 'off' : 'polite'}>
             {current.headline}
           </p>
 
-          <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
+          <div className="mt-4 flex flex-wrap items-center gap-x-5 gap-y-1 md:mt-6 md:gap-x-6 md:gap-y-3">
             <Link
               href={current.ctaHref}
               data-testid="hero-cta"
               className={cn(
-                'font-display inline-flex h-13 min-w-40 items-center justify-center px-8 text-[0.82rem] transition-colors',
+                'font-display inline-flex h-12 min-w-36 items-center justify-center px-7 text-[0.8rem] transition-colors md:h-13 md:min-w-40 md:px-8',
                 tone === 'light' ? 'bg-ink text-paper hover:bg-signal' : 'bg-paper text-ink hover:bg-signal hover:text-paper',
               )}
             >
@@ -156,7 +156,7 @@ export function Hero({ content }: { content: HeroContent }) {
             aria-label={isPaused ? 'Play slideshow' : 'Pause slideshow'}
             data-testid="hero-pause"
             className={cn(
-              'font-display flex h-12 min-w-24 shrink-0 items-center justify-center rounded-full border px-5 text-[0.72rem] transition-colors',
+              'font-display flex h-11 min-w-20 shrink-0 items-center justify-center rounded-full border px-4 text-[0.7rem] transition-colors md:h-12 md:min-w-24 md:px-5',
               tone === 'light' ? 'border-ink/70 hover:bg-ink hover:text-paper' : 'border-paper/70 hover:bg-paper hover:text-ink',
             )}
           >

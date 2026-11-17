@@ -20,12 +20,12 @@ export function BrandMark({ className, label }: { className?: string; label?: st
   return <span className={cn('brand-mark', className)} role={label ? 'img' : undefined} aria-label={label} aria-hidden={label ? undefined : true} />;
 }
 
-/** Mark + wordmark lockup used in the header and footer. */
+/** Mark + wordmark lockup used in the header and footer; scales with the viewport. */
 export function BrandLogo({ className, compact = false }: { className?: string; compact?: boolean }) {
   return (
-    <span className={cn('inline-flex items-center gap-2.5', className)}>
-      <BrandMark className={compact ? 'h-6' : 'h-7 md:h-8'} />
-      <Wordmark className={compact ? 'text-base' : 'text-lg md:text-xl'} />
+    <span className={cn('inline-flex items-center gap-2 md:gap-2.5', className)}>
+      <BrandMark className={compact ? 'h-6' : 'h-6 md:h-8'} />
+      <Wordmark className={compact ? 'text-base' : 'text-base md:text-xl'} />
     </span>
   );
 }

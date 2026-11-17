@@ -110,8 +110,7 @@ export function Header() {
 
             {/* Centre: the owner's mark and wordmark */}
             <Link href="/" aria-label="INFNITY — home" className="justify-self-center">
-              <BrandLogo compact className="md:hidden" />
-              <BrandLogo className="hidden md:inline-flex" />
+              <BrandLogo />
             </Link>
 
             {/* Right: search, account, cart */}

@@ -39,6 +39,8 @@ const nextConfig: NextConfig = {
       { source: '/collections/all', destination: '/shop', permanent: true },
       { source: '/pages/customer-gallery', destination: '/styled-by-you', permanent: true },
       { source: '/troop', destination: '/styled-by-you', permanent: true },
+      { source: '/vault', destination: '/shop', permanent: true },
+      { source: '/collections', destination: '/shop', permanent: false },
       { source: '/pages/contact', destination: '/contact', permanent: true },
       { source: '/pages/jointhetroop', destination: '/#newsletter', permanent: true },
       { source: '/pages/bottom-size-chart', destination: '/size-guide', permanent: true },

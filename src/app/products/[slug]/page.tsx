@@ -6,8 +6,7 @@ import { ProductDetailView } from '@/components/product/ProductDetailView';
 import { ProductRack } from '@/components/product/ProductRack';
 import { Section, SectionHeader } from '@/components/layout/Section';
 import { TextLink } from '@/components/ui/Button';
-import { TroopGallery } from '@/components/troop/TroopGallery';
-import { catalogRepository, contentRepository } from '@/data';
+import { catalogRepository } from '@/data';
 import { fromPrice, isSoldOut, primaryMedia, productAvailability, relatedProducts } from '@/domain/product';
 import { previewOffers } from '@/domain/promotions';
 import type { Product } from '@/domain/types';
@@ -56,9 +55,9 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
   if (!product) notFound();
 
-  const [{ products: catalog }, ugc, sizeGuide, promotions, settings] = await Promise.all([
+  const [{ products: catalog }, , sizeGuide, promotions, settings] = await Promise.all([
     catalogRepository.listProducts(),
-    contentRepository.getUGCForProduct(product.slug),
+    Promise.resolve(null),
     product.sizeGuideId ? catalogRepository.getSizeGuide(product.sizeGuideId) : null,
     livePromotions(),
     getSettings(),
@@ -137,18 +136,6 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         <ProductDetailView product={product} sizeGuide={sizeGuide} offerMessages={offerMessages} siblings={siblings} />
       </Section>
 
-      {ugc.length > 0 && (
-        <Section surface="paper" aria-labelledby="worn-heading">
-          <SectionHeader
-            id="worn-heading"
-            eyebrow="The Troop"
-            title="Worn by the Troop"
-            action={<TextLink href="/styled-by-you">See more</TextLink>}
-            className="mb-10 md:mb-14"
-          />
-          <TroopGallery entries={ugc} />
-        </Section>
-      )}
 
       {related.length > 0 && (
         <Section surface="paper" aria-labelledby="related-heading">
