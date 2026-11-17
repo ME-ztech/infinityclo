@@ -1,127 +1,71 @@
-# INFNITY — Digital Flagship Storefront
+# INFNITY — storefront and back office
 
-A ground-up commerce storefront for INFNITY. Next.js 16, React 19, TypeScript
-strict, Tailwind v4. Frontend-first by design: the storefront is complete and
-deployable, with typed seams where the commerce backend will land.
+The headless storefront and branded back office for **Infnity.clo**
+(infinityclo.ca). Shopify stays the system of record for the catalogue,
+inventory, customers, orders, checkout, payments, taxes and fulfilment; this
+app is the customer-facing site and the owner's operating console on top of it.
 
-> **Preview build.** No payment provider is connected. Checkout is disabled, no
-> order can be placed, and the deployed site says so on every page.
+Next.js 16 · React 19 · TypeScript strict · Tailwind 4 · Drizzle (Postgres / PGlite) · Vitest · Playwright.
 
-> **The committed catalog is empty.** The development environment cannot reach
-> the legacy store, so nothing could be imported there — and nothing was
-> invented to stand in for it. A `prebuild` step imports the real catalog and
-> photography during deployment, where the source _is_ reachable, and falls back
-> to honest empty states if it is not. See
-> [`docs/LEGACY_BRAND_AUDIT.md`](docs/LEGACY_BRAND_AUDIT.md).
+## Start here
 
-## Quick start
+| Document | For |
+| --- | --- |
+| [`docs/launch-checklist.md`](docs/launch-checklist.md) | What is ready, what needs the owner, exact Shopify setup steps |
+| [`docs/admin-operator-guide.md`](docs/admin-operator-guide.md) | How to add a product, restock, run a discount, edit the hero, fulfil, handle returns, export |
+| [`docs/architecture-decision.md`](docs/architecture-decision.md) | Why Shopify stays the system of record; data ownership; API/webhook map |
+| [`docs/source-audit.md`](docs/source-audit.md) | What was found on the live store, Instagram and the references |
+| [`docs/feature-matrix.md`](docs/feature-matrix.md) | Every requested feature: implemented / tested / limitations |
+| [`docs/test-evidence.md`](docs/test-evidence.md) | Exact test results, real vs simulated |
+| [`docs/deployment-and-rollback.md`](docs/deployment-and-rollback.md) | Staging, production cutover, DNS, rollback |
+| [`docs/assets-and-rights.md`](docs/assets-and-rights.md) | Image rights and the assets still needed |
+
+## Run it locally
 
 ```bash
 npm ci
-npm run dev          # http://localhost:3000
+npm run dev                      # http://localhost:3000 (local PGlite database)
 ```
 
-| Script                   | What it does                                             |
-| ------------------------ | -------------------------------------------------------- |
-| `npm run dev`            | Development server                                       |
-| `npm run build`          | Production build                                         |
-| `npm start`              | Serve the production build                               |
-| `npm run typecheck`      | `tsc --noEmit`                                           |
-| `npm run lint`           | ESLint                                                   |
-| `npm test`               | Vitest unit and component tests                          |
-| `npm run e2e`            | Playwright, against a production build                   |
-| `npm run format`         | Prettier                                                 |
-| `npm run import:catalog` | Import the catalogue and photography from infinityclo.ca |
-
-No environment variables are required to build or run. See
-[`docs/VERCEL_DEPLOYMENT.md`](docs/VERCEL_DEPLOYMENT.md) for the optional ones.
-
-## Importing the real catalog
-
-This is the one step that turns the storefront from a working shell into a
-working store.
+Create a back-office owner, then sign in at `/admin`:
 
 ```bash
-npm run import:catalog
+OWNER_EMAIL=you@example.com npm run admin:create-owner
 ```
 
-It reads the legacy store **once**, normalises the catalog into the domain
-model, downloads imagery into `public/assets/`, writes the snapshot into
-`src/data/catalog/`, and regenerates `docs/ASSET_PROVENANCE.md`.
+With no environment variables the site runs on the imported snapshot of the
+live catalogue, checkout shows as not connected, and Shopify-backed admin
+screens are read-only with an explanation. Configure Shopify and Postgres via
+`.env.example`.
 
-It requires network access to `infinityclo.ca` and `cdn.shopify.com`, which this
-environment currently denies. If the host is unreachable it writes nothing
-rather than leaving a partial catalog behind.
+| Script | |
+| --- | --- |
+| `npm run build` / `npm start` | Production build / serve |
+| `npm run typecheck` · `npm run lint` · `npm test` | Static checks and 130 unit/integration tests |
+| `npx playwright test` | 100 end-to-end tests (desktop + Pixel 7) — build first with `CHECKOUT_MODE=permalink` |
+| `npm run import:catalog` | Re-import products/photos from infinityclo.ca (CA market, CAD) |
+| `npm run import:content` | Re-import published policies and the community wall |
+| `npm run db:generate` | Generate SQL migrations after editing `src/server/db/schema.ts` |
+| `npm run admin:create-owner` | Create the first owner account |
 
-The storefront never contacts the legacy site at runtime.
-
-## Routes
-
-```
-/                     Homepage — hero, drop, editorial, Vault, essentials, Troop
-/shop                 Catalog with faceted filters and sort, URL-persisted
-/collections          All collections
-/collections/[slug]   Single collection
-/products/[slug]      Product detail
-/search               Search results
-/cart                 Full cart
-/vault                The archive
-/troop                Styled By You — customer gallery
-/about                Brand story
-/contact /faq /shipping /returns /privacy /terms
-/account /account/orders /account/wishlist
-```
-
-## How this codebase is organised
+## Layout
 
 ```
-src/domain/      Types and pure logic. No React, no Next, no storage.
-src/data/        Repository interfaces + local adapters + composition root
-src/components/  UI by surface
-src/lib/         Cart, analytics, URL params, focus trap, site config
-src/app/         Routes and API handlers
-scripts/         Legacy importer
-e2e/             Playwright journeys
+src/app/(store)/     Storefront routes (home, shop, products, cart, account, content pages)
+src/app/admin/       Back office (RBAC-guarded) and CSV exports
+src/app/api/         Checkout hand-off, cart pricing, forms, webhooks
+src/domain/          Pure logic: money, products, promotions, order status, RBAC, CMS schemas
+src/server/          Server-only: Shopify clients, DB, auth, services, security
+src/data/            Catalogue repositories (Shopify Storefront API or imported snapshot)
+src/components/      UI by surface
+scripts/             Importers and the owner CLI
+e2e/                 Playwright suites
 ```
 
-Components depend on repository _interfaces_, never on a data source. Phase 2
-swaps `src/data/index.ts` for PostgreSQL adapters without touching the UI.
-[`docs/STOREFRONT_ARCHITECTURE.md`](docs/STOREFRONT_ARCHITECTURE.md) has the detail.
+## Rules the code holds to
 
-## Two rules the code holds to
-
-**An unconfirmed fact is `null`, never a plausible default.** Materials, fit,
-care, weight, origin and garment measurements are all nullable. The UI omits a
-section rather than rendering a guess. A customer orders against these.
-
-**Browser state can never represent a payment.** The cart persists identities
-only — slug, variant, quantity — and every price is resolved server-side, so a
-tampered `localStorage` value cannot change what anything costs. There is no
-client-callable path from cart to order, not even a stubbed one.
-
-## Documentation
-
-| Document                                                            | Contents                                                       |
-| ------------------------------------------------------------------- | -------------------------------------------------------------- |
-| [`LEGACY_BRAND_AUDIT.md`](docs/LEGACY_BRAND_AUDIT.md)               | What was and was not recoverable from the legacy site, and why |
-| [`STOREFRONT_ARCHITECTURE.md`](docs/STOREFRONT_ARCHITECTURE.md)     | Layers, seams, cart and checkout design, rendering strategy    |
-| [`DESIGN_SYSTEM.md`](docs/DESIGN_SYSTEM.md)                         | Colour, type, spacing, motion, breakpoints                     |
-| [`ASSET_PROVENANCE.md`](docs/ASSET_PROVENANCE.md)                   | Where every asset came from; regenerated by the importer       |
-| [`BRAND_STORY_INPUTS_NEEDED.md`](docs/BRAND_STORY_INPUTS_NEEDED.md) | Questions for the founder, in priority order                   |
-| [`OPERATIONS_CONTENT_GAPS.md`](docs/OPERATIONS_CONTENT_GAPS.md)     | What must be confirmed before taking orders                    |
-| [`VERCEL_DEPLOYMENT.md`](docs/VERCEL_DEPLOYMENT.md)                 | Deployment settings and environment variables                  |
-| [`PHASE_2_COMMERCE_BACKEND.md`](docs/PHASE_2_COMMERCE_BACKEND.md)   | The next phase, sliced and sequenced                           |
-
-## Testing
-
-Unit tests cover the domain logic, URL parsing, cart storage validation, the
-checkout boundary and form behaviour. Playwright covers storefront journeys at
-1440px and Pixel 7 against a production build.
-
-Catalog-dependent journeys are written in full and skip while the snapshot is
-empty. They are not seeded with invented products — a green add-to-cart test
-over fake data would assert something untrue.
-
-```bash
-npm test && npm run e2e
-```
+- **No invented facts.** Unknown garment facts, dates or measurements render as "not published yet", never as a guess.
+- **No client-side money.** The browser holds cart identities only; every price is resolved on the server and Shopify computes the final total.
+- **No fake integrations.** A Shopify-backed screen without credentials says so and disables its writes.
+- **Drafts until approved.** Promotions reach shoppers only after owner approval *and* a real Shopify discount exists.
+- **Consent is explicit.** Marketing email, waitlists and community photos each require an unticked box; the wording and time are stored.

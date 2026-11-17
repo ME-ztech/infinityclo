@@ -1,5 +1,13 @@
 # Design System
 
+> **2.0 update (Nov 2026).** Per the owner's notes ("white theme", "theme: current on site"):
+> surfaces are white (`bone` resolves to `#ffffff`); display type is **Poppins ExtraBold Italic**,
+> an OFL stand-in for the live store's ITC Avant Garde Gothic Bold Oblique (swap `--font-display`
+> if the owner licenses the original); signal red is `#d0201a` (5.4:1 on white, WCAG AA); the
+> header centres the owner's swoosh mark (`public/brand/infnity-mark.png`, rendered as a CSS mask)
+> beside the wordmark. Sections below describe the token system, which is unchanged.
+
+
 Tokens live in `src/app/globals.css` under Tailwind v4's `@theme`. Nothing here
 is a component library — art direction comes first, and the primitives exist to
 keep that direction consistent, not to make every page look like a demo.

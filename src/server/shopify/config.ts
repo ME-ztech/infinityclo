@@ -116,8 +116,7 @@ export function integrationStatuses(): IntegrationStatus[] {
       configured: Boolean(config.adminToken),
       envVars: ['SHOPIFY_ADMIN_ACCESS_TOKEN'],
       unlocks: 'Back-office products, media, inventory, orders, fulfilment, customers, live discounts and sales analytics.',
-      setup:
-        'Create a custom app for the store with scopes: read/write_products, read/write_inventory, read_locations, read/write_orders, read/write_merchant_managed_fulfillment_orders, read/write_customers, read/write_discounts, read_publications/write_publications, read_reports, read_markets.',
+      setup: 'Shopify admin → Settings → Apps and sales channels → Develop apps → create a custom app with the Admin API scopes listed in docs/launch-checklist.md, install it, and copy the Admin API access token.',
     },
     {
       key: 'webhooks',
