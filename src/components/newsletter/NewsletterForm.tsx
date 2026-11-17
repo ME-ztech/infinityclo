@@ -12,6 +12,7 @@
 import { useId, useState } from 'react';
 
 import { Button } from '@/components/ui/Button';
+import { NEWSLETTER_CONSENT_TEXT } from '@/domain/consent';
 import { track } from '@/lib/analytics';
 import { cn } from '@/lib/cn';
 
@@ -30,6 +31,7 @@ export function NewsletterForm({
 }) {
   const inputId = useId();
   const [email, setEmail] = useState('');
+  const [consent, setConsent] = useState(false);
   const [status, setStatus] = useState<Status>('idle');
   const [message, setMessage] = useState<string | null>(null);
 
@@ -43,6 +45,12 @@ export function NewsletterForm({
       return;
     }
 
+    if (!consent) {
+      setStatus('error');
+      setMessage('Tick the box to confirm you want our emails.');
+      return;
+    }
+
     setStatus('submitting');
     setMessage(null);
 
@@ -50,7 +58,7 @@ export function NewsletterForm({
       const response = await fetch('/api/newsletter', {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ email: trimmed, source }),
+        body: JSON.stringify({ email: trimmed, source, consent }),
       });
       const data = (await response.json()) as { message?: string; error?: string };
 
@@ -63,6 +71,7 @@ export function NewsletterForm({
       setStatus('success');
       setMessage(data.message ?? 'You are on the list.');
       setEmail('');
+      setConsent(false);
       track({ name: 'newsletter_signup', source });
     } catch {
       setStatus('error');
@@ -107,6 +116,17 @@ export function NewsletterForm({
           {status === 'submitting' ? 'Joining…' : 'Join'}
         </Button>
       </div>
+
+      <label className="text-fg-muted mt-4 flex cursor-pointer items-start gap-3 text-left text-xs leading-relaxed">
+        <input
+          type="checkbox"
+          checked={consent}
+          onChange={(event) => setConsent(event.target.checked)}
+          data-testid="newsletter-consent"
+          className="accent-fg mt-0.5 h-4 w-4 shrink-0"
+        />
+        <span>{NEWSLETTER_CONSENT_TEXT}</span>
+      </label>
 
       {message && (
         <p

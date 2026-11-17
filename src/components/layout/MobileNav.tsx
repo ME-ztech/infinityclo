@@ -12,7 +12,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
 
-import { Wordmark } from '@/components/ui/Wordmark';
+import { BrandLogo } from '@/components/ui/Wordmark';
 import { cn } from '@/lib/cn';
 import { LEGAL_NAV, PRIMARY_NAV } from '@/lib/site';
 import { useFocusTrap } from '@/lib/useFocusTrap';
@@ -43,11 +43,11 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
       aria-label="Menu"
       data-testid="mobile-nav"
       tabIndex={-1}
-      data-surface="void"
-      className="bg-surface text-fg fixed inset-0 z-[70] flex animate-[fade-in_200ms_ease-out] flex-col lg:hidden"
+      data-surface="paper"
+      className="bg-surface text-fg fixed inset-0 z-[70] flex animate-[slide-in-left_260ms_var(--ease-brand)] flex-col lg:hidden"
     >
       <div className="edge flex h-16 shrink-0 items-center justify-between">
-        <Wordmark className="text-lg" />
+        <BrandLogo compact />
         <button
           type="button"
           onClick={onClose}
@@ -88,8 +88,11 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
             small — the label sets the size, the row sets the tap area. */}
         <div className="mt-8 flex flex-col">
           {[
-            { label: 'Account', href: '/account' },
-            { label: 'Contact', href: '/contact' },
+            { label: 'Account / sign in', href: '/account' },
+            { label: 'Track an order', href: '/account/orders' },
+            { label: 'Wishlist', href: '/account/wishlist' },
+            { label: 'Coming soon', href: '/coming-soon' },
+            { label: 'Size guide', href: '/size-guide' },
           ].map((link) => (
             <Link
               key={link.href}

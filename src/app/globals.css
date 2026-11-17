@@ -33,9 +33,11 @@
   /* Light. Bone is the warm gallery wall; paper is the product showroom the
      legacy store shot everything against; concrete is the structural mid-tone. */
   --color-paper: #ffffff;
-  --color-bone: #f6f3ed;
-  --color-concrete: #e8e4db;
-  --color-concrete-deep: #d2cdc2;
+  /* 2.0: the owner's notes ask for a white theme, matching the live store. Bone
+     resolves to white so every room that used it follows. */
+  --color-bone: #ffffff;
+  --color-concrete: #f2f2f2;
+  --color-concrete-deep: #dedede;
 
   /* Dark. Ink is the near-black used for large rooms — flat true black over a
      whole viewport reads as an absence rather than a surface. Void is reserved
@@ -59,7 +61,10 @@
   /* Anton carries campaign statements and the wordmark; Archivo does product
      and utility copy. The split is the hierarchy: if everything screams,
      nothing has emphasis. */
-  --font-display: var(--font-anton), 'Arial Narrow', sans-serif;
+  /* Display: Poppins ExtraBold Italic, an OFL stand-in for the ITC Avant Garde
+     Gothic Bold Oblique the live store uses (licence unverified). Swap here if
+     the owner licenses the original webfont. */
+  --font-display: var(--font-poppins), 'Avant Garde', 'Century Gothic', sans-serif;
   --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
 
   /* Fluid campaign scale. Clamps keep the hero legible at 360px without
@@ -127,27 +132,25 @@
     --ui-surface-raised: var(--color-paper);
     --ui-surface-sunken: var(--color-concrete);
     --ui-fg: var(--color-ink);
-    --ui-fg-muted: #4a4741;
-    --ui-fg-faint: var(--color-graphite);
-    --ui-line: #cfcabe;
-    --ui-hairline: #e0dbd0;
-    --ui-field: #b3aea1;
+    --ui-fg-muted: #444444;
+    --ui-fg-faint: #6b6b6b;
+    --ui-line: #d6d6d6;
+    --ui-hairline: #ebebeb;
+    --ui-field: #9e9e9e;
     --ui-inverse-surface: var(--color-ink);
     --ui-inverse-fg: var(--color-paper);
   }
 
   [data-surface='paper'] {
     --ui-surface: var(--color-paper);
-    --ui-surface-raised: var(--color-bone);
-    /* Deliberately two steps down from paper rather than one: this tone is what
-       an image loads off, and on a white card a bone plate is invisible. */
+    --ui-surface-raised: var(--color-paper);
     --ui-surface-sunken: var(--color-concrete);
     --ui-fg: var(--color-ink);
-    --ui-fg-muted: #4a4741;
-    --ui-fg-faint: var(--color-graphite);
-    --ui-line: #ddd8cd;
-    --ui-hairline: #ececec;
-    --ui-field: #b8b3a7;
+    --ui-fg-muted: #444444;
+    --ui-fg-faint: #6b6b6b;
+    --ui-line: #d6d6d6;
+    --ui-hairline: #ebebeb;
+    --ui-field: #9e9e9e;
     --ui-inverse-surface: var(--color-ink);
     --ui-inverse-fg: var(--color-paper);
   }
@@ -247,7 +250,9 @@
      is too loose at display sizes. */
   .font-display {
     text-transform: uppercase;
-    letter-spacing: 0.005em;
+    font-weight: 800;
+    font-style: italic;
+    letter-spacing: -0.01em;
   }
 
   a {
@@ -315,6 +320,15 @@
     font-style: italic;
   }
 
+  /* The owner's swoosh mark, rendered as a mask so it takes the current text colour. */
+  .brand-mark {
+    display: inline-block;
+    background-color: currentColor;
+    -webkit-mask: url('/brand/infnity-mark.png') center / contain no-repeat;
+    mask: url('/brand/infnity-mark.png') center / contain no-repeat;
+    aspect-ratio: 640 / 426;
+  }
+
   /* Chrome/metallic wash for the rare industrial accent. Kept as a utility so
      there is exactly one definition of it. */
   .chrome-wash {
@@ -343,6 +357,15 @@
   }
   to {
     opacity: 1;
+  }
+}
+
+@keyframes slide-in-left {
+  from {
+    transform: translate3d(-100%, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
   }
 }
 

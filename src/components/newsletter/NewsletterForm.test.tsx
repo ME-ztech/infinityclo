@@ -44,11 +44,27 @@ describe('NewsletterForm', () => {
     render(<NewsletterForm source="footer" />);
 
     await user.type(emailField(), 'someone@example.com');
+    await user.click(screen.getByTestId('newsletter-consent'));
     await user.click(screen.getByRole('button', { name: /join/i }));
 
     await waitFor(() => expect(fetch).toHaveBeenCalledOnce());
+    const body = JSON.parse(String(vi.mocked(fetch).mock.calls[0]?.[1]?.body)) as Record<string, unknown>;
+    expect(body).toMatchObject({ email: 'someone@example.com', source: 'footer', consent: true });
     const message = await screen.findByTestId('newsletter-message');
     expect(message.textContent).toBe('Received.');
+  });
+
+  it('requires the unticked consent box before anything is sent (express consent)', async () => {
+    const user = userEvent.setup();
+    render(<NewsletterForm />);
+
+    expect((screen.getByTestId('newsletter-consent') as HTMLInputElement).checked).toBe(false);
+    await user.type(emailField(), 'someone@example.com');
+    await user.click(screen.getByRole('button', { name: /join/i }));
+
+    const message = await screen.findByTestId('newsletter-message');
+    expect(message.textContent).toMatch(/tick the box/i);
+    expect(fetch).not.toHaveBeenCalled();
   });
 
   it('clears the error once the customer starts correcting it', async () => {
@@ -73,6 +89,7 @@ describe('NewsletterForm', () => {
     render(<NewsletterForm />);
 
     await user.type(emailField(), 'someone@example.com');
+    await user.click(screen.getByTestId('newsletter-consent'));
     await user.click(screen.getByRole('button', { name: /join/i }));
 
     const message = await screen.findByTestId('newsletter-message');
@@ -91,6 +108,7 @@ describe('NewsletterForm', () => {
     render(<NewsletterForm />);
 
     await user.type(emailField(), 'someone@example.com');
+    await user.click(screen.getByTestId('newsletter-consent'));
     await user.click(screen.getByRole('button', { name: /join/i }));
 
     const message = await screen.findByTestId('newsletter-message');

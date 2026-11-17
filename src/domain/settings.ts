@@ -32,7 +32,8 @@ export const DEFAULT_SETTINGS: StoreSettings = {
   publicPhone: '+1 (431) 388-3322',
   notificationEmail: '',
   instagramHandle: 'infnity.clo',
-  facebookUrl: 'https://www.facebook.com/Infinityapparelclo',
+  // Page name 'Infinityapparelclo' is on the Instagram profile; the URL is unverified.
+  facebookUrl: '',
   threadsHandle: 'infnity.clo',
   cartUpsellEnabled: false,
   pdpRecommendationsEnabled: true,

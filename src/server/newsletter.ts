@@ -1,5 +1,7 @@
 import 'server-only';
 
+import { NEWSLETTER_CONSENT_TEXT } from '@/domain/consent';
+
 import { desc, eq } from 'drizzle-orm';
 
 import { getSettings } from '@/server/content/cms';
@@ -16,8 +18,6 @@ import { syncEmailConsent } from '@/server/shopify/admin';
  * source and a hashed IP recorded as evidence. Creating a customer account never
  * implies consent; this is the only path in.
  */
-export const NEWSLETTER_CONSENT_TEXT =
-  'Yes, email me about INFNITY drops, restocks and offers. I can unsubscribe at any time.';
 
 export type SubscribeOutcome = 'subscribed' | 'pending_confirmation' | 'already_subscribed';
 
@@ -116,3 +116,5 @@ export async function listSubscribers(limit = 500) {
   const db = await getDb();
   return db.select().from(subscribers).orderBy(desc(subscribers.createdAt)).limit(limit);
 }
+
+export { NEWSLETTER_CONSENT_TEXT };

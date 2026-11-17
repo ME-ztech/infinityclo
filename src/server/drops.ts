@@ -1,5 +1,7 @@
 import 'server-only';
 
+import { WAITLIST_CONSENT_TEXT } from '@/domain/consent';
+
 import { and, asc, count, desc, eq, inArray } from 'drizzle-orm';
 import { z } from 'zod';
 
@@ -80,7 +82,6 @@ export async function saveDrop(id: string | null, input: DropInput, actor: Audit
   return created!.id;
 }
 
-export const WAITLIST_CONSENT_TEXT = 'Email me when this drop releases. I can unsubscribe at any time.';
 
 /** Returns false when the address was already on this drop's list (no duplicate rows). */
 export async function joinWaitlist(input: { slug: string; email: string; ipHash: string | null }): Promise<'joined' | 'already' | 'closed'> {
@@ -99,3 +100,5 @@ export async function waitlistFor(dropId: string) {
   const db = await getDb();
   return db.select().from(waitlistEntries).where(and(eq(waitlistEntries.dropId, dropId))).orderBy(asc(waitlistEntries.createdAt));
 }
+
+export { WAITLIST_CONSENT_TEXT };

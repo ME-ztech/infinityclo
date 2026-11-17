@@ -1,5 +1,7 @@
 import 'server-only';
 
+import { COMMUNITY_CONSENT_TEXT } from '@/domain/consent';
+
 import { asc, desc, eq, inArray } from 'drizzle-orm';
 
 import legacyWall from '@/data/catalog/community-legacy.json';
@@ -21,8 +23,6 @@ import { randomToken } from '@/server/security/crypto';
  * as `implied_legacy` (tag-to-feature), flagged for the owner to confirm.
  */
 
-export const COMMUNITY_CONSENT_TEXT =
-  'I took this photo (or have permission from who did), I am in it or have permission from everyone shown, and I give INFNITY permission to show it on infinityclo.ca and INFNITY social channels with my handle. I can ask for it to be removed at any time.';
 
 export const MAX_UPLOAD_BYTES = 6 * 1024 * 1024;
 
@@ -229,3 +229,5 @@ export async function mediaFor(id: string, allowUnapproved: boolean): Promise<{ 
   if (row.status !== 'approved' && !allowUnapproved) return null;
   return { bytes: row.data, mime: row.mime };
 }
+
+export { COMMUNITY_CONSENT_TEXT };

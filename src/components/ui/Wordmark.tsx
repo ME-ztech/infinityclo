@@ -2,28 +2,30 @@ import { cn } from '@/lib/cn';
 import { BRAND } from '@/lib/site';
 
 /**
- * The INFNITY wordmark, set in type rather than shipped as an image.
- *
- * The official logo files could not be retrieved — the source host is blocked in
- * this environment — so this is a typographic mark built from the brand's own
- * name, oblique and letterspaced the way the storefront sets INFNITY.CLO, rather
- * than an invented logo. Swapping in the real artwork means changing this one
- * component. Tracked in docs/ASSET_PROVENANCE.md.
- *
- * `text-fg` rather than a fixed colour: the mark appears on bone in the header
- * and on void in the footer and the mobile menu, and it must read on all three.
+ * The INFNITY wordmark, set in the display face the way the live store sets
+ * "INFNITY.CLO" — bold, oblique, uppercase. The swoosh mark beside it is the
+ * owner's own artwork from infinityclo.ca (see BrandLogo); no logo is invented.
  */
 export function Wordmark({ className }: { className?: string }) {
   return (
-    <span
-      className={cn(
-        'font-display oblique text-fg leading-none tracking-[0.12em] uppercase select-none',
-        className,
-      )}
-    >
+    <span className={cn('font-display leading-none tracking-[0.04em] uppercase select-none', className)}>
       {BRAND.name}
       <span className="text-signal">.</span>
-      <span className="tracking-[0.08em]">clo</span>
+      <span className="tracking-[0.02em] lowercase">clo</span>
+    </span>
+  );
+}
+
+export function BrandMark({ className, label }: { className?: string; label?: string }) {
+  return <span className={cn('brand-mark', className)} role={label ? 'img' : undefined} aria-label={label} aria-hidden={label ? undefined : true} />;
+}
+
+/** Mark + wordmark lockup used in the header and footer. */
+export function BrandLogo({ className, compact = false }: { className?: string; compact?: boolean }) {
+  return (
+    <span className={cn('inline-flex items-center gap-2.5', className)}>
+      <BrandMark className={compact ? 'h-6' : 'h-7 md:h-8'} />
+      <Wordmark className={compact ? 'text-base' : 'text-lg md:text-xl'} />
     </span>
   );
 }

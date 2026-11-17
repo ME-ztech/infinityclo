@@ -25,6 +25,7 @@ export const SITE_URL =
  * disabled and the storefront says so plainly rather than presenting a buy flow
  * that cannot complete. Phase 2 flips this by wiring a real payment provider.
  */
+/** @deprecated Checkout mode is resolved server-side; see src/server/shopify/config.ts. */
 export const CHECKOUT_ENABLED = process.env.NEXT_PUBLIC_CHECKOUT_ENABLED === 'true';
 
 export interface NavLink {
@@ -40,46 +41,50 @@ export interface NavSection {
   readonly children?: readonly NavLink[];
 }
 
+/** Desktop left-hand navigation, per the owner's notes: Home · Shop · Styled By You · Contact. */
 export const PRIMARY_NAV: readonly NavSection[] = [
-  { label: 'New', href: '/shop?sort=newest' },
+  { label: 'Home', href: '/' },
   { label: 'Shop', href: '/shop' },
-  { label: 'Collections', href: '/collections' },
-  { label: 'The Vault', href: '/vault' },
-  { label: 'The Troop', href: '/troop' },
-  { label: 'About', href: '/about' },
+  { label: 'Styled By You', href: '/styled-by-you' },
+  { label: 'Contact', href: '/contact' },
 ];
 
 export const FOOTER_NAV: ReadonlyArray<{ heading: string; links: readonly NavLink[] }> = [
   {
     heading: 'Shop',
     links: [
-      { label: 'All Products', href: '/shop' },
-      { label: 'New Arrivals', href: '/shop?sort=newest' },
-      { label: 'Collections', href: '/collections' },
-      { label: 'The Vault', href: '/vault' },
+      { label: 'Shop all', href: '/shop' },
+      { label: 'New arrivals', href: '/shop?sort=newest' },
+      { label: 'Tops & tees', href: '/shop?group=tops' },
+      { label: 'Hoodies', href: '/shop?group=hoodies' },
+      { label: 'Bottoms & jorts', href: '/shop?group=bottoms' },
+      { label: 'Accessories', href: '/shop?group=accessories' },
+      { label: 'Coming soon', href: '/coming-soon' },
     ],
   },
   {
     heading: 'Brand',
     links: [
-      { label: 'About', href: '/about' },
-      { label: 'The Troop', href: '/troop' },
+      { label: 'Our story', href: '/about' },
+      { label: 'Styled By You', href: '/styled-by-you' },
+      { label: 'Lookbook', href: '/lookbook' },
       { label: 'Contact', href: '/contact' },
     ],
   },
   {
-    heading: 'Support',
+    heading: 'Help',
     links: [
-      { label: 'FAQ', href: '/faq' },
+      { label: 'Size guide', href: '/size-guide' },
       { label: 'Shipping', href: '/shipping' },
-      { label: 'Returns', href: '/returns' },
-      { label: 'Size Guide', href: '/faq#sizing' },
+      { label: 'Returns & exchanges', href: '/returns' },
+      { label: 'Track an order', href: '/account/orders' },
+      { label: 'FAQ', href: '/faq' },
     ],
   },
   {
     heading: 'Account',
     links: [
-      { label: 'Account', href: '/account' },
+      { label: 'Sign in / account', href: '/account' },
       { label: 'Orders', href: '/account/orders' },
       { label: 'Wishlist', href: '/account/wishlist' },
     ],
@@ -89,11 +94,15 @@ export const FOOTER_NAV: ReadonlyArray<{ heading: string; links: readonly NavLin
 export const LEGAL_NAV: readonly NavLink[] = [
   { label: 'Privacy', href: '/privacy' },
   { label: 'Terms', href: '/terms' },
+  { label: 'Contact information', href: '/contact-information' },
 ];
 
 /**
- * Social links are deliberately empty until the brand confirms its live
- * handles. Rendering a dead icon row would be worse than rendering none.
- * Tracked in docs/OPERATIONS_CONTENT_GAPS.md.
+ * Only handles verified from the brand's own Instagram profile (screenshot 05)
+ * and its link-in-bio. The Facebook page name is known but its URL could not be
+ * verified from this environment, so it is configured in Admin → Settings.
  */
-export const SOCIAL_LINKS: ReadonlyArray<{ label: string; href: string }> = [];
+export const SOCIAL_LINKS: ReadonlyArray<{ label: string; href: string }> = [
+  { label: 'Instagram', href: 'https://www.instagram.com/infnity.clo/' },
+  { label: 'Threads', href: 'https://www.threads.net/@infnity.clo' },
+];
