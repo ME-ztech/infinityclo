@@ -29,9 +29,10 @@ and nothing was written to the Shopify store.
 | ------- | ------ |
 | `npm run typecheck` | Pass, 0 errors |
 | `npm run lint` | Pass, 0 errors, 3 warnings (intentional full-page navigations in checkout) |
-| `npm test` | **267 passed**, 19 files |
+| `npm test` | **274 passed**, 21 files |
 | `npm run build` | Pass; 33 product pages generated |
-| `npm run e2e` (with `PW_CHANNEL=chrome`) | **90 passed**, 20 skipped by design (viewport-specific or desktop-only flows) |
+| `npm run e2e` (with `PW_CHANNEL=chrome`) | **91 passed**, 23 skipped by design (viewport-specific or desktop-only flows) |
+| GitHub Actions CI on the pull request and on `main` | Pass |
 | `npm audit --omit=dev` | 0 vulnerabilities (after `npm audit fix`) |
 | `npm run db:migrate`, `db:seed`, `db:status`, `migrate:reconcile` | Ran against the development database: 33 products, 156 variants, 90 images |
 
@@ -122,5 +123,4 @@ fields, two-decimal prices); the checkout, account and admin images are current.
 | Email deliverability | Spam placement, domain authentication | After the sending domain is verified |
 | Full accessibility audit (screen reader, contrast measurement) | Legal and usability | Before launch |
 | Core Web Vitals on a deployed site | Performance budget | After staging deploy |
-| CI on GitHub | The workflow has not run yet | First push |
 | Cross-browser (Safari, Firefox) | iPhone Safari is most of the audience | Before launch |
