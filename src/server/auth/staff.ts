@@ -241,3 +241,60 @@ export async function requireStaffAction(permission: Permission): Promise<StaffS
 export async function currentRequestIsHttps(): Promise<boolean> {
   return (await requestContext()).isHttps;
 }
+
+/* ------------------------------------------------------------------ *
+ * Staff management (owner only)
+ * ------------------------------------------------------------------ */
+
+export async function listStaff() {
+  const db = await getDb();
+  return db
+    .select({ id: staffUsers.id, email: staffUsers.email, name: staffUsers.name, role: staffUsers.role, active: staffUsers.active, lastLoginAt: staffUsers.lastLoginAt, lockedUntil: staffUsers.lockedUntil, createdAt: staffUsers.createdAt })
+    .from(staffUsers)
+    .orderBy(staffUsers.createdAt);
+}
+
+async function revokeAllSessions(userId: string) {
+  const db = await getDb();
+  await db.update(staffSessions).set({ revokedAt: new Date() }).where(and(eq(staffSessions.userId, userId), isNull(staffSessions.revokedAt)));
+}
+
+async function activeOwnerCount(): Promise<number> {
+  const db = await getDb();
+  const [row] = await db.select({ value: count() }).from(staffUsers).where(and(eq(staffUsers.role, 'owner'), eq(staffUsers.active, true)));
+  return Number(row?.value ?? 0);
+}
+
+export async function updateStaff(
+  id: string,
+  update: { role?: Role; active?: boolean; password?: string },
+  actor: StaffSession['user'],
+): Promise<void> {
+  const db = await getDb();
+  const [target] = await db.select().from(staffUsers).where(eq(staffUsers.id, id)).limit(1);
+  if (!target) throw new Error('Staff member not found.');
+  const losingOwner = target.role === 'owner' && target.active && ((update.role && update.role !== 'owner') || update.active === false);
+  if (losingOwner && (await activeOwnerCount()) <= 1) throw new Error('There must always be at least one active owner.');
+  if (update.password) {
+    const problem = passwordProblem(update.password);
+    if (problem) throw new Error(problem);
+  }
+  await db
+    .update(staffUsers)
+    .set({
+      ...(update.role ? { role: update.role } : {}),
+      ...(update.active !== undefined ? { active: update.active } : {}),
+      ...(update.password ? { passwordHash: await hashPassword(update.password), failedLoginCount: 0, lockedUntil: null } : {}),
+      updatedAt: new Date(),
+    })
+    .where(eq(staffUsers.id, id));
+  // Any change to access ends existing sessions, so it takes effect immediately.
+  if (update.role || update.active === false || update.password) await revokeAllSessions(id);
+  await audit({
+    actor: { id: actor.id, email: actor.email },
+    action: 'staff.update',
+    summary: `Updated ${target.email}: ${[update.role && `role → ${update.role}`, update.active !== undefined && (update.active ? 'activated' : 'deactivated'), update.password && 'password reset'].filter(Boolean).join(', ')}`,
+    targetType: 'staff',
+    targetId: id,
+  });
+}

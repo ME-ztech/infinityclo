@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { AdminPage, Badge, formatCad, formatDate, NotConnected, Table, Td } from '@/components/admin/ui';
+import { AdminPage, Badge, DownloadLink, NotConnected, Table, Td, formatCad, formatDate } from '@/components/admin/ui';
 import { humanise } from '@/domain/order-status';
 import { can } from '@/domain/rbac';
 import { requireStaffPage } from '@/server/auth/staff';
@@ -26,9 +26,9 @@ export default async function CustomersPage({ searchParams }: { searchParams: Pr
       description="Live from Shopify. Payment card data is never available here."
       actions={
         can(session.user.role, 'customers:export') && (
-          <a href={`/admin/export/customers?${new URLSearchParams({ q: q ?? '' })}`} className="border-ink inline-flex h-10 items-center border px-4 text-xs font-semibold uppercase">
+          <DownloadLink href={`/admin/export/customers?${new URLSearchParams({ q: q ?? '' })}`}>
             Export CSV
-          </a>
+          </DownloadLink>
         )
       }
     >

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-import { AdminPage, Badge, formatCad, formatDate, NotConnected, Table, Td } from '@/components/admin/ui';
+import { AdminPage, Badge, DownloadLink, NotConnected, Table, Td, formatCad, formatDate } from '@/components/admin/ui';
 import { humanise } from '@/domain/order-status';
 import { requireStaffPage } from '@/server/auth/staff';
 import { isAdminConfigured } from '@/server/shopify/config';
@@ -35,7 +35,7 @@ export default async function OrdersPage({ searchParams }: { searchParams: Promi
     <AdminPage
       title="Orders"
       description="Live from Shopify. Statuses are Shopify’s own."
-      actions={<a href={`/admin/export/orders?${new URLSearchParams({ q: query })}`} className="border-ink inline-flex h-10 items-center border px-4 text-xs font-semibold uppercase">Export CSV</a>}
+      actions={<DownloadLink href={`/admin/export/orders?${new URLSearchParams({ q: query })}`}>Export CSV</DownloadLink>}
     >
       <div className="flex flex-wrap gap-2 text-sm">
         {Object.entries(FILTERS).map(([key, value]) => (

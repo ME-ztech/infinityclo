@@ -128,3 +128,12 @@ export function formatCad(amount: string | number | null | undefined, currency =
   if (amount === null || amount === undefined || amount === '') return '—';
   return new Intl.NumberFormat('en-CA', { style: 'currency', currency }).format(Number(amount));
 }
+
+/** CSV export link. Exports are route handlers that return a file, so this is a plain download anchor, not page navigation. */
+export function DownloadLink({ href, children }: { href: string; children: React.ReactNode }) {
+  return (
+    <a download href={href} className="border-ink inline-flex h-10 items-center border px-4 text-xs font-semibold uppercase">
+      {children}
+    </a>
+  );
+}
