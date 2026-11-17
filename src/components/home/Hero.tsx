@@ -9,7 +9,10 @@
  *            banner.
  *   Desktop  every photograph of the slide side by side, edge to edge.
  *
- * The emblem sits upper-centre. Lower-left carries the slide titles as a stacked
+ * The emblem has a band of its own above the photography — in the flow, so the
+ * stage begins beneath it and no crop of any slide can put a model's head under
+ * the mark. It is the page's one brand symbol: the header carries the wordmark
+ * alone. Lower-left carries the slide titles as a stacked
  * statement — the active one at full strength — and the call to action. The
  * stacked titles double as the slide selector, so there is no separate row of
  * anonymous dots.
@@ -112,10 +115,20 @@ export function Hero({ slides, autoAdvanceSeconds }: HeroProps) {
       aria-roledescription="carousel"
       aria-label="INFNITY campaign"
       onKeyDown={onKeyDown}
-      className="bg-surface-sunken relative h-[calc(100svh-4rem)] max-h-[58rem] min-h-[34rem] w-full overflow-hidden md:h-[calc(100svh-4.5rem)]"
+      className="bg-surface relative flex h-[calc(100svh-4rem)] max-h-[58rem] min-h-[34rem] w-full flex-col overflow-hidden md:h-[calc(100svh-4.5rem)]"
     >
       <h1 className="sr-only">INFNITY — Be the Statement</h1>
 
+      {/* ── Emblem band ─────────────────────────────────────────────── */}
+      <div
+        data-testid="hero-mark"
+        className="flex shrink-0 justify-center pt-5 pb-4 md:pt-6 md:pb-5"
+      >
+        <Emblem priority className="h-[4.25rem] md:h-20" />
+      </div>
+
+      {/* ── Stage ───────────────────────────────────────────────────── */}
+      <div data-testid="hero-stage" className="bg-surface-sunken relative min-h-0 flex-1">
       {/* ── Slides ──────────────────────────────────────────────────── */}
       {slides.map((slide, index) => {
         const isActive = index === active;
@@ -182,11 +195,6 @@ export function Hero({ slides, autoAdvanceSeconds }: HeroProps) {
         }}
       />
 
-      {/* ── Emblem, upper centre ────────────────────────────────────── */}
-      {/* Phones only: on wider screens the header's centred mark sits directly
-          above the hero, and a second one would land on the photography. */}
-      <div className="pointer-events-none absolute inset-x-0 top-5 flex justify-center md:hidden">
-        <Emblem tone={isLight ? 'paper' : 'gold'} className="h-12" />
       </div>
 
       {/* ── Copy, lower left ────────────────────────────────────────── */}
