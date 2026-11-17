@@ -75,6 +75,33 @@ test.describe('routes', () => {
     expect(sitemap).not.toContain('/admin');
   });
 
+  test('responses carry the security headers and hide the framework', async ({ request }) => {
+    const headers = (await request.get('/')).headers();
+    expect(headers['content-security-policy']).toContain("frame-ancestors 'none'");
+    expect(headers['content-security-policy']).toContain('https://js.stripe.com');
+    expect(headers['x-content-type-options']).toBe('nosniff');
+    expect(headers['x-frame-options']).toBe('DENY');
+    expect(headers['referrer-policy']).toBe('strict-origin-when-cross-origin');
+    expect(headers['strict-transport-security']).toContain('max-age=');
+    expect(headers['x-powered-by']).toBeUndefined();
+
+    // Per-person pages are never cacheable by a shared cache.
+    expect((await request.get('/account/login')).headers()['cache-control']).toContain('no-store');
+  });
+
+  test('no page logs a console error or violates the content security policy', async ({ page }) => {
+    const problems: string[] = [];
+    page.on('console', (message) => {
+      if (message.type() === 'error') problems.push(message.text());
+    });
+    page.on('pageerror', (error) => problems.push(error.message));
+    for (const route of ['/', '/shop', IN_STOCK, '/community', '/contact', '/cart', '/account/login']) {
+      await page.goto(route);
+      await page.waitForLoadState('networkidle');
+    }
+    expect(problems).toEqual([]);
+  });
+
   test('the account and admin areas send signed-out visitors to sign in', async ({ page }) => {
     await page.goto('/account/orders');
     await expect(page).toHaveURL(/\/account\/login\?returnTo=/);

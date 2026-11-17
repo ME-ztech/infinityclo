@@ -311,7 +311,7 @@ export function getStore(): DocumentStore {
     // Serverless: only /tmp is writable and it does not survive the instance.
     store = new FileStore(path.join('/tmp', 'infnity-data'), false);
   } else {
-    store = new FileStore(path.resolve(process.cwd(), dataDir));
+    store = new FileStore(path.resolve(/* turbopackIgnore: true */ process.cwd(), dataDir));
   }
   globalStore.__infnityStore = store;
   return store;

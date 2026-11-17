@@ -57,7 +57,7 @@ export async function sendEmail(email: OutboundEmail, fetcher: typeof fetch = fe
   if (outbox && (!config.isProduction || process.env.INFNITY_E2E === '1')) {
     const { appendFile, mkdir } = await import('node:fs/promises');
     const { dirname, resolve } = await import('node:path');
-    const file = resolve(process.cwd(), outbox);
+    const file = resolve(/* turbopackIgnore: true */ process.cwd(), outbox);
     await mkdir(dirname(file), { recursive: true });
     await appendFile(file, `${JSON.stringify({ to: email.to, subject: email.subject, text: email.text })}\n`);
     return true;

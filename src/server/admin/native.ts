@@ -12,6 +12,7 @@ import { and, asc, desc, eq, gte, ilike, inArray, lte, or, sql } from 'drizzle-o
 
 import type { Offer } from '@/domain/offers';
 import { htmlToText } from '@/domain/text';
+import { IMAGE_URL_HELP, allowedImageUrl } from '@/lib/images';
 
 import { StockConflictError, setOnHand } from '../commerce/inventory';
 import { cancelOrder, fulfillOrder, getOrder, itemCounts, listOrders, refundOrder, updateOrderNote } from '../commerce/orders';
@@ -395,9 +396,8 @@ export class NativeGateway implements CommerceGateway {
   }
 
   async addProductImage(id: string, url: string, alt: string): Promise<void> {
-    if (!/^\/(?!\/)[\w./-]+\.(?:jpe?g|png|webp|avif)$/i.test(url) && !/^https:\/\/[^\s"'<>]+$/i.test(url)) {
-      throw new GatewayError('Enter an image path on this site or an https:// image URL.');
-    }
+    // Only sources the page is actually allowed to display (see next.config.ts).
+    if (!allowedImageUrl(url)) throw new GatewayError(IMAGE_URL_HELP);
     const db = await getDb();
     const existing = await db.select().from(productMedia).where(eq(productMedia.productId, id));
     await db.insert(productMedia).values({

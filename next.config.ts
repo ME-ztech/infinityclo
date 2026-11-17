@@ -37,8 +37,65 @@ const LEGACY_REDIRECTS: ReadonlyArray<readonly [source: string, destination: str
   ['/vault', '/shop'],
 ];
 
+const isDev = process.env.NODE_ENV !== 'production';
+
+/**
+ * Hosts product images may be served from besides this site — for example the
+ * public domain of an object-storage bucket. Comma-separated host names.
+ * Empty by default: every image the store ships with is a local file.
+ */
+const IMAGE_HOSTS = (process.env.NEXT_PUBLIC_IMAGE_HOSTS ?? '')
+  .split(',')
+  .map((host) => host.trim().toLowerCase())
+  .filter((host) => /^[a-z0-9.-]+\.[a-z]{2,}$/.test(host));
+
+/**
+ * Content-Security-Policy.
+ *
+ * Scripts and frames are limited to this site and Stripe (the payment form is
+ * an iframe served by Stripe; Stripe.js must be loaded from js.stripe.com).
+ * `'unsafe-inline'` is required by the framework's inline bootstrap scripts
+ * and by structured-data blocks; moving to per-request nonces is the next
+ * hardening step and is listed in docs/production-readiness.md.
+ */
+const CSP = [
+  "default-src 'self'",
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ''} https://js.stripe.com`,
+  "style-src 'self' 'unsafe-inline'",
+  `img-src 'self' data: blob:${IMAGE_HOSTS.map((host) => ` https://${host}`).join('')}`,
+  "font-src 'self' data:",
+  `connect-src 'self' https://api.stripe.com${isDev ? ' ws: wss:' : ''}`,
+  'frame-src https://js.stripe.com https://hooks.stripe.com',
+  "frame-ancestors 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+  "object-src 'none'",
+  ...(isDev ? [] : ['upgrade-insecure-requests']),
+].join('; ');
+
+const SECURITY_HEADERS = [
+  { key: 'Content-Security-Policy', value: CSP },
+  { key: 'X-Content-Type-Options', value: 'nosniff' },
+  { key: 'X-Frame-Options', value: 'DENY' },
+  { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+  { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=(), payment=(self "https://js.stripe.com")' },
+  // Two years, as browsers' preload lists require. Only meaningful over HTTPS.
+  { key: 'Strict-Transport-Security', value: 'max-age=63072000; includeSubDomains; preload' },
+];
+
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  poweredByHeader: false,
+  async headers() {
+    return [
+      { source: '/:path*', headers: SECURITY_HEADERS },
+      // Per-person pages must never be stored by a shared cache.
+      {
+        source: '/:area(account|admin|checkout)/:path*',
+        headers: [{ key: 'Cache-Control', value: 'private, no-store' }],
+      },
+    ];
+  },
   // Database drivers are loaded by Node at runtime rather than bundled: the
   // embedded engine ships WebAssembly and `pg` has optional native bindings.
   serverExternalPackages: ['@electric-sql/pglite', 'pg'],
@@ -54,15 +111,11 @@ const nextConfig: NextConfig = {
   },
   images: {
     /**
-     * Product photography imported with the catalogue is served from this
-     * origin (`public/products/`). A product published in Shopify after the last
-     * import has no local copy yet, so its images are served — through Next's
-     * optimiser — from the store's own Shopify CDN.
+     * Product photography is served from this origin (`public/products/`).
+     * Additional image hosts are opt-in via NEXT_PUBLIC_IMAGE_HOSTS; none is
+     * needed today and nothing is loaded from the legacy store's CDN.
      */
-    remotePatterns: [
-      { protocol: 'https', hostname: 'cdn.shopify.com' },
-      { protocol: 'https', hostname: 'infinityclo.ca' },
-    ],
+    remotePatterns: IMAGE_HOSTS.map((hostname) => ({ protocol: 'https' as const, hostname })),
     formats: ['image/avif', 'image/webp'],
     /**
      * Trimmed to the widths this layout actually requests, so Next does not

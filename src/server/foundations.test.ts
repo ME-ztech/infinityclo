@@ -176,7 +176,8 @@ describe('content', () => {
     expect(safeHref('javascript:alert(1)', '/shop')).toBe('/shop');
     expect(safeHref('//evil.example', '/shop')).toBe('/shop');
     expect(safeImageUrl('/products/a/01.jpg')).toBe('/products/a/01.jpg');
-    expect(safeImageUrl('https://cdn.shopify.com/s/files/1/x.jpg')).toBe('https://cdn.shopify.com/s/files/1/x.jpg');
+    // No external host is allowed unless the deployment opts in.
+    expect(safeImageUrl('https://cdn.shopify.com/s/files/1/x.jpg')).toBeNull();
     expect(safeImageUrl('https://evil.example/x.jpg')).toBeNull();
     expect(safeImageUrl('/products/../../etc/passwd')).toBeNull();
   });

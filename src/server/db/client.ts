@@ -60,7 +60,7 @@ async function connect(url: string): Promise<Connection> {
     if (target === 'memory') {
       client = new PGlite();
     } else {
-      const directory = path.resolve(process.cwd(), target);
+      const directory = path.resolve(/* turbopackIgnore: true */ process.cwd(), target);
       const { mkdir } = await import('node:fs/promises');
       await mkdir(path.dirname(directory), { recursive: true });
       client = new PGlite(directory);
@@ -116,7 +116,7 @@ function connection(): Promise<Connection> {
   return globalDb.__infnityDb;
 }
 
-export const migrationsFolder = (): string => path.resolve(process.cwd(), 'drizzle');
+export const migrationsFolder = (): string => path.resolve(/* turbopackIgnore: true */ process.cwd(), 'drizzle');
 
 export async function getDb(): Promise<Database> {
   return (await connection()).db;

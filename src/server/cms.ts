@@ -15,6 +15,7 @@ import 'server-only';
 
 import { products as snapshotProducts } from '@/data/adapters/local/snapshot';
 import type { Product } from '@/domain/types';
+import { allowedImageUrl } from '@/lib/images';
 
 import { getStore } from './store';
 
@@ -207,13 +208,9 @@ export function safeHref(value: unknown, fallback = ''): string {
   return fallback;
 }
 
-/** Images must be served from this origin or the store's own Shopify CDN. */
+/** Images must be served from this origin or an explicitly allowed image host. */
 export function safeImageUrl(value: unknown): string | null {
-  if (typeof value !== 'string') return null;
-  const url = value.trim();
-  if (/^\/(?!\/)[\w./-]+\.(?:jpe?g|png|webp|avif)$/i.test(url)) return url;
-  if (/^https:\/\/cdn\.shopify\.com\/[^\s"'<>]+$/i.test(url)) return url;
-  return null;
+  return allowedImageUrl(value);
 }
 
 function image(value: unknown): ContentImage | null {

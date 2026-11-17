@@ -68,7 +68,7 @@ export function uploadsEnabled(): boolean {
 }
 
 export function uploadDirectory(): string {
-  return path.resolve(process.cwd(), config.storage.dataDir, 'uploads', 'community');
+  return path.resolve(/* turbopackIgnore: true */ process.cwd(), config.storage.dataDir, 'uploads', 'community');
 }
 
 export interface ProcessedImage {

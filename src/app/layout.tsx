@@ -4,6 +4,7 @@ import { Anton, Archivo } from 'next/font/google';
 import { CartDrawer } from '@/components/cart/CartDrawer';
 import { Footer } from '@/components/layout/Footer';
 import { Header } from '@/components/layout/Header';
+import { StorefrontOnly } from '@/components/layout/StorefrontOnly';
 import { CartProvider } from '@/lib/cart/CartProvider';
 import { BRAND, SITE_URL } from '@/lib/site';
 import { getSiteContent } from '@/server/cms';
@@ -117,16 +118,20 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           }}
         />
         <CartProvider>
-          <a
-            href="#main"
-            className="sr-only-focusable bg-inverse-surface text-inverse-fg absolute top-2 left-2 z-[100] px-4 py-2 text-sm font-semibold"
-          >
-            Skip to content
-          </a>
-          <Header announcement={announcement} />
+          <StorefrontOnly>
+            <a
+              href="#main"
+              className="sr-only-focusable bg-inverse-surface text-inverse-fg absolute top-2 left-2 z-[100] px-4 py-2 text-sm font-semibold"
+            >
+              Skip to content
+            </a>
+            <Header announcement={announcement} />
+          </StorefrontOnly>
           <main id="main">{children}</main>
-          <Footer social={social} />
-          <CartDrawer />
+          <StorefrontOnly>
+            <Footer social={social} />
+            <CartDrawer />
+          </StorefrontOnly>
         </CartProvider>
       </body>
     </html>

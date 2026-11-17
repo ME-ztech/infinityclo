@@ -17,8 +17,28 @@ export const BRAND = {
   domain: 'infinityclo.ca',
 } as const;
 
-export const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '') ?? 'https://infinityclo.ca';
+const DEFAULT_SITE_URL = 'https://infinityclo.ca';
+
+/**
+ * Turns whatever was configured into a usable absolute origin. A value without
+ * a scheme ("infinityclo.ca") gets https://; anything that still is not a URL
+ * falls back to the default. A typo in an environment variable must never be
+ * able to fail a build or break every canonical link.
+ */
+export function resolveSiteUrl(configured: string | undefined, fallback = DEFAULT_SITE_URL): string {
+  const value = configured?.trim();
+  if (!value) return fallback;
+  const candidate = /^https?:\/\//i.test(value) ? value : `https://${value}`;
+  try {
+    const url = new URL(candidate);
+    if (!url.hostname.includes('.') && url.hostname !== 'localhost') return fallback;
+    return url.origin;
+  } catch {
+    return fallback;
+  }
+}
+
+export const SITE_URL = resolveSiteUrl(process.env.NEXT_PUBLIC_SITE_URL);
 
 /**
  * Checkout switch. Whether an order can actually be taken is decided on the

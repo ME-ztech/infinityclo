@@ -40,7 +40,7 @@ export function sessionSecret(): string | null {
   if (configured && configured.length >= 32) return configured;
   if (config.isProduction && !process.env.INFNITY_ALLOW_DEV_SECRET) return null;
   if (cachedDevSecret) return cachedDevSecret;
-  const file = path.resolve(process.cwd(), config.storage.dataDir, 'dev-session-secret');
+  const file = path.resolve(/* turbopackIgnore: true */ process.cwd(), config.storage.dataDir, 'dev-session-secret');
   try {
     if (existsSync(file)) {
       cachedDevSecret = readFileSync(file, 'utf8').trim();
