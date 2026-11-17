@@ -28,13 +28,13 @@ export function multiplyMoney(value: Money, factor: number): Money {
  * Formats for display. Whole-dollar amounts drop the decimals — fashion pricing
  * reads as "$85", not "$85.00" — while anything with cents keeps them.
  */
+/** Always two decimals ("$45.00"), as the live store and the brief's "ADD TO CART — $XX.XX" show prices. */
 export function formatMoney(value: Money, locale = 'en-CA'): string {
-  const hasCents = value.amount % 100 !== 0;
   return new Intl.NumberFormat(locale, {
     style: 'currency',
     currency: value.currency,
-    minimumFractionDigits: hasCents ? 2 : 0,
-    maximumFractionDigits: hasCents ? 2 : 0,
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
   }).format(value.amount / 100);
 }
 

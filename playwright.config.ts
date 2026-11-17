@@ -25,15 +25,16 @@ const executablePath = existsSync(CHROMIUM_PATH) ? CHROMIUM_PATH : undefined;
 
 export default defineConfig({
   testDir: './e2e',
-  fullyParallel: true,
+  fullyParallel: false,
   forbidOnly: Boolean(process.env.CI),
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 2 : undefined,
+  // One worker: the admin journey mutates shared (throwaway) server state.
+  workers: 1,
   reporter: process.env.CI ? [['github'], ['html', { open: 'never' }]] : [['list']],
 
   use: {
     baseURL: BASE_URL,
-    trace: 'on-first-retry',
+    trace: 'off',
     screenshot: 'only-on-failure',
     launchOptions: { executablePath },
   },
@@ -46,10 +47,26 @@ export default defineConfig({
     { name: 'mobile', use: { ...devices['Pixel 7'] } },
   ],
 
+  globalSetup: './e2e/global-setup.ts',
+
+  /**
+   * The build must be produced with the same CHECKOUT_MODE (see
+   * docs/test-evidence.md): `CHECKOUT_MODE=permalink npm run build`.
+   * The server runs against a fresh, throwaway PGlite database and a test
+   * owner account; it never touches a production database or Shopify writes.
+   */
   webServer: {
     command: `npx next start --port ${PORT}`,
     url: BASE_URL,
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: false,
     timeout: 120_000,
+    env: {
+      ALLOW_DEV_SECRET: 'true',
+      PGLITE_DATA_DIR: '.data/e2e-pglite',
+      ADMIN_BOOTSTRAP_EMAIL: 'owner@e2e.test',
+      ADMIN_BOOTSTRAP_PASSWORD: 'e2e-owner-pass-2026',
+      CHECKOUT_MODE: 'permalink',
+      NODE_USE_ENV_PROXY: '1',
+    },
   },
 });

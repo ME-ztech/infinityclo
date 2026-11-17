@@ -35,7 +35,7 @@ describe('money', () => {
   });
 
   it('drops decimals on whole amounts and keeps them otherwise', () => {
-    expect(formatMoney({ amount: 8500, currency: 'CAD' })).toBe('$85');
+    expect(formatMoney({ amount: 8500, currency: 'CAD' })).toBe('$85.00');
     expect(formatMoney({ amount: 8550, currency: 'CAD' })).toBe('$85.50');
   });
 

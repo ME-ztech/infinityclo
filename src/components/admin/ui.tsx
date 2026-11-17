@@ -63,15 +63,14 @@ export function Badge({ children, tone = 'neutral' }: { children: React.ReactNod
   return <span className={cn('inline-flex items-center px-2 py-0.5 text-[0.7rem] font-semibold uppercase', BADGE_TONES[tone])}>{children}</span>;
 }
 
-export function Field({ label, hint, children, htmlFor }: { label: string; hint?: React.ReactNode; children: React.ReactNode; htmlFor?: string }) {
+export function Field({ label, hint, children }: { label: string; hint?: React.ReactNode; children: React.ReactNode; htmlFor?: string }) {
+  // The control sits inside its <label>, so it is named for assistive technology without ids.
   return (
-    <div className="flex flex-col gap-1">
-      <label htmlFor={htmlFor} className="text-xs font-semibold text-neutral-700">
-        {label}
-      </label>
+    <label className="flex flex-col gap-1">
+      <span className="text-xs font-semibold text-neutral-700">{label}</span>
       {children}
-      {hint && <p className="text-xs text-neutral-500">{hint}</p>}
-    </div>
+      {hint && <span className="text-xs text-neutral-500">{hint}</span>}
+    </label>
   );
 }
 

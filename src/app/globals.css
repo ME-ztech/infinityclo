@@ -53,8 +53,8 @@
   /* Signal. The bright red from the legacy storefront. Used only where
      something is genuinely true — a live sale, an error, an active control.
      Never decorative; the moment it is sprinkled around, it stops signalling. */
-  --color-signal: #e8281c;
-  --color-signal-deep: #b81c12;
+  --color-signal: #d0201a; /* legacy red, darkened just enough for WCAG AA text contrast (5.4:1 on white) */
+  --color-signal-deep: #a8170f;
 
   /* --- Type --------------------------------------------------------- */
 

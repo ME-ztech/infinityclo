@@ -30,7 +30,7 @@ export default async function SizeGuidePage() {
             <h2 id={`guide-${guide.id}`} className="font-display text-2xl">
               {guide.name}
             </h2>
-            <div className="-mx-2 mt-4 overflow-x-auto px-2">
+            <div className="-mx-2 mt-4 overflow-x-auto px-2" tabIndex={0} role="region" aria-label={`${guide.name} table, scrolls sideways`}>
               <table className="w-full min-w-[420px] border-collapse text-sm">
                 <caption className="sr-only">{guide.name} measurements in inches</caption>
                 <thead>

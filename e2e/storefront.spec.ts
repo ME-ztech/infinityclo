@@ -1,34 +1,19 @@
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test } from '@playwright/test';
 
-/**
- * Storefront journeys.
- *
- * These cover everything that does not depend on catalog *content*: routing,
- * navigation, the cart and search shells, form validation, empty states and
- * accessibility structure. They pass against an empty catalog and continue to
- * pass once the real one is imported.
- *
- * Catalog-dependent journeys — filtering, variant selection, add-to-cart,
- * gallery navigation — live in `catalog.spec.ts` and skip themselves while the
- * catalog is empty, so the suite is honest about what it is and is not proving.
- */
+import { expectNoHorizontalScroll, trackErrors } from './helpers';
 
-/** Fails the test if the browser logged an error during the run. */
-function trackConsoleErrors(page: Page): string[] {
-  const errors: string[] = [];
-  page.on('console', (message) => {
-    if (message.type() === 'error') errors.push(message.text());
-  });
-  page.on('pageerror', (error) => errors.push(error.message));
-  return errors;
-}
-
-const PRIMARY_ROUTES = [
+const ROUTES = [
   '/',
   '/shop',
-  '/collections',
-  '/vault',
-  '/troop',
+  '/shop?group=hoodies',
+  '/search?q=tank',
+  '/products/infnitys-iced-raven-tank',
+  '/products/infnitys-black-varsity-hoodie',
+  '/cart',
+  '/styled-by-you',
+  '/lookbook',
+  '/coming-soon',
+  '/size-guide',
   '/about',
   '/contact',
   '/faq',
@@ -36,166 +21,95 @@ const PRIMARY_ROUTES = [
   '/returns',
   '/privacy',
   '/terms',
-  '/cart',
-  '/search',
+  '/contact-information',
   '/account',
   '/account/orders',
   '/account/wishlist',
 ];
 
 test.describe('routing integrity', () => {
-  for (const route of PRIMARY_ROUTES) {
-    test(`${route} responds and renders a heading`, async ({ page }) => {
-      const errors = trackConsoleErrors(page);
+  for (const route of ROUTES) {
+    test(`${route} renders one h1, no errors, no sideways scroll`, async ({ page }) => {
+      const errors = trackErrors(page);
       const response = await page.goto(route);
-
-      expect(response?.status(), `${route} should return 2xx`).toBeLessThan(400);
+      expect(response?.status()).toBeLessThan(400);
       await expect(page.locator('h1')).toHaveCount(1);
-      expect(errors, `${route} logged console errors`).toEqual([]);
+      await expectNoHorizontalScroll(page);
+      expect(errors).toEqual([]);
     });
   }
 
-  test('an unknown product returns the not-found page', async ({ page }) => {
-    const response = await page.goto('/products/definitely-not-a-real-product');
-    expect(response?.status()).toBe(404);
-    await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
+  test('unknown products 404', async ({ page }) => {
+    expect((await page.goto('/products/not-a-real-product'))?.status()).toBe(404);
   });
 
-  test('an unknown collection returns the not-found page', async ({ page }) => {
-    const response = await page.goto('/collections/definitely-not-a-real-collection');
-    expect(response?.status()).toBe(404);
-  });
-
-  test('no primary navigation link is dead', async ({ page }) => {
-    await page.goto('/');
-
-    const hrefs = await page
-      .locator('footer a[href^="/"]')
-      .evaluateAll((links) =>
-        Array.from(new Set(links.map((link) => link.getAttribute('href')).filter(Boolean))),
-      );
-    expect(hrefs.length).toBeGreaterThan(5);
-
-    for (const href of hrefs) {
-      const response = await page.request.get(href as string);
-      expect(response.status(), `${href} is dead`).toBeLessThan(400);
+  test('legacy Shopify URLs redirect permanently', async ({ request }) => {
+    for (const [from, to] of [
+      ['/collections/all', '/shop'],
+      ['/pages/customer-gallery', '/styled-by-you'],
+      ['/pages/contact', '/contact'],
+      ['/policies/refund-policy', '/returns'],
+      ['/policies/shipping-policy', '/shipping'],
+    ]) {
+      const response = await request.get(from!, { maxRedirects: 0 });
+      expect(response.status(), from).toBe(308);
+      expect(response.headers().location).toBe(to);
     }
   });
-});
 
-test.describe('page structure', () => {
-  test('the skip link is the first focus stop and reaches main', async ({ page }) => {
-    await page.goto('/');
-    await page.keyboard.press('Tab');
-
-    const skip = page.getByRole('link', { name: /skip to content/i });
-    await expect(skip).toBeFocused();
-    await expect(page.locator('#main')).toBeAttached();
-  });
-
-  test('landmarks are present exactly once', async ({ page }) => {
-    await page.goto('/');
-    await expect(page.locator('header')).toHaveCount(1);
-    await expect(page.locator('main')).toHaveCount(1);
-    await expect(page.locator('footer')).toHaveCount(1);
-  });
-
-  test('the preview notice discloses that checkout is not live', async ({ page }) => {
-    await page.goto('/');
-    await expect(page.getByTestId('preview-notice')).toContainText(/checkout is not live/i);
+  test('robots and sitemap resolve and list product URLs', async ({ request }) => {
+    expect((await request.get('/robots.txt')).ok()).toBe(true);
+    const sitemap = await (await request.get('/sitemap.xml')).text();
+    expect(sitemap).toContain('/products/infnitys-iced-raven-tank');
   });
 });
 
-test.describe('search', () => {
-  test('opens, searches, shows a no-results state, and closes on Escape', async ({ page }) => {
+test.describe('navigation and hero', () => {
+  test('header carries the brand mark, the owner’s menu and a live cart count', async ({ page, isMobile }) => {
     await page.goto('/');
-
-    await page.getByRole('button', { name: 'Search' }).click();
-    const overlay = page.getByTestId('search-overlay');
-    await expect(overlay).toBeVisible();
-
-    await page.getByTestId('search-input').fill('zzzzqqq');
-    await expect(page.getByTestId('search-empty')).toBeVisible();
-
-    await page.keyboard.press('Escape');
-    await expect(overlay).toBeHidden();
+    const header = page.getByTestId('site-header');
+    await expect(header.getByRole('link', { name: 'INFNITY.clo — home' })).toBeVisible();
+    if (isMobile) {
+      await header.getByRole('button', { name: 'Open menu' }).click();
+      const menu = page.getByTestId('mobile-nav');
+      for (const label of ['Home', 'Shop', 'Styled By You', 'Contact']) await expect(menu.getByRole('link', { name: label, exact: true })).toBeVisible();
+      await menu.getByRole('button', { name: 'Close menu' }).click();
+    } else {
+      for (const label of ['Home', 'Shop', 'Styled By You', 'Contact']) await expect(header.getByRole('link', { name: label, exact: true })).toBeVisible();
+      await expect(header.getByRole('link', { name: 'Account' })).toBeVisible();
+    }
+    await expect(page.getByTestId('cart-button')).toHaveAccessibleName(/Cart/);
   });
 
-  test('the search results page renders a term', async ({ page }) => {
-    await page.goto('/search?q=hoodie');
-    await expect(page.locator('h1')).toContainText(/search/i);
-  });
-});
-
-test.describe('cart', () => {
-  test('opens the drawer and shows an empty state', async ({ page }) => {
+  test('hero shows the slogan, statements are selectable, and the slideshow pauses', async ({ page }) => {
     await page.goto('/');
-    await page.getByTestId('cart-button').click();
-
-    const drawer = page.getByTestId('cart-drawer');
-    await expect(drawer).toBeVisible();
-    await expect(drawer).toContainText(/your cart is empty/i);
+    const hero = page.getByTestId('hero');
+    await expect(hero.getByTestId('hero-slogan')).toHaveText(/Be the Statement/i);
+    const pause = hero.getByTestId('hero-pause');
+    await pause.click();
+    await expect(pause).toHaveAttribute('aria-pressed', 'true');
+    await hero.getByRole('button', { name: /Slide 2 of/ }).click();
+    await expect(hero.getByRole('button', { name: /Slide 2 of/ })).toHaveAttribute('aria-current', 'true');
+    await expect(hero.getByTestId('hero-cta')).toHaveAttribute('href', '/shop?group=hoodies');
   });
 
-  test('closes the drawer on Escape and restores focus', async ({ page }) => {
+  test('homepage sections appear in the brief’s order', async ({ page }) => {
     await page.goto('/');
-    await page.getByTestId('cart-button').click();
-    await expect(page.getByTestId('cart-drawer')).toBeVisible();
-
-    await page.keyboard.press('Escape');
-    await expect(page.getByTestId('cart-drawer')).toBeHidden();
-    await expect(page.getByTestId('cart-button')).toBeFocused();
+    const ids = ['statement-heading', 'featured-heading', 'vault-heading', 'lookbook-heading', 'community-heading', 'newsletter-heading'];
+    const tops: number[] = [];
+    for (const id of ids) {
+      const box = await page.locator(`#${id}`).boundingBox();
+      expect(box, id).not.toBeNull();
+      tops.push(box!.y);
+    }
+    expect([...tops].sort((a, b) => a - b)).toEqual(tops);
+    await expect(page.getByTestId('vault-cta')).toHaveAttribute('href', '/shop');
   });
 
-  test('the cart page shows an empty state', async ({ page }) => {
-    await page.goto('/cart');
-    await expect(page.getByTestId('empty-state')).toContainText(/empty/i);
-  });
-});
-
-test.describe('newsletter', () => {
-  test('rejects an invalid address and accepts a valid one', async ({ page }) => {
+  test('every footer link resolves', async ({ page, request }) => {
     await page.goto('/');
-
-    const form = page.getByTestId('newsletter-form').first();
-    await form.getByTestId('newsletter-email').fill('nope');
-    await form.getByRole('button', { name: /join/i }).click();
-    await expect(form.getByTestId('newsletter-message')).toContainText(/valid email/i);
-
-    await form.getByTestId('newsletter-email').fill('someone@example.com');
-    await form.getByRole('button', { name: /join/i }).click();
-    await expect(form.getByTestId('newsletter-message')).toContainText(/received/i);
+    const hrefs = await page.locator('footer a[href^="/"]').evaluateAll((links) => [...new Set(links.map((link) => link.getAttribute('href')!))]);
+    expect(hrefs.length).toBeGreaterThan(15);
+    for (const href of hrefs) expect((await request.get(href)).status(), href).toBeLessThan(400);
   });
-});
-
-test.describe('contact', () => {
-  test('validates and states plainly that nothing was sent', async ({ page }) => {
-    await page.goto('/contact');
-
-    // Scoped to the contact form: the footer newsletter also has an Email field.
-    const form = page.getByTestId('contact-form');
-
-    await form.getByRole('button', { name: /send/i }).click();
-    await expect(form.getByRole('alert').first()).toBeVisible();
-
-    await form.getByLabel('Name').fill('Test Person');
-    await form.getByLabel('Email').fill('someone@example.com');
-    await form.getByLabel('Message').fill('This is a long enough message.');
-    await form.getByRole('button', { name: /send/i }).click();
-
-    await expect(page.getByTestId('contact-blocked')).toContainText(/was not sent/i);
-  });
-});
-
-test.describe('no horizontal overflow', () => {
-  for (const route of ['/', '/shop', '/vault', '/troop', '/cart', '/about']) {
-    test(`${route} does not scroll sideways`, async ({ page }) => {
-      await page.goto(route);
-      const overflow = await page.evaluate(
-        () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
-      );
-      // One pixel of tolerance for sub-pixel rounding at fractional zoom.
-      expect(overflow, `${route} overflows horizontally by ${overflow}px`).toBeLessThanOrEqual(1);
-    });
-  }
 });

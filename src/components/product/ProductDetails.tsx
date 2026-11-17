@@ -79,7 +79,7 @@ export function ProductDetails({ product }: { product: Product }) {
       {sections.map((section) => (
         <details key={section.id} className="border-line group border-b">
           <summary className="text-fg hover:text-fg-muted flex min-h-14 cursor-pointer list-none items-center justify-between py-4 text-[0.95rem] font-medium [&::-webkit-details-marker]:hidden">
-            {section.title}
+            <span>{section.title}</span>
             <span aria-hidden className="ml-4 shrink-0 text-2xl leading-none font-light transition-transform duration-200 group-open:rotate-45">
               +
             </span>

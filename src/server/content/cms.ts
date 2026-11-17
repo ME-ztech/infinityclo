@@ -20,7 +20,7 @@ export async function getCms<K extends CmsKey>(key: K): Promise<{ value: CmsValu
     const parsed = parseCms(key, row.data);
     return { value: parsed.value, version: row.version, stored: parsed.valid };
   } catch (error) {
-    console.error(`[cms] falling back to defaults for "${key}": ${(error as Error).message}`);
+    if (process.env.NEXT_PHASE !== 'phase-production-build') console.error(`[cms] falling back to defaults for "${key}": ${(error as Error).message}`);
     return { value: CMS_DOCUMENTS[key].defaults as CmsValue<K>, version: 0, stored: false };
   }
 }
@@ -68,7 +68,7 @@ export async function getSettings(): Promise<StoreSettings> {
     const parsed = storeSettingsSchema.safeParse({ ...DEFAULT_SETTINGS, ...(row.value as object) });
     return parsed.success ? parsed.data : DEFAULT_SETTINGS;
   } catch (error) {
-    console.error(`[settings] falling back to defaults: ${(error as Error).message}`);
+    if (process.env.NEXT_PHASE !== 'phase-production-build') console.error(`[settings] falling back to defaults: ${(error as Error).message}`);
     return DEFAULT_SETTINGS;
   }
 }

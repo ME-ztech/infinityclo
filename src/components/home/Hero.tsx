@@ -100,9 +100,9 @@ export function Hero({ content }: { content: HeroContent }) {
         )}
       >
         <div className="max-w-xl">
-          <p className="font-display text-[clamp(1.9rem,8vw,5.6rem)] leading-[0.88]" data-testid="hero-slogan">
+          <h1 className="font-display text-[clamp(1.9rem,8vw,5.6rem)] leading-[0.88]" data-testid="hero-slogan">
             {content.slogan}
-          </p>
+          </h1>
 
           {/* The stacked statements: each one is a slide; the lit one is current. */}
           <ul className="mt-3 flex flex-col md:mt-5 md:gap-0.5" aria-label="Choose a slide">

@@ -117,8 +117,16 @@ export async function approvedPosts(limit = 60): Promise<PublicCommunityPost[]> 
       productSlugs: row.productSlugs,
     }));
   } catch (error) {
-    console.error(`[community] ${(error as Error).message}`);
-    return [];
+    if (process.env.NEXT_PHASE !== 'phase-production-build') console.error(`[community] ${(error as Error).message}`);
+    // No database (e.g. during a static build): serve the legacy wall, which is approved by default.
+    return (legacyWall as Array<{ id: string; imageUrl: string }>).slice(0, limit).map((entry) => ({
+      id: entry.id,
+      imageUrl: entry.imageUrl,
+      alt: 'Customer wearing INFNITY, from the Troop wall on infinityclo.ca',
+      handle: null,
+      caption: null,
+      productSlugs: [],
+    }));
   }
 }
 

@@ -109,7 +109,7 @@ export function Header() {
             </div>
 
             {/* Centre: the owner's mark and wordmark */}
-            <Link href="/" aria-label="INFNITY — home" className="justify-self-center">
+            <Link href="/" aria-label="INFNITY.clo — home" className="justify-self-center">
               <BrandLogo />
             </Link>
 
