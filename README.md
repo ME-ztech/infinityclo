@@ -9,7 +9,7 @@ and discounts live in INFNITY's database. Stripe moves money; nothing depends on
 Shopify at runtime. Shopify is a migration source only.
 
 > **Status: ready for staging UAT, not for live orders.** The platform's logic
-> is built and tested (267 unit/integration tests, 90 browser tests). Payments
+> is built and tested (274 unit/integration tests, 91 browser tests). Payments
 > have only been exercised with a simulated provider — the Stripe integration
 > has never been run against Stripe. See
 > [`docs/production-readiness.md`](docs/production-readiness.md).
@@ -93,6 +93,7 @@ e2e/                 Browser tests
 | [`data-model.md`](docs/data-model.md) | Schema and commerce-domain design |
 | [`migration-plan.md`](docs/migration-plan.md) | Shopify migration, reconciliation, rollback |
 | [`development-plan.md`](docs/development-plan.md) | What was reused, what is done, what remains |
+| [`launch-audit.md`](docs/launch-audit.md) | The final audit: what was verified, findings, external requirements, to-do |
 | [`production-readiness.md`](docs/production-readiness.md) | Checklist: ready, owner action, to do |
 | [`build-vs-shopify.md`](docs/build-vs-shopify.md) | Cost, complexity and timeline, honestly |
 | [`deployment-and-rollback.md`](docs/deployment-and-rollback.md) | Environments, variables, deploy, recover |

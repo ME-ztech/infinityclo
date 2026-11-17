@@ -76,9 +76,10 @@ against the real service.
 | Upload validation by content, re-encoding, size limit | READY — tested |
 | Secrets only in environment variables; none in the repository; status page shows names only | READY — repository searched |
 | Edge rate limiting / WAF | **TO DO** — add a Vercel Firewall rule for `/api/*`, `/account/*`, `/admin/login` |
-| Security headers (CSP, HSTS, frame-ancestors) | **TO DO** — CSP must allow `js.stripe.com` |
+| Security headers (CSP allowing Stripe, HSTS, frame-ancestors, nosniff, referrer and permissions policies) | READY — browser test |
+| CSP without `unsafe-inline` (per-request nonces) | **TO DO** — hardening |
 | Two-factor authentication for staff | **TO DO** — recommended before adding staff |
-| Dependency audit in CI | **TO DO** |
+| Dependency audit in CI | READY — runs on every push |
 | Independent security review / penetration test | **TO DO** — recommended before live payments |
 
 ## 5. Data protection and recovery
