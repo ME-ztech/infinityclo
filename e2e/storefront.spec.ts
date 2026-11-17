@@ -95,7 +95,15 @@ test.describe('routes', () => {
       if (message.type() === 'error') problems.push(message.text());
     });
     page.on('pageerror', (error) => problems.push(error.message));
-    for (const route of ['/', '/shop', IN_STOCK, '/community', '/contact', '/cart', '/account/login']) {
+    for (const route of [
+      '/',
+      '/shop',
+      IN_STOCK,
+      '/community',
+      '/contact',
+      '/cart',
+      '/account/login',
+    ]) {
       await page.goto(route);
       await page.waitForLoadState('networkidle');
     }
@@ -150,6 +158,24 @@ test.describe('homepage', () => {
     await hero.getByTestId('hero-next').click();
     await expect(hero.getByTestId('hero-cta')).toBeVisible();
     expect(before).toBeTruthy();
+  });
+
+  test('one emblem: the header carries the wordmark alone, the hero crest stands above the photography', async ({
+    page,
+  }) => {
+    await page.goto('/');
+    await expect(page.getByTestId('brand-home')).toContainText('INFNITY');
+    await expect(page.getByTestId('site-header').locator('img')).toHaveCount(0);
+
+    const crest = page.getByTestId('hero-crest');
+    await expect(crest.locator('img')).toBeVisible();
+    const emblem = (await crest.locator('img').boundingBox())!;
+    const stage = (await page.getByTestId('hero-stage').boundingBox())!;
+    // In its own band, never laid over a photograph — so no model's head,
+    // whatever the slide or crop, can sit under it.
+    expect(emblem.y + emblem.height).toBeLessThanOrEqual(stage.y);
+    const { width } = page.viewportSize()!;
+    expect(Math.abs(emblem.x + emblem.width / 2 - width / 2)).toBeLessThanOrEqual(1);
   });
 
   test('the brand statement and real products are on the page', async ({ page }) => {
@@ -211,7 +237,9 @@ test.describe('product page', () => {
   test('carries product structured data with a CAD price', async ({ page }) => {
     await page.goto(IN_STOCK);
     const blocks = await page.locator('script[type="application/ld+json"]').allTextContents();
-    const product = blocks.map((block) => JSON.parse(block)).find((entry) => entry['@type'] === 'Product');
+    const product = blocks
+      .map((block) => JSON.parse(block))
+      .find((entry) => entry['@type'] === 'Product');
     expect(product).toBeTruthy();
     expect(JSON.stringify(product)).toContain('CAD');
   });
@@ -243,10 +271,20 @@ test.describe('cart', () => {
     const response = await request.post('/api/cart/resolve', {
       data: {
         id: 'tamper',
-        lines: [{ productSlug: 'infnitys-iced-ivory-pearl-tank', variantId: 'not-a-variant', quantity: 1, unitPrice: 1 }],
+        lines: [
+          {
+            productSlug: 'infnitys-iced-ivory-pearl-tank',
+            variantId: 'not-a-variant',
+            quantity: 1,
+            unitPrice: 1,
+          },
+        ],
       },
     });
-    const body = (await response.json()) as { cart: { lines: unknown[]; subtotal: { amount: number } }; droppedLines: unknown[] };
+    const body = (await response.json()) as {
+      cart: { lines: unknown[]; subtotal: { amount: number } };
+      droppedLines: unknown[];
+    };
     expect(body.cart.lines).toHaveLength(0);
     expect(body.cart.subtotal.amount).toBe(0);
     expect(body.droppedLines).toHaveLength(1);
@@ -267,7 +305,10 @@ test.describe('forms', () => {
     await expect(form.getByTestId('newsletter-message')).toContainText(/on the list/i);
   });
 
-  test('the public form endpoints refuse cross-site and consent-less requests', async ({ request, baseURL }) => {
+  test('the public form endpoints refuse cross-site and consent-less requests', async ({
+    request,
+    baseURL,
+  }) => {
     const sameSite = { origin: baseURL! };
     const crossSite = await request.post('/api/contact', {
       headers: { origin: 'https://evil.example' },
@@ -275,7 +316,10 @@ test.describe('forms', () => {
     });
     expect(crossSite.status()).toBe(403);
 
-    const noConsent = await request.post('/api/newsletter', { headers: sameSite, data: { email: 'x@e2e.test' } });
+    const noConsent = await request.post('/api/newsletter', {
+      headers: sameSite,
+      data: { email: 'x@e2e.test' },
+    });
     expect(noConsent.status()).toBe(400);
 
     const unknownDrop = await request.post('/api/waitlist', {
@@ -286,7 +330,12 @@ test.describe('forms', () => {
 
     const contact = await request.post('/api/contact', {
       headers: sameSite,
-      data: { name: 'E2E', email: 'x@e2e.test', topic: 'sizing', message: 'Which size should I take in the tank?' },
+      data: {
+        name: 'E2E',
+        email: 'x@e2e.test',
+        topic: 'sizing',
+        message: 'Which size should I take in the tank?',
+      },
     });
     expect(contact.status()).toBe(200);
   });

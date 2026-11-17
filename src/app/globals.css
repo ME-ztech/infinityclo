@@ -1,5 +1,10 @@
 @import 'tailwindcss';
 
+/* Phones whose visible viewport is short — an iPhone SE, or any iPhone in
+   Safari with its toolbars showing. The campaign hero tightens its spacing
+   there so the copy clears the model's face. */
+@custom-variant short-phone (@media (max-width: 47.99rem) and (max-height: 44rem));
+
 /**
  * INFNITY design tokens — STOREFRONT 1.1.
  *

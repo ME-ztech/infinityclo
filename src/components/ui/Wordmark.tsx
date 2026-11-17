@@ -25,10 +25,13 @@ export function Emblem({
   tone = 'gold',
   className,
   priority,
+  sizes = '128px',
 }: {
   tone?: keyof typeof EMBLEM;
   className?: string;
   priority?: boolean;
+  /** The widest the mark is ever drawn, so a large mark is not upscaled. */
+  sizes?: string;
 }) {
   return (
     <Image
@@ -38,7 +41,7 @@ export function Emblem({
       width={480}
       height={320}
       priority={priority}
-      sizes="128px"
+      sizes={sizes}
       className={cn('h-8 w-auto select-none', className)}
     />
   );

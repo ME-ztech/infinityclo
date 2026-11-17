@@ -9,10 +9,17 @@
  *            banner.
  *   Desktop  every photograph of the slide side by side, edge to edge.
  *
- * The emblem sits upper-centre. Lower-left carries the slide titles as a stacked
- * statement — the active one at full strength — and the call to action. The
- * stacked titles double as the slide selector, so there is no separate row of
- * anonymous dots.
+ * The hero is a column of two parts:
+ *
+ *   Crest  the gold emblem, centred in its own band directly under the
+ *          wordmark in the header. It is in normal flow — never laid over a
+ *          photograph — so no slide, crop or model's head can ever collide with
+ *          it. The band is white like the studio backdrops of the photography,
+ *          so the mark reads as standing above the model, not stamped on them.
+ *   Stage  the photographs, filling the remaining height. Lower-left carries
+ *          the slide titles as a stacked statement — the active one at full
+ *          strength — and the call to action. The stacked titles double as the
+ *          slide selector, so there is no separate row of anonymous dots.
  *
  * Behaviour
  *   - Auto-advances only when more than one slide exists, an interval is set,
@@ -41,6 +48,9 @@ interface HeroProps {
 
 const GRID = { 1: 'md:grid-cols-1', 2: 'md:grid-cols-2', 3: 'md:grid-cols-3' } as const;
 
+/** The hero's emblem: about 1.4× the size it used to be stamped on the photo. */
+const CREST = 'h-[clamp(4rem,17vw,4.5rem)] md:h-20';
+
 export function Hero({ slides, autoAdvanceSeconds }: HeroProps) {
   const [active, setActive] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
@@ -48,10 +58,7 @@ export function Hero({ slides, autoAdvanceSeconds }: HeroProps) {
   const regionRef = useRef<HTMLElement | null>(null);
 
   const count = slides.length;
-  const go = useCallback(
-    (index: number) => setActive(((index % count) + count) % count),
-    [count],
-  );
+  const go = useCallback((index: number) => setActive(((index % count) + count) % count), [count]);
 
   useEffect(() => {
     const query = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -80,7 +87,7 @@ export function Hero({ slides, autoAdvanceSeconds }: HeroProps) {
         aria-labelledby="hero-heading"
         className="edge flex min-h-[60svh] flex-col items-center justify-center py-24 text-center"
       >
-        <Emblem className="mb-8 h-16" priority />
+        <Emblem className={cn('mb-8', CREST)} sizes="120px" priority />
         <h1 id="hero-heading" className="font-display text-statement text-fg">
           Be the Statement
         </h1>
@@ -112,177 +119,183 @@ export function Hero({ slides, autoAdvanceSeconds }: HeroProps) {
       aria-roledescription="carousel"
       aria-label="INFNITY campaign"
       onKeyDown={onKeyDown}
-      className="bg-surface-sunken relative h-[calc(100svh-4rem)] max-h-[58rem] min-h-[34rem] w-full overflow-hidden md:h-[calc(100svh-4.5rem)]"
+      className="bg-surface relative flex h-[calc(100svh-4rem)] max-h-[58rem] min-h-[34rem] w-full flex-col overflow-hidden md:h-[calc(100svh-4.5rem)]"
     >
       <h1 className="sr-only">INFNITY — Be the Statement</h1>
 
-      {/* ── Slides ──────────────────────────────────────────────────── */}
-      {slides.map((slide, index) => {
-        const isActive = index === active;
-        const columns = Math.min(slide.images.length, 3) as 1 | 2 | 3;
-        return (
-          <div
-            key={slide.id}
-            role="group"
-            aria-roledescription="slide"
-            aria-label={`${index + 1} of ${count}: ${slide.title}`}
-            aria-hidden={!isActive}
-            data-testid="hero-slide"
-            data-active={isActive}
-            className={cn(
-              'absolute inset-0 grid grid-cols-1 transition-opacity duration-700 ease-(--ease-brand)',
-              GRID[columns],
-              isActive ? 'opacity-100' : 'pointer-events-none opacity-0',
-            )}
-          >
-            {slide.images.map((image, imageIndex) => (
-              <div
-                key={image.url}
-                className={cn('relative h-full w-full', imageIndex > 0 && 'hidden md:block')}
-              >
-                <Image
-                  src={image.url}
-                  alt={isActive ? image.alt : ''}
-                  fill
-                  priority={index === 0 && imageIndex === 0}
-                  loading={index === 0 && imageIndex === 0 ? undefined : 'lazy'}
-                  sizes={
-                    columns === 1 ? '100vw' : `(min-width: 768px) ${Math.ceil(100 / columns)}vw, 100vw`
-                  }
-                  className="object-cover"
-                  style={{ objectPosition: `${slide.focalPoint.x}% ${slide.focalPoint.y}%` }}
-                />
-              </div>
-            ))}
-
-            {slide.overlay > 0 && (
-              <div
-                aria-hidden
-                className="absolute inset-0 bg-black"
-                style={{ opacity: slide.overlay / 100 }}
-              />
-            )}
-          </div>
-        );
-      })}
-
-      {/* A wash behind the copy only, so type stays legible without dimming the
-          photograph: a band along the bottom on a phone, a soft corner on wider
-          screens. It follows the slide's tone. */}
+      {/* ── Crest ───────────────────────────────────────────────────── */}
       <div
-        aria-hidden
-        className="pointer-events-none absolute bottom-0 left-0 hidden h-[75%] w-[62%] md:block"
-        style={{ backgroundImage: wash(isLight) }}
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-[52%] md:hidden"
-        style={{
-          backgroundImage: `linear-gradient(to top, ${isLight ? 'rgba(0,0,0,0.7)' : 'rgba(255,255,255,0.92)'} 0%, ${isLight ? 'rgba(0,0,0,0.35)' : 'rgba(255,255,255,0.6)'} 55%, transparent 100%)`,
-        }}
-      />
-
-      {/* ── Emblem, upper centre ────────────────────────────────────── */}
-      {/* Phones only: on wider screens the header's centred mark sits directly
-          above the hero, and a second one would land on the photography. */}
-      <div className="pointer-events-none absolute inset-x-0 top-5 flex justify-center md:hidden">
-        <Emblem tone={isLight ? 'paper' : 'gold'} className="h-12" />
+        data-testid="hero-crest"
+        className="short-phone:pt-4 short-phone:pb-3 flex shrink-0 justify-center pt-5 pb-4 md:pt-7 md:pb-6"
+      >
+        <Emblem className={CREST} sizes="120px" priority />
       </div>
 
-      {/* ── Copy, lower left ────────────────────────────────────────── */}
-      <div
-        className={cn(
-          'edge absolute inset-x-0 bottom-0 flex flex-col gap-6 pb-7 md:flex-row md:items-end md:justify-between md:pb-12',
-          isLight ? 'text-paper' : 'text-ink',
-        )}
-      >
-        <div className="min-w-0">
-          {current.eyebrow && (
-            <p
+      {/* ── Stage ───────────────────────────────────────────────────── */}
+      <div data-testid="hero-stage" className="bg-surface-sunken relative min-h-0 flex-1">
+        {/* ── Slides ──────────────────────────────────────────────────── */}
+        {slides.map((slide, index) => {
+          const isActive = index === active;
+          const columns = Math.min(slide.images.length, 3) as 1 | 2 | 3;
+          return (
+            <div
+              key={slide.id}
+              role="group"
+              aria-roledescription="slide"
+              aria-label={`${index + 1} of ${count}: ${slide.title}`}
+              aria-hidden={!isActive}
+              data-testid="hero-slide"
+              data-active={isActive}
               className={cn(
-                'mb-3 text-[0.66rem] font-semibold tracking-[0.3em] uppercase',
-                isLight ? 'text-paper/80' : 'text-ink/70',
+                'absolute inset-0 grid grid-cols-1 transition-opacity duration-700 ease-(--ease-brand)',
+                GRID[columns],
+                isActive ? 'opacity-100' : 'pointer-events-none opacity-0',
               )}
             >
-              {current.eyebrow}
-            </p>
-          )}
+              {slide.images.map((image, imageIndex) => (
+                <div
+                  key={image.url}
+                  className={cn('relative h-full w-full', imageIndex > 0 && 'hidden md:block')}
+                >
+                  <Image
+                    src={image.url}
+                    alt={isActive ? image.alt : ''}
+                    fill
+                    priority={index === 0 && imageIndex === 0}
+                    loading={index === 0 && imageIndex === 0 ? undefined : 'lazy'}
+                    sizes={
+                      columns === 1
+                        ? '100vw'
+                        : `(min-width: 768px) ${Math.ceil(100 / columns)}vw, 100vw`
+                    }
+                    className="object-cover"
+                    style={{ objectPosition: `${slide.focalPoint.x}% ${slide.focalPoint.y}%` }}
+                  />
+                </div>
+              ))}
 
-          <ul className="flex flex-col items-start gap-1" aria-label="Slides">
-            {slides.map((slide, index) => {
-              const isActive = index === active;
-              return (
-                <li key={slide.id}>
-                  <button
-                    type="button"
-                    onClick={() => go(index)}
-                    aria-current={isActive ? 'true' : undefined}
-                    aria-label={`Show slide ${index + 1}: ${slide.title}`}
-                    data-testid="hero-dot"
-                    className={cn(
-                      'font-display block min-h-11 text-left text-[clamp(1.9rem,7.4vw,3.6rem)] leading-[1.02] transition-opacity duration-300',
-                      isActive ? 'opacity-100' : 'opacity-35 hover:opacity-70',
-                    )}
-                  >
-                    {slide.title}
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
-
-          {current.ctaLabel && (
-            <ButtonLink
-              href={current.ctaHref}
-              size="lg"
-              data-testid="hero-cta"
-              className={cn(
-                'mt-6',
-                isLight
-                  ? 'bg-paper text-ink hover:opacity-85'
-                  : 'bg-ink text-paper hover:opacity-85',
+              {slide.overlay > 0 && (
+                <div
+                  aria-hidden
+                  className="absolute inset-0 bg-black"
+                  style={{ opacity: slide.overlay / 100 }}
+                />
               )}
-            >
-              {current.ctaLabel}
-            </ButtonLink>
-          )}
-        </div>
+            </div>
+          );
+        })}
 
-        {/* ── Controls, lower right ─────────────────────────────────── */}
-        {count > 1 && (
-          <div className="flex items-center gap-2 self-end">
-            <button
-              type="button"
-              onClick={() => go(active - 1)}
-              aria-label="Previous slide"
-              data-testid="hero-prev"
-              className={controlClass(isLight, 'w-11')}
-            >
-              <span aria-hidden>←</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => go(active + 1)}
-              aria-label="Next slide"
-              data-testid="hero-next"
-              className={controlClass(isLight, 'w-11')}
-            >
-              <span aria-hidden>→</span>
-            </button>
-            {canAutoAdvance && (
-              <button
-                type="button"
-                onClick={() => setIsPaused((value) => !value)}
-                aria-label={isPaused ? 'Play slideshow' : 'Pause slideshow'}
-                aria-pressed={isPaused}
-                data-testid="hero-pause"
-                className={controlClass(isLight, 'px-5')}
+        {/* A wash behind the copy only, so type stays legible without dimming the
+          photograph: a band along the bottom on a phone, a soft corner on wider
+          screens. It follows the slide's tone. */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute bottom-0 left-0 hidden h-[75%] w-[62%] md:block"
+          style={{ backgroundImage: wash(isLight) }}
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-[52%] md:hidden"
+          style={{
+            backgroundImage: `linear-gradient(to top, ${isLight ? 'rgba(0,0,0,0.7)' : 'rgba(255,255,255,0.92)'} 0%, ${isLight ? 'rgba(0,0,0,0.35)' : 'rgba(255,255,255,0.6)'} 55%, transparent 100%)`,
+          }}
+        />
+
+        {/* ── Copy, lower left ────────────────────────────────────────── */}
+        <div
+          className={cn(
+            'edge short-phone:gap-4 short-phone:pb-5 absolute inset-x-0 bottom-0 flex flex-col gap-6 pb-7 md:flex-row md:items-end md:justify-between md:pb-12',
+            isLight ? 'text-paper' : 'text-ink',
+          )}
+        >
+          <div className="min-w-0">
+            {current.eyebrow && (
+              <p
+                className={cn(
+                  'short-phone:mb-2 mb-3 text-[0.66rem] font-semibold tracking-[0.3em] uppercase',
+                  isLight ? 'text-paper/80' : 'text-ink/70',
+                )}
               >
-                {isPaused ? 'Play' : 'Pause'}
-              </button>
+                {current.eyebrow}
+              </p>
+            )}
+
+            <ul className="flex flex-col items-start gap-1" aria-label="Slides">
+              {slides.map((slide, index) => {
+                const isActive = index === active;
+                return (
+                  <li key={slide.id}>
+                    <button
+                      type="button"
+                      onClick={() => go(index)}
+                      aria-current={isActive ? 'true' : undefined}
+                      aria-label={`Show slide ${index + 1}: ${slide.title}`}
+                      data-testid="hero-dot"
+                      className={cn(
+                        'font-display block min-h-11 text-left text-[clamp(1.9rem,7.4vw,3.6rem)] leading-[1.02] transition-opacity duration-300',
+                        isActive ? 'opacity-100' : 'opacity-35 hover:opacity-70',
+                      )}
+                    >
+                      {slide.title}
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+
+            {current.ctaLabel && (
+              <ButtonLink
+                href={current.ctaHref}
+                size="lg"
+                data-testid="hero-cta"
+                className={cn(
+                  'short-phone:mt-4 mt-6',
+                  isLight
+                    ? 'bg-paper text-ink hover:opacity-85'
+                    : 'bg-ink text-paper hover:opacity-85',
+                )}
+              >
+                {current.ctaLabel}
+              </ButtonLink>
             )}
           </div>
-        )}
+
+          {/* ── Controls, lower right ─────────────────────────────────── */}
+          {count > 1 && (
+            <div className="flex items-center gap-2 self-end">
+              <button
+                type="button"
+                onClick={() => go(active - 1)}
+                aria-label="Previous slide"
+                data-testid="hero-prev"
+                className={controlClass(isLight, 'w-11')}
+              >
+                <span aria-hidden>←</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => go(active + 1)}
+                aria-label="Next slide"
+                data-testid="hero-next"
+                className={controlClass(isLight, 'w-11')}
+              >
+                <span aria-hidden>→</span>
+              </button>
+              {canAutoAdvance && (
+                <button
+                  type="button"
+                  onClick={() => setIsPaused((value) => !value)}
+                  aria-label={isPaused ? 'Play slideshow' : 'Pause slideshow'}
+                  aria-pressed={isPaused}
+                  data-testid="hero-pause"
+                  className={controlClass(isLight, 'px-5')}
+                >
+                  {isPaused ? 'Play' : 'Pause'}
+                </button>
+              )}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Announce slide changes only when the visitor is driving. */}

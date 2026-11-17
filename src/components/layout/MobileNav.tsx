@@ -65,7 +65,7 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
         className="bg-surface text-fg absolute inset-y-0 left-0 flex w-[min(22rem,88vw)] animate-[slide-in-left_260ms_var(--ease-brand)] flex-col shadow-2xl"
       >
         <div className="border-line flex h-16 shrink-0 items-center justify-between border-b px-5">
-          <Wordmark withEmblem emblemClassName="h-7" className="text-base" />
+          <Wordmark className="text-[1.35rem]" />
           <button
             type="button"
             onClick={onClose}

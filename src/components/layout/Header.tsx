@@ -3,8 +3,8 @@
 /**
  * Global header.
  *
- * Three columns: navigation on the left, the brand mark dead centre, utilities
- * on the right. The bar is always solid white with ink type — it sits above the
+ * Three columns: navigation on the left, the INFNITY wordmark dead centre,
+ * utilities on the right. The bar is always solid white with ink type — it sits above the
  * campaign hero rather than over it, so there is no scroll position at which
  * the navigation loses contrast against a photograph.
  *
@@ -118,18 +118,16 @@ export function Header({ announcement }: { announcement?: Announcement | null })
               </nav>
             </div>
 
-            {/* Centre: the brand. */}
+            {/* Centre: the brand. The wordmark alone — the gold emblem is the
+                hero's statement directly below, and two marks stacked a few
+                pixels apart competed for the same glance. */}
             <Link
               href="/"
               aria-label="INFNITY — home"
               data-testid="brand-home"
               className="flex min-h-11 items-center justify-self-center"
             >
-              <Wordmark
-                withEmblem
-                emblemClassName="h-7 md:h-9"
-                className="text-[1.05rem] md:text-[1.35rem]"
-              />
+              <Wordmark className="text-[1.35rem] md:text-[1.6rem]" />
             </Link>
 
             {/* Right: utilities. */}
