@@ -1,29 +1,69 @@
+import Image from 'next/image';
+
 import { cn } from '@/lib/cn';
 import { BRAND } from '@/lib/site';
 
 /**
- * The INFNITY wordmark, set in type rather than shipped as an image.
+ * The INFNITY brand marks.
  *
- * The official logo files could not be retrieved — the source host is blocked in
- * this environment — so this is a typographic mark built from the brand's own
- * name, oblique and letterspaced the way the storefront sets INFNITY.CLO, rather
- * than an invented logo. Swapping in the real artwork means changing this one
- * component. Tracked in docs/ASSET_PROVENANCE.md.
+ * `Emblem` is the brand's own emblem — the artwork published as the logo on
+ * infinityclo.ca — cropped to its bounds by `scripts/build-brand-marks.mjs`.
+ * The gold original is the default; the ink and paper variants are the same
+ * shape in a flat colour for monochrome contexts and dark photography.
  *
- * `text-fg` rather than a fixed colour: the mark appears on bone in the header
- * and on void in the footer and the mobile menu, and it must read on all three.
+ * `Wordmark` sets the brand name in type beside it. The name is typeset rather
+ * than drawn because no vector wordmark has been supplied (see
+ * docs/assets-and-rights.md); it is the brand's name, not an invented logo.
  */
-export function Wordmark({ className }: { className?: string }) {
+const EMBLEM = {
+  gold: '/brand/emblem.png',
+  ink: '/brand/emblem-ink.png',
+  paper: '/brand/emblem-paper.png',
+} as const;
+
+export function Emblem({
+  tone = 'gold',
+  className,
+  priority,
+}: {
+  tone?: keyof typeof EMBLEM;
+  className?: string;
+  priority?: boolean;
+}) {
   return (
-    <span
-      className={cn(
-        'font-display oblique text-fg leading-none tracking-[0.12em] uppercase select-none',
-        className,
-      )}
-    >
-      {BRAND.name}
-      <span className="text-signal">.</span>
-      <span className="tracking-[0.08em]">clo</span>
+    <Image
+      src={EMBLEM[tone]}
+      alt=""
+      aria-hidden
+      width={480}
+      height={320}
+      priority={priority}
+      sizes="128px"
+      className={cn('h-8 w-auto select-none', className)}
+    />
+  );
+}
+
+export function Wordmark({
+  className,
+  withEmblem = false,
+  emblemClassName,
+}: {
+  className?: string;
+  withEmblem?: boolean;
+  emblemClassName?: string;
+}) {
+  return (
+    <span className="inline-flex items-center gap-2.5">
+      {withEmblem && <Emblem className={emblemClassName} priority />}
+      <span
+        className={cn(
+          'font-display text-fg leading-none tracking-[0.14em] uppercase select-none',
+          className,
+        )}
+      >
+        {BRAND.name}
+      </span>
     </span>
   );
 }

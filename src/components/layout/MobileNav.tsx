@@ -1,12 +1,11 @@
 'use client';
 
 /**
- * Mobile navigation.
+ * Mobile navigation — a slide-out panel from the left edge.
  *
- * Full-screen rather than a slide-in sheet: at 390px a partial panel wastes the
- * canvas and makes the type feel cramped. Links are set at display scale so the
- * menu reads as part of the brand rather than as a utility list, and every
- * target clears 48px.
+ * It is a modal dialog: focus is trapped inside it, Escape and the backdrop
+ * close it, focus returns to the menu button, and it closes on navigation so it
+ * can never cover the page that was just requested. Every target clears 44px.
  */
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -14,13 +13,20 @@ import { useEffect } from 'react';
 
 import { Wordmark } from '@/components/ui/Wordmark';
 import { cn } from '@/lib/cn';
-import { LEGAL_NAV, PRIMARY_NAV } from '@/lib/site';
+import { FOOTER_NAV, INSTAGRAM_HANDLE, INSTAGRAM_URL, PRIMARY_NAV } from '@/lib/site';
 import { useFocusTrap } from '@/lib/useFocusTrap';
 
 interface MobileNavProps {
   isOpen: boolean;
   onClose: () => void;
 }
+
+const SECONDARY = [
+  { label: 'Account', href: '/account' },
+  { label: 'Order tracking', href: '/account/orders' },
+  { label: 'Size guide', href: '/size-guide' },
+  { label: 'About', href: '/about' },
+];
 
 export function MobileNav({ isOpen, onClose }: MobileNavProps) {
   const pathname = usePathname();
@@ -35,85 +41,104 @@ export function MobileNav({ isOpen, onClose }: MobileNavProps) {
 
   if (!isOpen) return null;
 
-  return (
-    <div
-      ref={containerRef}
-      role="dialog"
-      aria-modal="true"
-      aria-label="Menu"
-      data-testid="mobile-nav"
-      tabIndex={-1}
-      data-surface="void"
-      className="bg-surface text-fg fixed inset-0 z-[70] flex animate-[fade-in_200ms_ease-out] flex-col lg:hidden"
-    >
-      <div className="edge flex h-16 shrink-0 items-center justify-between">
-        <Wordmark className="text-lg" />
-        <button
-          type="button"
-          onClick={onClose}
-          aria-label="Close menu"
-          className="text-fg hover:text-signal -mr-2 p-3 transition-colors"
-        >
-          <CloseIcon />
-        </button>
-      </div>
+  const policies = FOOTER_NAV.find((group) => group.heading === 'Policies')?.links ?? [];
 
-      <nav aria-label="Primary mobile" className="edge flex-1 overflow-y-auto py-6">
-        <ul className="flex flex-col">
-          {PRIMARY_NAV.map((item, index) => {
-            const isActive = pathname === item.href.split('?')[0];
-            return (
-              <li key={item.label} className="border-line border-b">
+  return (
+    <div className="fixed inset-0 z-[70] lg:hidden">
+      <button
+        type="button"
+        aria-label="Close menu"
+        onClick={onClose}
+        tabIndex={-1}
+        className="absolute inset-0 h-full w-full animate-[fade-in_200ms_ease-out] cursor-default bg-black/40"
+      />
+
+      <div
+        ref={containerRef}
+        id="mobile-nav"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Menu"
+        data-testid="mobile-nav"
+        tabIndex={-1}
+        data-surface="paper"
+        className="bg-surface text-fg absolute inset-y-0 left-0 flex w-[min(22rem,88vw)] animate-[slide-in-left_260ms_var(--ease-brand)] flex-col shadow-2xl"
+      >
+        <div className="border-line flex h-16 shrink-0 items-center justify-between border-b px-5">
+          <Wordmark withEmblem emblemClassName="h-7" className="text-base" />
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close menu"
+            className="text-fg -mr-2.5 grid h-11 w-11 place-items-center"
+          >
+            <CloseIcon />
+          </button>
+        </div>
+
+        <nav aria-label="Primary mobile" className="flex-1 overflow-y-auto px-5 py-4">
+          <ul className="flex flex-col">
+            {PRIMARY_NAV.map((item) => {
+              const isActive =
+                item.href === '/' ? pathname === '/' : pathname.startsWith(item.href);
+              return (
+                <li key={item.label} className="border-hairline border-b">
+                  <Link
+                    href={item.href}
+                    onClick={onClose}
+                    aria-current={isActive ? 'page' : undefined}
+                    className={cn(
+                      'font-display flex min-h-14 items-center justify-between py-3 text-[1.6rem] leading-none',
+                      isActive ? 'text-fg' : 'text-fg-muted hover:text-fg',
+                    )}
+                  >
+                    {item.label}
+                    <span aria-hidden className="text-fg-faint text-base">
+                      →
+                    </span>
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+
+          <ul className="mt-6 flex flex-col">
+            {SECONDARY.map((link) => (
+              <li key={link.href}>
                 <Link
-                  href={item.href}
+                  href={link.href}
                   onClick={onClose}
-                  className={cn(
-                    'font-display oblique flex items-center justify-between py-5 text-[2rem] leading-none transition-colors',
-                    isActive ? 'text-signal' : 'text-fg hover:text-signal',
-                  )}
+                  className="text-fg-muted hover:text-fg flex min-h-11 items-center text-xs font-semibold tracking-[0.2em] uppercase"
                 >
-                  <span>{item.label}</span>
-                  {/* Decorative index — hidden from assistive tech so the link's
-                      accessible name stays "Shop", not "Shop 02". */}
-                  <span aria-hidden className="text-fg-faint text-xs tabular-nums">
-                    {String(index + 1).padStart(2, '0')}
-                  </span>
+                  {link.label}
                 </Link>
               </li>
-            );
-          })}
-        </ul>
+            ))}
+          </ul>
+        </nav>
 
-        {/* Secondary links keep a 44px touch target even though the type is
-            small — the label sets the size, the row sets the tap area. */}
-        <div className="mt-8 flex flex-col">
-          {[
-            { label: 'Account', href: '/account' },
-            { label: 'Contact', href: '/contact' },
-          ].map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              onClick={onClose}
-              className="text-fg-muted hover:text-fg flex min-h-11 items-center text-xs font-semibold tracking-[0.2em] uppercase transition-colors"
-            >
-              {link.label}
-            </Link>
-          ))}
-        </div>
-      </nav>
-
-      <div className="edge border-line flex shrink-0 items-center gap-6 border-t py-5">
-        {LEGAL_NAV.map((link) => (
-          <Link
-            key={link.href}
-            href={link.href}
-            onClick={onClose}
-            className="text-fg-faint hover:text-fg flex min-h-11 items-center text-[0.66rem] tracking-[0.18em] uppercase transition-colors"
+        <div className="border-line shrink-0 border-t px-5 py-4">
+          <a
+            href={INSTAGRAM_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-fg flex min-h-11 items-center text-xs font-semibold tracking-[0.16em]"
           >
-            {link.label}
-          </Link>
-        ))}
+            Instagram {INSTAGRAM_HANDLE}
+          </a>
+          <div className="flex flex-wrap gap-x-5">
+            {policies.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={onClose}
+                className="text-fg-faint hover:text-fg flex min-h-11 items-center text-[0.66rem] tracking-[0.18em] uppercase"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );

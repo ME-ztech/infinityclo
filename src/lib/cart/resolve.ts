@@ -12,7 +12,7 @@ import { mediaById, primaryMedia } from '@/domain/product';
 import type { Cart, CartLine, CurrencyCode } from '@/domain/types';
 import type { PersistedCart, PersistedLine } from './storage';
 
-const MAX_QUANTITY_PER_LINE = 10;
+import { MAX_QUANTITY_PER_LINE } from './limits';
 
 export interface ResolvedCart {
   readonly cart: Cart;

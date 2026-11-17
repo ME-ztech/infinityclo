@@ -1,127 +1,104 @@
-# INFNITY — Digital Flagship Storefront
+# INFNITY — Commerce Platform
 
-A ground-up commerce storefront for INFNITY. Next.js 16, React 19, TypeScript
-strict, Tailwind v4. Frontend-first by design: the storefront is complete and
-deployable, with typed seams where the commerce backend will land.
+INFNITY's own storefront, checkout, customer accounts and back office.
+Next.js 16, React 19, TypeScript strict, Tailwind v4, PostgreSQL (Drizzle),
+Stripe.
 
-> **Preview build.** No payment provider is connected. Checkout is disabled, no
-> order can be placed, and the deployed site says so on every page.
+The platform owns its data and its rules: catalogue, stock, customers, orders
+and discounts live in INFNITY's database. Stripe moves money; nothing depends on
+Shopify at runtime. Shopify is a migration source only.
 
-> **The committed catalog is empty.** The development environment cannot reach
-> the legacy store, so nothing could be imported there — and nothing was
-> invented to stand in for it. A `prebuild` step imports the real catalog and
-> photography during deployment, where the source _is_ reachable, and falls back
-> to honest empty states if it is not. See
-> [`docs/LEGACY_BRAND_AUDIT.md`](docs/LEGACY_BRAND_AUDIT.md).
+> **Status: ready for staging UAT, not for live orders.** The platform's logic
+> is built and tested (267 unit/integration tests, 90 browser tests). Payments
+> have only been exercised with a simulated provider — the Stripe integration
+> has never been run against Stripe. See
+> [`docs/production-readiness.md`](docs/production-readiness.md).
 
 ## Quick start
 
 ```bash
 npm ci
-npm run dev          # http://localhost:3000
 ```
-
-| Script                   | What it does                                             |
-| ------------------------ | -------------------------------------------------------- |
-| `npm run dev`            | Development server                                       |
-| `npm run build`          | Production build                                         |
-| `npm start`              | Serve the production build                               |
-| `npm run typecheck`      | `tsc --noEmit`                                           |
-| `npm run lint`           | ESLint                                                   |
-| `npm test`               | Vitest unit and component tests                          |
-| `npm run e2e`            | Playwright, against a production build                   |
-| `npm run format`         | Prettier                                                 |
-| `npm run import:catalog` | Import the catalogue and photography from infinityclo.ca |
-
-No environment variables are required to build or run. See
-[`docs/VERCEL_DEPLOYMENT.md`](docs/VERCEL_DEPLOYMENT.md) for the optional ones.
-
-## Importing the real catalog
-
-This is the one step that turns the storefront from a working shell into a
-working store.
 
 ```bash
-npm run import:catalog
+npm run admin:setup -- you@example.com
 ```
 
-It reads the legacy store **once**, normalises the catalog into the domain
-model, downloads imagery into `public/assets/`, writes the snapshot into
-`src/data/catalog/`, and regenerates `docs/ASSET_PROVENANCE.md`.
-
-It requires network access to `infinityclo.ca` and `cdn.shopify.com`, which this
-environment currently denies. If the host is unreachable it writes nothing
-rather than leaving a partial catalog behind.
-
-The storefront never contacts the legacy site at runtime.
-
-## Routes
-
-```
-/                     Homepage — hero, drop, editorial, Vault, essentials, Troop
-/shop                 Catalog with faceted filters and sort, URL-persisted
-/collections          All collections
-/collections/[slug]   Single collection
-/products/[slug]      Product detail
-/search               Search results
-/cart                 Full cart
-/vault                The archive
-/troop                Styled By You — customer gallery
-/about                Brand story
-/contact /faq /shipping /returns /privacy /terms
-/account /account/orders /account/wishlist
+```bash
+npm run dev
 ```
 
-## How this codebase is organised
+- Storefront: `http://localhost:3000`
+- Back office: `http://localhost:3000/admin`
+
+No database to install: development uses an embedded PostgreSQL under `./.data`
+and imports the real catalogue on first run. To try checkout with simulated
+payments, add `PAYMENTS_PROVIDER=test` to `.env.local` and add a shipping rate
+in Admin → Settings. See [`.env.example`](.env.example).
+
+## Scripts
+
+| Script | What it does |
+| ------ | ------------ |
+| `npm run dev` / `build` / `start` | Develop, build, serve |
+| `npm run typecheck` / `lint` / `test` | Static checks; unit and integration tests |
+| `npm run e2e` | Browser tests against a production build (`PW_CHANNEL=chrome` to use installed Chrome) |
+| `npm run admin:setup -- <email>` | Create the admin owner account for this environment |
+| `npm run db:generate` | Generate a migration after editing the schema |
+| `npm run db:migrate` | Apply migrations to `DATABASE_URL` |
+| `npm run db:seed` | Import the catalogue snapshot (idempotent) |
+| `npm run db:status` | Row counts; variants still without a counted quantity |
+| `npm run db:inventory -- <csv>` | Apply counted stock from an inventory export |
+| `npm run migrate:customers -- <csv> [--dry-run]` | Import customers from a Shopify export |
+| `npm run migrate:orders -- <csv> [--dry-run]` | Import order history from a Shopify export |
+| `npm run migrate:reconcile` | Figures to hold against Shopify's own |
+| `npm run import:catalog` | Refresh the catalogue snapshot from the legacy store |
+
+## How the code is organised
 
 ```
-src/domain/      Types and pure logic. No React, no Next, no storage.
-src/data/        Repository interfaces + local adapters + composition root
-src/components/  UI by surface
-src/lib/         Cart, analytics, URL params, focus trap, site config
-src/app/         Routes and API handlers
-scripts/         Legacy importer
-e2e/             Playwright journeys
+src/domain/          Pure logic: money, pricing, offers, products, taxonomy
+src/server/db/       Schema, connection, ids
+src/server/commerce/ The engine: catalogue, inventory, checkout, payments,
+                     orders, customers, emails, migration
+src/server/admin/    Staff auth, permissions, gateway over the engine
+src/server/          Config, security, document store, content, records
+src/data/            Repository seam the storefront reads through
+src/app/             Routes: storefront, checkout, account, admin, API
+src/components/      UI by surface
+drizzle/             SQL migrations
+scripts/             Database, migration, setup and import tools
+e2e/                 Browser tests
 ```
 
-Components depend on repository _interfaces_, never on a data source. Phase 2
-swaps `src/data/index.ts` for PostgreSQL adapters without touching the UI.
-[`docs/STOREFRONT_ARCHITECTURE.md`](docs/STOREFRONT_ARCHITECTURE.md) has the detail.
+## Rules the code holds to
 
-## Two rules the code holds to
-
-**An unconfirmed fact is `null`, never a plausible default.** Materials, fit,
-care, weight, origin and garment measurements are all nullable. The UI omits a
-section rather than rendering a guess. A customer orders against these.
-
-**Browser state can never represent a payment.** The cart persists identities
-only — slug, variant, quantity — and every price is resolved server-side, so a
-tampered `localStorage` value cannot change what anything costs. There is no
-client-callable path from cart to order, not even a stubbed one.
+1. **The server prices everything.** The browser sends variant ids and
+   quantities; money is integer cents and never comes from the client.
+2. **Stock is reserved at checkout** by a conditional update, so the last unit
+   cannot be sold twice.
+3. **An order is created in one place** — the handler for a signature-verified
+   payment webhook whose amount matches the checkout.
+4. **Everything that moves money or stock is idempotent.**
+5. **An unconfirmed fact is `null`, never a plausible default.** Fit, fabric,
+   care and measurements are omitted until the brand supplies them.
+6. **Nothing simulated is called production-ready.** The test payment provider
+   cannot be enabled on a production deployment.
 
 ## Documentation
 
-| Document                                                            | Contents                                                       |
-| ------------------------------------------------------------------- | -------------------------------------------------------------- |
-| [`LEGACY_BRAND_AUDIT.md`](docs/LEGACY_BRAND_AUDIT.md)               | What was and was not recoverable from the legacy site, and why |
-| [`STOREFRONT_ARCHITECTURE.md`](docs/STOREFRONT_ARCHITECTURE.md)     | Layers, seams, cart and checkout design, rendering strategy    |
-| [`DESIGN_SYSTEM.md`](docs/DESIGN_SYSTEM.md)                         | Colour, type, spacing, motion, breakpoints                     |
-| [`ASSET_PROVENANCE.md`](docs/ASSET_PROVENANCE.md)                   | Where every asset came from; regenerated by the importer       |
-| [`BRAND_STORY_INPUTS_NEEDED.md`](docs/BRAND_STORY_INPUTS_NEEDED.md) | Questions for the founder, in priority order                   |
-| [`OPERATIONS_CONTENT_GAPS.md`](docs/OPERATIONS_CONTENT_GAPS.md)     | What must be confirmed before taking orders                    |
-| [`VERCEL_DEPLOYMENT.md`](docs/VERCEL_DEPLOYMENT.md)                 | Deployment settings and environment variables                  |
-| [`PHASE_2_COMMERCE_BACKEND.md`](docs/PHASE_2_COMMERCE_BACKEND.md)   | The next phase, sliced and sequenced                           |
-
-## Testing
-
-Unit tests cover the domain logic, URL parsing, cart storage validation, the
-checkout boundary and form behaviour. Playwright covers storefront journeys at
-1440px and Pixel 7 against a production build.
-
-Catalog-dependent journeys are written in full and skip while the snapshot is
-empty. They are not seeded with invented products — a green add-to-cart test
-over fake data would assert something untrue.
-
-```bash
-npm test && npm run e2e
-```
+| Document | Contents |
+| -------- | -------- |
+| [`architecture-decision.md`](docs/architecture-decision.md) | The Shopify-independent architecture and why |
+| [`data-model.md`](docs/data-model.md) | Schema and commerce-domain design |
+| [`migration-plan.md`](docs/migration-plan.md) | Shopify migration, reconciliation, rollback |
+| [`development-plan.md`](docs/development-plan.md) | What was reused, what is done, what remains |
+| [`production-readiness.md`](docs/production-readiness.md) | Checklist: ready, owner action, to do |
+| [`build-vs-shopify.md`](docs/build-vs-shopify.md) | Cost, complexity and timeline, honestly |
+| [`deployment-and-rollback.md`](docs/deployment-and-rollback.md) | Environments, variables, deploy, recover |
+| [`admin-operator-guide.md`](docs/admin-operator-guide.md) | How to run the store day to day |
+| [`test-evidence.md`](docs/test-evidence.md) | Exactly what was tested, and what was simulated |
+| [`feature-matrix.md`](docs/feature-matrix.md) | Every requested feature and its state |
+| [`source-audit.md`](docs/source-audit.md) | What was found on the legacy store and references |
+| [`assets-and-rights.md`](docs/assets-and-rights.md) | Asset inventory, rights, missing-asset requests |
+| [`DESIGN_SYSTEM.md`](docs/DESIGN_SYSTEM.md) | Colour, type, spacing, motion |

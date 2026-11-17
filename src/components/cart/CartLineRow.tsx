@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { formatMoney, isDiscounted, multiplyMoney } from '@/domain/money';
 import type { CartLine } from '@/domain/types';
 import { useCart } from '@/lib/cart/CartProvider';
-import { MAX_QUANTITY_PER_LINE } from '@/lib/cart/resolve';
+import { MAX_QUANTITY_PER_LINE } from '@/lib/cart/limits';
 
 export function CartLineRow({ line }: { line: CartLine }) {
   const { updateQuantity, removeLine, isPending } = useCart();
@@ -54,7 +54,7 @@ export function CartLineRow({ line }: { line: CartLine }) {
             disabled={isPending}
             aria-label={`Remove ${line.productName}, ${line.variantTitle}, from cart`}
             data-testid="cart-remove"
-            className="text-fg-faint hover:text-fg shrink-0 p-1 disabled:opacity-50"
+            className="text-fg-faint hover:text-fg -mt-3 -mr-3 grid h-11 w-11 shrink-0 place-items-center disabled:opacity-50"
           >
             <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden>
               <path d="m4 4 12 12M16 4 4 16" stroke="currentColor" strokeWidth="1.75" />
@@ -70,7 +70,7 @@ export function CartLineRow({ line }: { line: CartLine }) {
               disabled={isPending}
               aria-label="Decrease quantity"
               data-testid="cart-decrease"
-              className="text-fg-muted hover:text-fg hover:bg-surface-sunken flex h-9 w-9 items-center justify-center text-lg leading-none disabled:opacity-50"
+              className="text-fg-muted hover:text-fg hover:bg-surface-sunken flex h-11 w-11 items-center justify-center text-lg leading-none disabled:opacity-50"
             >
               −
             </button>
@@ -87,7 +87,7 @@ export function CartLineRow({ line }: { line: CartLine }) {
               disabled={isPending || line.quantity >= MAX_QUANTITY_PER_LINE}
               aria-label="Increase quantity"
               data-testid="cart-increase"
-              className="text-fg-muted hover:text-fg hover:bg-surface-sunken flex h-9 w-9 items-center justify-center text-lg leading-none disabled:opacity-30"
+              className="text-fg-muted hover:text-fg hover:bg-surface-sunken flex h-11 w-11 items-center justify-center text-lg leading-none disabled:opacity-30"
             >
               +
             </button>

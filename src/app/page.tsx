@@ -1,256 +1,274 @@
+import Image from 'next/image';
+import Link from 'next/link';
+import type { ReactNode } from 'react';
+
+import { DropCountdown } from '@/components/home/DropCountdown';
 import { Hero } from '@/components/home/Hero';
-import { Section, SectionHeader } from '@/components/layout/Section';
-import { ProductGrid } from '@/components/product/ProductGrid';
+import { WaitlistForm } from '@/components/home/WaitlistForm';
+import { Section } from '@/components/layout/Section';
+import { NewsletterForm } from '@/components/newsletter/NewsletterForm';
 import { ProductRack } from '@/components/product/ProductRack';
 import { TroopGallery } from '@/components/troop/TroopGallery';
 import { ButtonLink, TextLink } from '@/components/ui/Button';
-import { EmptyState } from '@/components/ui/EmptyState';
-import { MediaFrame } from '@/components/ui/MediaFrame';
 import { Reveal } from '@/components/ui/Reveal';
-import { catalogRepository, contentRepository } from '@/data';
-import { orderedMedia, primaryMedia } from '@/domain/product';
-import type { Product, ProductMedia } from '@/domain/types';
+import { getSiteContent, type HomepageSectionId } from '@/server/cms';
+import { NEWSLETTER_CONSENT_TEXT, WAITLIST_CONSENT_TEXT, listPublicDrops } from '@/server/records';
+import { getCommunityWall, getFeaturedProducts } from '@/server/storefront';
 
-export const revalidate = 3600;
+export const revalidate = 60;
 
 /**
  * Homepage.
  *
- * Composed as a sequence of *rooms*. Scrolling it should feel like moving
- * through a store rather than down a page, and that only works if the rooms are
- * made of different materials:
- *
- *   BONE      hero — type-led, the front window
- *   PAPER     the drop — a white showroom, garments on white
- *   VOID      manifesto — the lights go out, the brand speaks
- *   BONE      editorial — campaign photography at scale
- *   INK       the Vault — the archive room
- *   CONCRETE  essentials — the core rail
- *   PAPER     the Troop — customer fits
- *   VOID      newsletter and footer (in `Footer`)
- *
- * Black is now a *punctuation mark* in that sequence rather than the background
- * it was in 1.0. Two dark rooms across a long scroll land hard; eight of them
- * land as nothing at all.
- *
- * Sections that depend on photography are rendered only when the photography
- * exists. That is what keeps this composition honest whether the catalogue
- * import has run or not: it degrades to a shorter, tighter page rather than to a
- * page of empty grey rectangles apologising for themselves.
+ * Nothing here is hard-coded: the section order and on/off state, every
+ * headline, the hero slides, the featured products and the lookbook all come
+ * from the CMS document the owner edits in /admin. A section with nothing real
+ * to show — no lookbook images, no community photos, no upcoming drop — is
+ * skipped rather than padded.
  */
 export default async function HomePage() {
-  const [{ products: featured }, { products: newest }, collections, ugc, campaigns] =
-    await Promise.all([
-      catalogRepository.listProducts({ sort: 'featured', limit: 8 }),
-      catalogRepository.listProducts({ sort: 'newest', limit: 8 }),
-      catalogRepository.listCollections(),
-      contentRepository.listUGC(8),
-      contentRepository.listCampaigns(),
-    ]);
+  const content = await getSiteContent();
+  const [featured, wall, drops] = await Promise.all([
+    getFeaturedProducts(content, 8),
+    getCommunityWall(8),
+    listPublicDrops(),
+  ]);
 
-  const { products: essentials } = await catalogRepository.listProducts({
-    sort: 'featured',
-    limit: 3,
-    offset: 8,
-  });
+  const slides = content.hero.slides.filter((slide) => slide.enabled);
 
-  /**
-   * "New Arrivals" is only an honest heading when publish dates exist to sort
-   * by. Without them the newest sort degrades to alphabetical, so the section
-   * keeps the same design and takes the brand's own merchandised order under a
-   * heading that claims nothing about dates.
-   */
-  const hasPublishDates = newest.some((product) => product.publishedAt !== null);
-  const dropProducts = hasPublishDates ? newest : featured;
+  const sections: Record<HomepageSectionId, () => ReactNode> = {
+    hero: () => (
+      <Hero key="hero" slides={slides} autoAdvanceSeconds={content.hero.autoAdvanceSeconds} />
+    ),
 
-  const heroMedia = campaigns[0]?.media[0] ?? (featured[0] ? primaryMedia(featured[0]) : null);
-  const editorialMedia = pickEditorialMedia(featured, heroMedia);
-
-  const hasCatalog = featured.length > 0;
-  const archivedCount = collections.filter((collection) => collection.isArchived).length;
-
-  return (
-    <>
-      <Hero media={heroMedia} />
-
-      {/* ── PAPER — the showroom ────────────────────────────────────── */}
-      <Section surface="paper" aria-labelledby="drop-heading">
-        <SectionHeader
-          id="drop-heading"
-          eyebrow={hasPublishDates ? 'Current drop' : 'Now in store'}
-          title={hasPublishDates ? 'New Arrivals' : 'The Drop'}
-          action={
-            <TextLink href={hasPublishDates ? '/shop?sort=newest' : '/shop'}>View all</TextLink>
-          }
-          className="mb-10 md:mb-14"
-        />
-
-        {hasCatalog ? (
-          <ProductRack products={dropProducts} priorityCount={1} columns={4} />
-        ) : (
-          <EmptyState
-            title="The catalogue is not loaded"
-            body="Product data has not been imported into this build. No stand-in products have been invented to fill the space."
-            action={
-              <ButtonLink href="/about" variant="secondary" size="md">
-                About INFNITY
-              </ButtonLink>
-            }
-          />
-        )}
-      </Section>
-
-      {/* ── VOID — the manifesto ────────────────────────────────────── */}
-      <Section surface="void" spacing="loose" aria-labelledby="manifesto-heading">
-        <Reveal className="mx-auto max-w-4xl">
-          <div className="mb-8 flex items-center gap-4">
-            <span aria-hidden className="bg-signal h-px w-12" />
-            <p className="text-fg-faint text-[0.66rem] font-semibold tracking-[0.32em] uppercase">
-              The label
-            </p>
-          </div>
-
-          <h2
-            id="manifesto-heading"
-            className="font-display text-headline text-fg oblique text-balance"
-          >
-            Don&apos;t fold.
-            <br />
-            Don&apos;t follow.
-            <br />
-            <span className="text-signal">Never settle.</span>
-          </h2>
-
-          <p className="text-fg-muted mt-8 max-w-lg text-[0.95rem] leading-relaxed">
-            INFNITY is where raw identity meets untouchable design. Every piece is made to be worn
-            hard and to still read as a statement.
-          </p>
-
-          <div className="mt-10">
-            <ButtonLink href="/about" variant="primary" size="lg">
-              Read the story
-            </ButtonLink>
-          </div>
-        </Reveal>
-      </Section>
-
-      {/* ── BONE — editorial. Only when there is a real photograph. ─── */}
-      {editorialMedia && (
-        <Section surface="bone" bleed spacing="none" aria-labelledby="editorial-heading">
-          <div className="grid items-stretch md:grid-cols-2">
-            <div data-surface="paper" className="bg-surface order-1 md:order-2">
-              <MediaFrame
-                src={editorialMedia.url}
-                alt={editorialMedia.alt}
-                sizes="(min-width: 768px) 50vw, 100vw"
-                ratioClassName="aspect-[4/5] md:aspect-auto md:h-full md:min-h-[36rem]"
-                fallbackLabel="INFNITY"
-              />
-            </div>
-
-            <Reveal className="order-2 flex flex-col justify-center px-(--spacing-gutter) py-16 md:order-1 md:py-24">
-              <p className="text-fg-faint mb-5 text-[0.66rem] font-semibold tracking-[0.32em] uppercase">
-                Campaign
-              </p>
-              <h2
-                id="editorial-heading"
-                className="font-display text-headline text-fg max-w-[12ch] text-balance"
-              >
-                Worn hard.
-                <br />
-                Still a statement.
-              </h2>
-              <p className="text-fg-muted mt-6 max-w-sm text-sm leading-relaxed">
-                Shot on the pieces themselves — no studio gloss, no borrowed imagery. What you see
-                on the model is what arrives in the box.
-              </p>
-              <div className="mt-9">
-                <TextLink href="/shop">Shop the campaign</TextLink>
-              </div>
-            </Reveal>
-          </div>
-        </Section>
-      )}
-
-      {/* ── INK — the Vault ─────────────────────────────────────────── */}
-      <Section surface="ink" aria-labelledby="vault-heading">
-        <Reveal className="border-line flex flex-col items-start gap-10 border px-6 py-16 md:flex-row md:items-center md:justify-between md:px-14 md:py-24">
-          <div>
-            <p className="text-fg-faint mb-5 text-[0.66rem] font-semibold tracking-[0.32em] uppercase">
-              The archive
-            </p>
-            <h2 id="vault-heading" className="font-display text-headline text-fg oblique">
-              Enter the Vault
+    statement: () =>
+      content.statement.headline ? (
+        <Section key="statement" surface="paper" aria-labelledby="statement-heading">
+          <Reveal className="mx-auto max-w-3xl text-center">
+            <h2
+              id="statement-heading"
+              className="font-display text-fg text-[clamp(2.5rem,9vw,6rem)] leading-[0.9] text-balance"
+            >
+              {content.statement.headline}
             </h2>
-            <p className="text-fg-muted mt-6 max-w-sm text-sm leading-relaxed">
-              Past drops and retired pieces, kept on record. Not restocked, not reissued — still
-              INFNITY.
-            </p>
-            {archivedCount > 0 && (
-              <p className="text-fg-faint mt-5 text-[0.68rem] tracking-[0.18em] uppercase tabular-nums">
-                {archivedCount} archived {archivedCount === 1 ? 'collection' : 'collections'}
+            {content.statement.body && (
+              <p className="text-fg-muted mx-auto mt-7 max-w-xl text-[0.95rem] leading-relaxed text-pretty">
+                {content.statement.body}
               </p>
             )}
-          </div>
+          </Reveal>
+        </Section>
+      ) : null,
 
-          <ButtonLink href="/vault" variant="primary" size="lg" className="shrink-0">
-            Enter
+    featured: () =>
+      featured.length > 0 ? (
+        <Section
+          key="featured"
+          surface="paper"
+          spacing="tight"
+          aria-labelledby="featured-heading"
+          data-testid="home-featured"
+        >
+          <CenteredHeading id="featured-heading" title={content.featured.heading} />
+          <ProductRack products={featured} priorityCount={0} columns={4} />
+          <div className="mt-10 flex justify-center">
+            <TextLink href="/shop">Shop all</TextLink>
+          </div>
+        </Section>
+      ) : null,
+
+    vault: () => (
+      <Section key="vault" surface="ink" aria-labelledby="vault-heading" data-testid="home-vault">
+        <Reveal className="mx-auto flex max-w-2xl flex-col items-center text-center">
+          <h2
+            id="vault-heading"
+            className="font-display text-fg text-[clamp(2.5rem,9vw,5.5rem)] leading-[0.9]"
+          >
+            {content.vault.heading}
+          </h2>
+          {content.vault.body && (
+            <p className="text-fg-muted mt-6 max-w-md text-sm leading-relaxed">
+              {content.vault.body}
+            </p>
+          )}
+          <ButtonLink href="/shop" size="lg" className="mt-9">
+            {content.vault.ctaLabel || 'Enter the Vault'}
           </ButtonLink>
         </Reveal>
       </Section>
+    ),
 
-      {/* ── CONCRETE — essentials ───────────────────────────────────── */}
-      {essentials.length > 0 && (
-        <Section surface="concrete" aria-labelledby="essentials-heading">
-          <SectionHeader
-            id="essentials-heading"
-            eyebrow="Core"
-            title="The Essentials"
-            lede="The pieces that stay in rotation between drops."
-            action={<TextLink href="/shop">Shop the core</TextLink>}
-            className="mb-10 md:mb-14"
-          />
-          <ProductGrid products={essentials} density="editorial" priorityCount={0} />
+    lookbook: () =>
+      content.lookbook.images.length > 0 ? (
+        <Section
+          key="lookbook"
+          surface="paper"
+          bleed
+          spacing="tight"
+          aria-labelledby="lookbook-heading"
+          data-testid="home-lookbook"
+        >
+          <div className="edge">
+            <CenteredHeading
+              id="lookbook-heading"
+              title={content.lookbook.heading}
+              lede={content.lookbook.body}
+            />
+          </div>
+          <ul className="grid grid-cols-2 gap-px md:grid-cols-3">
+            {content.lookbook.images.map((image, index) => {
+              const frame = (
+                <div className="bg-surface-sunken relative aspect-[4/5] overflow-hidden">
+                  <Image
+                    src={image.url}
+                    alt={image.alt}
+                    fill
+                    sizes="(min-width: 768px) 33vw, 50vw"
+                    className="object-cover object-top transition-transform duration-700 ease-(--ease-brand) group-hover:scale-[1.03]"
+                  />
+                </div>
+              );
+              return (
+                <li key={`${image.url}-${index}`}>
+                  {image.productSlug ? (
+                    <Link
+                      href={`/products/${image.productSlug}`}
+                      className="group block"
+                      aria-label={`Shop this look: ${image.alt}`}
+                    >
+                      {frame}
+                    </Link>
+                  ) : (
+                    <div className="group">{frame}</div>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
         </Section>
-      )}
+      ) : null,
 
-      {/* ── PAPER — the Troop. Only when real customer fits exist. ──── */}
-      {ugc.length > 0 && (
-        <Section surface="paper" aria-labelledby="troop-heading">
-          <SectionHeader
-            id="troop-heading"
-            eyebrow="Styled by you"
-            title="The Troop"
-            action={<TextLink href="/troop">See the gallery</TextLink>}
-            className="mb-10 md:mb-14"
+    community: () =>
+      wall.length > 0 ? (
+        <Section
+          key="community"
+          surface="paper"
+          spacing="tight"
+          aria-labelledby="community-heading"
+          data-testid="home-community"
+        >
+          <CenteredHeading
+            id="community-heading"
+            title={content.community.heading}
+            lede={content.community.body}
           />
-          <TroopGallery entries={ugc} />
+          <TroopGallery entries={wall} />
+          <div className="mt-10 flex justify-center">
+            <ButtonLink href="/community" variant="secondary" size="lg">
+              See the wall
+            </ButtonLink>
+          </div>
         </Section>
-      )}
+      ) : null,
+
+    'coming-soon': () =>
+      drops.length > 0 ? (
+        <Section
+          key="coming-soon"
+          surface="bone"
+          aria-labelledby="coming-soon-heading"
+          data-testid="home-coming-soon"
+        >
+          <CenteredHeading id="coming-soon-heading" title="Coming soon" />
+          <div className="mx-auto flex max-w-5xl flex-col gap-16">
+            {drops.map((drop) => (
+              <article
+                key={drop.id}
+                className={
+                  drop.image
+                    ? 'grid items-center gap-8 md:grid-cols-2 md:gap-14'
+                    : 'mx-auto w-full max-w-xl text-center'
+                }
+              >
+                {drop.image && (
+                  <div className="bg-surface-sunken relative aspect-[4/5] overflow-hidden">
+                    <Image
+                      src={drop.image.url}
+                      alt={drop.image.alt}
+                      fill
+                      sizes="(min-width: 768px) 50vw, 100vw"
+                      className="object-cover"
+                    />
+                  </div>
+                )}
+                <div>
+                  <p className="text-fg-faint text-[0.66rem] font-semibold tracking-[0.3em] uppercase">
+                    {drop.stage === 'early_access' ? 'Early access' : 'Next drop'}
+                  </p>
+                  {/* The name, teaser and date appear only once the owner has
+                      set them. Nothing about an unreleased product is assumed. */}
+                  {drop.publicName && (
+                    <h3 className="font-display text-headline text-fg mt-3">{drop.publicName}</h3>
+                  )}
+                  {drop.teaser && (
+                    <p className="text-fg-muted mt-4 text-sm leading-relaxed">{drop.teaser}</p>
+                  )}
+                  {drop.releaseConfirmed && drop.releaseAt && (
+                    <DropCountdown releaseAt={drop.releaseAt} className="mt-6" />
+                  )}
+                  {drop.waitlistEnabled && (
+                    <WaitlistForm
+                      dropId={drop.id}
+                      consentText={WAITLIST_CONSENT_TEXT}
+                      className="mt-7"
+                    />
+                  )}
+                </div>
+              </article>
+            ))}
+          </div>
+        </Section>
+      ) : null,
+
+    newsletter: () => (
+      <Section
+        key="newsletter"
+        surface="paper"
+        aria-labelledby="newsletter-heading"
+        data-testid="home-newsletter"
+      >
+        <div className="mx-auto max-w-xl text-center">
+          <h2 id="newsletter-heading" className="font-display text-headline text-fg">
+            {content.newsletter.heading}
+          </h2>
+          {content.newsletter.body && (
+            <p className="text-fg-muted mt-5 text-sm leading-relaxed">{content.newsletter.body}</p>
+          )}
+          <NewsletterForm
+            source="homepage"
+            consentText={NEWSLETTER_CONSENT_TEXT}
+            align="center"
+            className="mt-8"
+          />
+        </div>
+      </Section>
+    ),
+  };
+
+  return (
+    <>
+      {content.sections.filter((section) => section.enabled).map((section) => sections[section.id]())}
     </>
   );
 }
 
-/**
- * The editorial slot wants an on-model shot, and specifically not the one
- * already used in the hero — repeating a single asset twice on one page is the
- * tell that a storefront has no photography rather than a design decision.
- * Returns null when the catalogue genuinely has nothing else, and the section
- * is dropped entirely.
- */
-function pickEditorialMedia(
-  products: readonly Product[],
-  exclude: ProductMedia | null,
-): ProductMedia | null {
-  for (const product of products) {
-    const candidate = orderedMedia(product).find(
-      (item) => item.kind === 'model' && item.url !== exclude?.url,
-    );
-    if (candidate) return candidate;
-  }
-  for (const product of products) {
-    const candidate = orderedMedia(product).find((item) => item.url !== exclude?.url);
-    if (candidate) return candidate;
-  }
-  return null;
+function CenteredHeading({ id, title, lede }: { id: string; title: string; lede?: string }) {
+  return (
+    <div className="mx-auto mb-10 max-w-2xl text-center md:mb-14">
+      <h2 id={id} className="font-display text-headline text-fg text-balance">
+        {title}
+      </h2>
+      {lede && <p className="text-fg-muted mt-4 text-sm leading-relaxed text-pretty">{lede}</p>}
+    </div>
+  );
 }

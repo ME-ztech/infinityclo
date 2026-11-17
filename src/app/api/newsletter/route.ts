@@ -1,40 +1,40 @@
 /**
  * Newsletter signup.
  *
- * Phase 1 has no email provider connected, so this route validates the address
- * and returns success **without persisting it**. That is a deliberate choice
- * over the two alternatives: storing addresses somewhere with no retention
- * policy or consent record, or failing the form and making the UI look broken.
+ * Requires explicit consent (`consent: true`) — an email address alone is not
+ * permission to market to someone. The consent record is stored, and mirrored
+ * onto the customer account with the same address, if there is one.
  *
- * The response copy therefore confirms the submission was received rather than
- * promising a welcome email that nothing can send.
- *
- * To make this real in Phase 2, add the provider call where marked. The client
- * contract does not change.
+ * The confirmation says only what is true: the address is on the list. It does
+ * not promise a welcome email, because nothing here sends one.
  */
-import { NextResponse } from 'next/server';
+import { guardPublicForm, hasConsent, isHoneypotTripped, json, readJsonObject } from '@/server/customer/forms';
+import { signUpForNewsletter } from '@/server/customer/newsletter';
+import { cleanText, normaliseEmail } from '@/server/security';
 
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+export const dynamic = 'force-dynamic';
 
-export async function POST(request: Request): Promise<NextResponse> {
-  let body: unknown;
+const SUCCESS = 'You’re on the list. We’ll email you about the next drop.';
+
+export async function POST(request: Request) {
+  const guard = guardPublicForm(request, 'newsletter', 8);
+  if (guard.refused) return guard.refused;
+
+  const body = await readJsonObject(request);
+  if (!body) return json({ error: 'Invalid request.' }, 400);
+  if (isHoneypotTripped(body.website)) return json({ message: SUCCESS });
+
+  const email = normaliseEmail(body.email);
+  if (!email) return json({ error: 'Enter a valid email address.' }, 400);
+  if (!hasConsent(body.consent)) {
+    return json({ error: 'Please confirm you want to receive emails from INFNITY.', code: 'consent_required' }, 400);
+  }
+
   try {
-    body = await request.json();
-  } catch {
-    return NextResponse.json({ error: 'Invalid request.' }, { status: 400 });
+    const result = await signUpForNewsletter(email, cleanText(body.source, 60) || 'site');
+    return json({ message: result.created ? SUCCESS : 'You’re already on the list.' });
+  } catch (error) {
+    console.error(`[newsletter] signup failed: ${(error as Error).message}`);
+    return json({ error: 'We could not save that right now. Please try again.' }, 503);
   }
-
-  const payload = (body ?? {}) as Record<string, unknown>;
-  const email = typeof payload.email === 'string' ? payload.email.trim() : '';
-
-  if (!EMAIL_PATTERN.test(email) || email.length > 254) {
-    return NextResponse.json({ error: 'Enter a valid email address.' }, { status: 400 });
-  }
-
-  // PHASE 2 SEAM: forward to the email provider here, then persist the consent
-  // record (address, timestamp, source, IP) alongside it.
-
-  return NextResponse.json({
-    message: 'Received. The list opens with the next drop.',
-  });
 }

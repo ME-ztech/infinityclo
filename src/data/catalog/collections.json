@@ -1,1 +1,13 @@
-[]
+[
+  {
+    "slug": "all",
+    "name": "All Products",
+    "description": null,
+    "heroMedia": null,
+    "dropLabel": null,
+    "releasedAt": null,
+    "isArchived": false,
+    "productSlugs": [],
+    "legacyUrl": "https://infinityclo.ca/collections/all"
+  }
+]

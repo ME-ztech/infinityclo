@@ -1,1 +1,580 @@
-[]
+[
+  {
+    "id": "troop-01",
+    "media": {
+      "id": "troop-media-01",
+      "url": "/community/troop-01-ba9c4198.jpg",
+      "alt": "A member of the Troop styled in INFNITY",
+      "kind": "ugc",
+      "width": 1320,
+      "height": 2019,
+      "position": 1,
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_2169_2048x2048.jpg?v=1764309517"
+    },
+    "handle": null,
+    "caption": null,
+    "productSlugs": [],
+    "sourceUrl": "https://infinityclo.ca/pages/customer-gallery"
+  },
+  {
+    "id": "troop-02",
+    "media": {
+      "id": "troop-media-02",
+      "url": "/community/troop-02-75421d1d.jpg",
+      "alt": "A member of the Troop styled in INFNITY",
+      "kind": "ugc",
+      "width": 1320,
+      "height": 2112,
+      "position": 2,
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_7815_2048x2048.png?v=1764304857"
+    },
+    "handle": null,
+    "caption": null,
+    "productSlugs": [],
+    "sourceUrl": "https://infinityclo.ca/pages/customer-gallery"
+  },
+  {
+    "id": "troop-03",
+    "media": {
+      "id": "troop-media-03",
+      "url": "/community/troop-03-135dfe6f.jpg",
+      "alt": "A member of the Troop styled in INFNITY",
+      "kind": "ugc",
+      "width": 1170,
+      "height": 1903,
+      "position": 3,
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_9592_2048x2048.jpg?v=1764462362"
+    },
+    "handle": null,
+    "caption": null,
+    "productSlugs": [],
+    "sourceUrl": "https://infinityclo.ca/pages/customer-gallery"
+  },
+  {
+    "id": "troop-04",
+    "media": {
+      "id": "troop-media-04",
+      "url": "/community/troop-04-d20a2237.jpg",
+      "alt": "A member of the Troop styled in INFNITY",
+      "kind": "ugc",
+      "width": 1320,
+      "height": 2041,
+      "position": 4,
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_2166_2048x2048.jpg?v=1764309589"
+    },
+    "handle": null,
+    "caption": null,
+    "productSlugs": [],
+    "sourceUrl": "https://infinityclo.ca/pages/customer-gallery"
+  },
+  {
+    "id": "troop-05",
+    "media": {
+      "id": "troop-media-05",
+      "url": "/community/troop-05-9c376ed4.jpg",
+      "alt": "A member of the Troop styled in INFNITY",
+      "kind": "ugc",
+      "width": 1320,
+      "height": 1984,
+      "position": 5,
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_2150_2048x2048.jpg?v=1764304852"
+    },
+    "handle": null,
+    "caption": null,
+    "productSlugs": [],
+    "sourceUrl": "https://infinityclo.ca/pages/customer-gallery"
+  },
+  {
+    "id": "troop-06",
+    "media": {
+      "id": "troop-media-06",
+      "url": "/community/troop-06-a62420b9.jpg",
+      "alt": "A member of the Troop styled in INFNITY",
+      "kind": "ugc",
+      "width": 1290,
+      "height": 1950,
+      "position": 6,
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_6408_2048x2048.jpg?v=1764462304"
+    },
+    "handle": null,
+    "caption": null,
+    "productSlugs": [],
+    "sourceUrl": "https://infinityclo.ca/pages/customer-gallery"
+  },
+  {
+    "id": "troop-07",
+    "media": {
+      "id": "troop-media-07",
+      "url": "/community/troop-07-69df1da1.jpg",
+      "alt": "A member of the Troop styled in INFNITY",
+      "kind": "ugc",
+      "width": 1320,
+      "height": 2115,
+      "position": 7,
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_2147_2048x2048.jpg?v=1764304852"
+    },
+    "handle": null,
+    "caption": null,
+    "productSlugs": [],
+    "sourceUrl": "https://infinityclo.ca/pages/customer-gallery"
+  },
+  {
+    "id": "troop-08",
+    "media": {
+      "id": "troop-media-08",
+      "url": "/community/troop-08-67b7f1b4.jpg",
+      "alt": "A member of the Troop styled in INFNITY",
+      "kind": "ugc",
+      "width": 1320,
+      "height": 2130,
+      "position": 8,
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_2162_2048x2048.jpg?v=1764304852"
+    },
+    "handle": null,
+    "caption": null,
+    "productSlugs": [],
+    "sourceUrl": "https://infinityclo.ca/pages/customer-gallery"
+  },
+  {
+    "id": "troop-09",
+    "media": {
+      "id": "troop-media-09",
+      "url": "/community/troop-09-f80a3175.jpg",
+      "alt": "A member of the Troop styled in INFNITY",
+      "kind": "ugc",
+      "width": 1179,
+      "height": 1931,
+      "position": 9,
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_7809_2048x2048.png?v=1764304857"
+    },
+    "handle": null,
+    "caption": null,
+    "productSlugs": [],
+    "sourceUrl": "https://infinityclo.ca/pages/customer-gallery"
+  },
+  {
+    "id": "troop-10",
+    "media": {
+      "id": "troop-media-10",
+      "url": "/community/troop-10-ea3ee901.jpg",
+      "alt": "A member of the Troop styled in INFNITY",
+      "kind": "ugc",
+      "width": 1320,
+      "height": 2089,
+      "position": 10,
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_7811_2048x2048.png?v=1764304857"
+    },
+    "handle": null,
+    "caption": null,
+    "productSlugs": [],
+    "sourceUrl": "https://infinityclo.ca/pages/customer-gallery"
+  },
+  {
+    "id": "troop-11",
+    "media": {
+      "id": "troop-media-11",
+      "url": "/community/troop-11-791f1c9f.jpg",
+      "alt": "A member of the Troop styled in INFNITY",
+      "kind": "ugc",
+      "width": 1320,
+      "height": 2015,
+      "position": 11,
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_2167_2048x2048.jpg?v=1764309584"
+    },
+    "handle": null,
+    "caption": null,
+    "productSlugs": [],
+    "sourceUrl": "https://infinityclo.ca/pages/customer-gallery"
+  },
+  {
+    "id": "troop-12",
+    "media": {
+      "id": "troop-media-12",
+      "url": "/community/troop-12-34c294ae.jpg",
+      "alt": "A member of the Troop styled in INFNITY",
+      "kind": "ugc",
+      "width": 1320,
+      "height": 2111,
+      "position": 12,
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_7828_2048x2048.png?v=1764304857"
+    },
+    "handle": null,
+    "caption": null,
+    "productSlugs": [],
+    "sourceUrl": "https://infinityclo.ca/pages/customer-gallery"
+  },
+  {
+    "id": "troop-13",
+    "media": {
+      "id": "troop-media-13",
+      "url": "/community/troop-13-55b6894e.jpg",
+      "alt": "A member of the Troop styled in INFNITY",
+      "kind": "ugc",
+      "width": 1170,
+      "height": 1902,
+      "position": 13,
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_7820_2048x2048.png?v=1764304856"
+    },
+    "handle": null,
+    "caption": null,
+    "productSlugs": [],
+    "sourceUrl": "https://infinityclo.ca/pages/customer-gallery"
+  },
+  {
+    "id": "troop-14",
+    "media": {
+      "id": "troop-media-14",
+      "url": "/community/troop-14-e93ac2e6.jpg",
+      "alt": "A member of the Troop styled in INFNITY",
+      "kind": "ugc",
+      "width": 1320,
+      "height": 2121,
+      "position": 14,
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_7813_2048x2048.png?v=1764304856"
+    },
+    "handle": null,
+    "caption": null,
+    "productSlugs": [],
+    "sourceUrl": "https://infinityclo.ca/pages/customer-gallery"
+  },
+  {
+    "id": "troop-15",
+    "media": {
+      "id": "troop-media-15",
+      "url": "/community/troop-15-13243564.jpg",
+      "alt": "A member of the Troop styled in INFNITY",
+      "kind": "ugc",
+      "width": 1320,
+      "height": 2005,
+      "position": 15,
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_2163_2048x2048.jpg?v=1764309592"
+    },
+    "handle": null,
+    "caption": null,
+    "productSlugs": [],
+    "sourceUrl": "https://infinityclo.ca/pages/customer-gallery"
+  },
+  {
+    "id": "troop-16",
+    "media": {
+      "id": "troop-media-16",
+      "url": "/community/troop-16-e6e61f89.jpg",
+      "alt": "A member of the Troop styled in INFNITY",
+      "kind": "ugc",
+      "width": 1320,
+      "height": 2112,
+      "position": 16,
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_7816_2048x2048.png?v=1764304856"
+    },
+    "handle": null,
+    "caption": null,
+    "productSlugs": [],
+    "sourceUrl": "https://infinityclo.ca/pages/customer-gallery"
+  },
+  {
+    "id": "troop-17",
+    "media": {
+      "id": "troop-media-17",
+      "url": "/community/troop-17-f930d96a.jpg",
+      "alt": "A member of the Troop styled in INFNITY",
+      "kind": "ugc",
+      "width": 1320,
+      "height": 1195,
+      "position": 17,
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_2168_2048x2048.jpg?v=1764309579"
+    },
+    "handle": null,
+    "caption": null,
+    "productSlugs": [],
+    "sourceUrl": "https://infinityclo.ca/pages/customer-gallery"
+  },
+  {
+    "id": "troop-18",
+    "media": {
+      "id": "troop-media-18",
+      "url": "/community/troop-18-71be94e8.jpg",
+      "alt": "A member of the Troop styled in INFNITY",
+      "kind": "ugc",
+      "width": 1320,
+      "height": 2116,
+      "position": 18,
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_7812_2048x2048.png?v=1764304855"
+    },
+    "handle": null,
+    "caption": null,
+    "productSlugs": [],
+    "sourceUrl": "https://infinityclo.ca/pages/customer-gallery"
+  },
+  {
+    "id": "troop-19",
+    "media": {
+      "id": "troop-media-19",
+      "url": "/community/troop-19-feef08b6.jpg",
+      "alt": "A member of the Troop styled in INFNITY",
+      "kind": "ugc",
+      "width": 1320,
+      "height": 2112,
+      "position": 19,
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_7814_2048x2048.png?v=1764304856"
+    },
+    "handle": null,
+    "caption": null,
+    "productSlugs": [],
+    "sourceUrl": "https://infinityclo.ca/pages/customer-gallery"
+  },
+  {
+    "id": "troop-20",
+    "media": {
+      "id": "troop-media-20",
+      "url": "/community/troop-20-ee03f592.jpg",
+      "alt": "A member of the Troop styled in INFNITY",
+      "kind": "ugc",
+      "width": 1320,
+      "height": 1999,
+      "position": 20,
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_2170_2048x2048.jpg?v=1764309512"
+    },
+    "handle": null,
+    "caption": null,
+    "productSlugs": [],
+    "sourceUrl": "https://infinityclo.ca/pages/customer-gallery"
+  },
+  {
+    "id": "troop-21",
+    "media": {
+      "id": "troop-media-21",
+      "url": "/community/troop-21-f5611545.jpg",
+      "alt": "A member of the Troop styled in INFNITY",
+      "kind": "ugc",
+      "width": 1320,
+      "height": 1987,
+      "position": 21,
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_7810_2048x2048.png?v=1764304856"
+    },
+    "handle": null,
+    "caption": null,
+    "productSlugs": [],
+    "sourceUrl": "https://infinityclo.ca/pages/customer-gallery"
+  },
+  {
+    "id": "troop-22",
+    "media": {
+      "id": "troop-media-22",
+      "url": "/community/troop-22-9f382b09.jpg",
+      "alt": "A member of the Troop styled in INFNITY",
+      "kind": "ugc",
+      "width": 1320,
+      "height": 1984,
+      "position": 22,
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_7825_2048x2048.png?v=1764304854"
+    },
+    "handle": null,
+    "caption": null,
+    "productSlugs": [],
+    "sourceUrl": "https://infinityclo.ca/pages/customer-gallery"
+  },
+  {
+    "id": "troop-23",
+    "media": {
+      "id": "troop-media-23",
+      "url": "/community/troop-23-bec1a42a.jpg",
+      "alt": "A member of the Troop styled in INFNITY",
+      "kind": "ugc",
+      "width": 1320,
+      "height": 1084,
+      "position": 23,
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_7818_2048x2048.png?v=1764304855"
+    },
+    "handle": null,
+    "caption": null,
+    "productSlugs": [],
+    "sourceUrl": "https://infinityclo.ca/pages/customer-gallery"
+  },
+  {
+    "id": "troop-24",
+    "media": {
+      "id": "troop-media-24",
+      "url": "/community/troop-24-a8c1b915.jpg",
+      "alt": "A member of the Troop styled in INFNITY",
+      "kind": "ugc",
+      "width": 1320,
+      "height": 2137,
+      "position": 24,
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_7821_2048x2048.png?v=1764304855"
+    },
+    "handle": null,
+    "caption": null,
+    "productSlugs": [],
+    "sourceUrl": "https://infinityclo.ca/pages/customer-gallery"
+  },
+  {
+    "id": "troop-25",
+    "media": {
+      "id": "troop-media-25",
+      "url": "/community/troop-25-56d4817c.jpg",
+      "alt": "A member of the Troop styled in INFNITY",
+      "kind": "ugc",
+      "width": 1320,
+      "height": 1999,
+      "position": 25,
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_7807_2048x2048.png?v=1764304855"
+    },
+    "handle": null,
+    "caption": null,
+    "productSlugs": [],
+    "sourceUrl": "https://infinityclo.ca/pages/customer-gallery"
+  },
+  {
+    "id": "troop-26",
+    "media": {
+      "id": "troop-media-26",
+      "url": "/community/troop-26-3e079d64.jpg",
+      "alt": "A member of the Troop styled in INFNITY",
+      "kind": "ugc",
+      "width": 1170,
+      "height": 2060,
+      "position": 26,
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_6270_2048x2048.jpg?v=1764304855"
+    },
+    "handle": null,
+    "caption": null,
+    "productSlugs": [],
+    "sourceUrl": "https://infinityclo.ca/pages/customer-gallery"
+  },
+  {
+    "id": "troop-27",
+    "media": {
+      "id": "troop-media-27",
+      "url": "/community/troop-27-fee462be.jpg",
+      "alt": "A member of the Troop styled in INFNITY",
+      "kind": "ugc",
+      "width": 1320,
+      "height": 2111,
+      "position": 27,
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_7827_2048x2048.png?v=1764304855"
+    },
+    "handle": null,
+    "caption": null,
+    "productSlugs": [],
+    "sourceUrl": "https://infinityclo.ca/pages/customer-gallery"
+  },
+  {
+    "id": "troop-28",
+    "media": {
+      "id": "troop-media-28",
+      "url": "/community/troop-28-f3f7a9fd.jpg",
+      "alt": "A member of the Troop styled in INFNITY",
+      "kind": "ugc",
+      "width": 1320,
+      "height": 1999,
+      "position": 28,
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_7823_2048x2048.png?v=1764304855"
+    },
+    "handle": null,
+    "caption": null,
+    "productSlugs": [],
+    "sourceUrl": "https://infinityclo.ca/pages/customer-gallery"
+  },
+  {
+    "id": "troop-29",
+    "media": {
+      "id": "troop-media-29",
+      "url": "/community/troop-29-ff6fa3e3.jpg",
+      "alt": "A member of the Troop styled in INFNITY",
+      "kind": "ugc",
+      "width": 828,
+      "height": 1266,
+      "position": 29,
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_7817_2048x2048.png?v=1764304855"
+    },
+    "handle": null,
+    "caption": null,
+    "productSlugs": [],
+    "sourceUrl": "https://infinityclo.ca/pages/customer-gallery"
+  },
+  {
+    "id": "troop-30",
+    "media": {
+      "id": "troop-media-30",
+      "url": "/community/troop-30-ab21d288.jpg",
+      "alt": "A member of the Troop styled in INFNITY",
+      "kind": "ugc",
+      "width": 1320,
+      "height": 2049,
+      "position": 30,
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_7822_2048x2048.png?v=1764304855"
+    },
+    "handle": null,
+    "caption": null,
+    "productSlugs": [],
+    "sourceUrl": "https://infinityclo.ca/pages/customer-gallery"
+  },
+  {
+    "id": "troop-31",
+    "media": {
+      "id": "troop-media-31",
+      "url": "/community/troop-31-c78d8e77.jpg",
+      "alt": "A member of the Troop styled in INFNITY",
+      "kind": "ugc",
+      "width": 1320,
+      "height": 2006,
+      "position": 31,
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_7824_2048x2048.png?v=1764304854"
+    },
+    "handle": null,
+    "caption": null,
+    "productSlugs": [],
+    "sourceUrl": "https://infinityclo.ca/pages/customer-gallery"
+  },
+  {
+    "id": "troop-32",
+    "media": {
+      "id": "troop-media-32",
+      "url": "/community/troop-32-c9e1329c.jpg",
+      "alt": "A member of the Troop styled in INFNITY",
+      "kind": "ugc",
+      "width": 1320,
+      "height": 1993,
+      "position": 32,
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_2149_2048x2048.jpg?v=1764304853"
+    },
+    "handle": null,
+    "caption": null,
+    "productSlugs": [],
+    "sourceUrl": "https://infinityclo.ca/pages/customer-gallery"
+  },
+  {
+    "id": "troop-33",
+    "media": {
+      "id": "troop-media-33",
+      "url": "/community/troop-33-55c4389b.jpg",
+      "alt": "A member of the Troop styled in INFNITY",
+      "kind": "ugc",
+      "width": 1320,
+      "height": 2007,
+      "position": 33,
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_2143_2048x2048.jpg?v=1764304853"
+    },
+    "handle": null,
+    "caption": null,
+    "productSlugs": [],
+    "sourceUrl": "https://infinityclo.ca/pages/customer-gallery"
+  },
+  {
+    "id": "troop-34",
+    "media": {
+      "id": "troop-media-34",
+      "url": "/community/troop-34-8234e4ae.jpg",
+      "alt": "A member of the Troop styled in INFNITY",
+      "kind": "ugc",
+      "width": 1320,
+      "height": 1998,
+      "position": 34,
+      "sourceUrl": "https://cdn.shopify.com/s/files/1/0605/7069/7948/files/IMG_2155_2048x2048.jpg?v=1764304852"
+    },
+    "handle": null,
+    "caption": null,
+    "productSlugs": [],
+    "sourceUrl": "https://infinityclo.ca/pages/customer-gallery"
+  }
+]

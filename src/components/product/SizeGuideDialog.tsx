@@ -1,22 +1,22 @@
 'use client';
 
 /**
- * Size guide.
+ * Size guide dialog.
  *
- * Renders whatever measurements the brand has confirmed and marks the rest as
- * pending. A garment measurement is something a customer orders against, so an
- * unconfirmed value shows as "—" with an explicit notice rather than a number
- * that looks authoritative and is not.
+ * Shows one of INFNITY's own published charts: the brand's graphic, and the
+ * same measurements as a real table so they are readable by a screen reader and
+ * at phone width.
  */
-import type { SizeGuide } from '@/domain/types';
+import { SizeChartView } from '@/components/product/SizeChartView';
+import type { SizeChart } from '@/domain/size-charts';
 import { useFocusTrap } from '@/lib/useFocusTrap';
 
 export function SizeGuideDialog({
-  guide,
+  chart,
   isOpen,
   onClose,
 }: {
-  guide: SizeGuide;
+  chart: SizeChart;
   isOpen: boolean;
   onClose: () => void;
 }) {
@@ -25,12 +25,12 @@ export function SizeGuideDialog({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[95] flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-[95] flex items-end justify-center sm:items-center sm:p-4">
       <button
         type="button"
         aria-label="Close size guide"
         onClick={onClose}
-        className="bg-surface/80 absolute inset-0 h-full w-full cursor-default"
+        className="absolute inset-0 h-full w-full cursor-default bg-black/45"
         tabIndex={-1}
       />
 
@@ -39,18 +39,20 @@ export function SizeGuideDialog({
         role="dialog"
         aria-modal="true"
         aria-labelledby="size-guide-title"
+        data-testid="size-guide-dialog"
         tabIndex={-1}
-        className="bg-surface-raised border-line relative flex max-h-[85svh] w-full max-w-2xl flex-col border"
+        data-surface="paper"
+        className="bg-surface text-fg relative flex max-h-[90svh] w-full max-w-2xl flex-col"
       >
-        <div className="border-line flex shrink-0 items-center justify-between border-b px-6 py-4">
+        <div className="border-line flex shrink-0 items-center justify-between border-b px-5 py-2">
           <h2 id="size-guide-title" className="text-xs font-semibold tracking-[0.18em] uppercase">
-            {guide.name}
+            Size guide — {chart.title}
           </h2>
           <button
             type="button"
             onClick={onClose}
             aria-label="Close size guide"
-            className="text-fg-muted hover:text-fg -mr-2 p-2"
+            className="text-fg -mr-2.5 grid h-11 w-11 place-items-center"
           >
             <svg width="18" height="18" viewBox="0 0 20 20" fill="none" aria-hidden>
               <path d="m4 4 12 12M16 4 4 16" stroke="currentColor" strokeWidth="1.5" />
@@ -58,62 +60,8 @@ export function SizeGuideDialog({
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto p-6">
-          {guide.isPending && (
-            <p className="border-line text-fg-muted mb-6 border px-4 py-3 text-xs leading-relaxed">
-              Measurements for this piece have not been confirmed yet. The rows below are shown so
-              you can see what will be published — no estimated numbers have been filled in.
-            </p>
-          )}
-
-          {/* Table scrolls inside its own container so the page never scrolls
-              sideways on a phone. */}
-          <div className="-mx-2 overflow-x-auto px-2">
-            <table className="w-full min-w-[420px] border-collapse text-sm">
-              <caption className="sr-only">Garment measurements by size for {guide.name}</caption>
-              <thead>
-                <tr className="border-line border-b">
-                  <th
-                    scope="col"
-                    className="text-fg-faint py-3 pr-4 text-left text-[0.68rem] tracking-[0.16em] uppercase"
-                  >
-                    Measurement
-                  </th>
-                  {guide.sizes.map((size) => (
-                    <th
-                      key={size}
-                      scope="col"
-                      className="text-fg-faint px-3 py-3 text-center text-[0.68rem] tracking-[0.16em] uppercase"
-                    >
-                      {size}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {guide.rows.map((row) => (
-                  <tr key={row.label} className="border-line border-b">
-                    <th scope="row" className="text-fg-muted py-3 pr-4 text-left font-normal">
-                      {row.label}
-                      <span className="text-fg-faint ml-1 text-xs">({row.unit})</span>
-                    </th>
-                    {guide.sizes.map((size) => {
-                      const measurement = row.measurements.find((m) => m.size === size);
-                      return (
-                        <td key={size} className="text-fg-muted px-3 py-3 text-center tabular-nums">
-                          {measurement?.value ?? <span className="text-fg-faint">—</span>}
-                        </td>
-                      );
-                    })}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          {guide.notes && (
-            <p className="text-fg-muted mt-6 text-xs leading-relaxed">{guide.notes}</p>
-          )}
+        <div className="flex-1 overflow-y-auto p-5">
+          <SizeChartView chart={chart} />
         </div>
       </div>
     </div>

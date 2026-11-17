@@ -1,49 +1,64 @@
 import type { Metadata } from 'next';
+import Link from 'next/link';
 
-import { PendingNotice, PolicyPage, PolicySection } from '@/components/content/PolicyPage';
+import { CarriedOverNotice, PolicyPage, PolicySection } from '@/components/content/PolicyPage';
+import { INSTAGRAM_HANDLE, INSTAGRAM_URL } from '@/lib/site';
 
 export const metadata: Metadata = {
   title: 'Shipping',
-  description: 'INFNITY shipping information.',
+  description: 'INFNITY shipping policy: order processing and shipping times.',
   alternates: { canonical: '/shipping' },
 };
 
+/**
+ * The store's shipping policy as published on infinityclo.ca. Nothing beyond
+ * that policy — no carrier, rate or free-shipping threshold — is stated here,
+ * because none has been verified.
+ */
 export default function ShippingPage() {
   return (
-    <PolicyPage title="Shipping" intro="How orders are dispatched and delivered.">
-      <PolicySection heading="Processing">
-        <PendingNotice>
-          Order processing times have not been confirmed. This section will state how long orders
-          take to leave the warehouse once the brand confirms it.
-        </PendingNotice>
+    <PolicyPage title="Shipping" note={<CarriedOverNotice />}>
+      <PolicySection heading="Processing and shipping times">
+        <p>Please give it 2–3 business days for your order to be processed.</p>
+        <p>
+          Once your order is processed, give it 3–5 business days to be shipped to your preferred
+          destination.
+        </p>
       </PolicySection>
 
-      <PolicySection heading="Destinations and carriers">
-        <PendingNotice>
-          Shipping destinations, carriers and service levels are not yet confirmed. No carrier or
-          delivery estimate is stated here because none has been verified.
-        </PendingNotice>
+      <PolicySection heading="Rates and taxes">
+        <p>
+          Shipping and taxes are calculated at checkout for your address, before you pay. Prices
+          are in Canadian dollars (CAD).
+        </p>
       </PolicySection>
 
-      <PolicySection heading="Rates">
-        <PendingNotice>
-          Shipping rates and any free-shipping threshold are not yet confirmed. Shipping is
-          calculated at checkout.
-        </PendingNotice>
-      </PolicySection>
-
-      <PolicySection heading="Tracking">
-        <PendingNotice>
-          Tracking is issued once fulfilment is connected in a later phase.
-        </PendingNotice>
+      <PolicySection heading="Tracking your order">
+        <p>
+          Sign in to{' '}
+          <Link href="/account/orders" className="text-fg underline underline-offset-4">
+            your account
+          </Link>{' '}
+          to see your orders. Tracking details appear there once your order has shipped with a
+          tracking number.
+        </p>
       </PolicySection>
 
       <PolicySection heading="Questions">
         <p>
-          For anything not covered here, use the{' '}
-          <a href="/contact" className="text-fg underline underline-offset-4">
-            contact page
-          </a>
+          Message us on Instagram{' '}
+          <a
+            href={INSTAGRAM_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-fg underline underline-offset-4"
+          >
+            {INSTAGRAM_HANDLE}
+          </a>{' '}
+          or use the{' '}
+          <Link href="/contact" className="text-fg underline underline-offset-4">
+            contact form
+          </Link>
           .
         </p>
       </PolicySection>

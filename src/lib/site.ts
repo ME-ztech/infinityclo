@@ -17,15 +17,36 @@ export const BRAND = {
   domain: 'infinityclo.ca',
 } as const;
 
-export const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '') ?? 'https://infinityclo.ca';
+const DEFAULT_SITE_URL = 'https://infinityclo.ca';
 
 /**
- * Preview mode. The public build has no payment infrastructure, so checkout is
- * disabled and the storefront says so plainly rather than presenting a buy flow
- * that cannot complete. Phase 2 flips this by wiring a real payment provider.
+ * Turns whatever was configured into a usable absolute origin. A value without
+ * a scheme ("infinityclo.ca") gets https://; anything that still is not a URL
+ * falls back to the default. A typo in an environment variable must never be
+ * able to fail a build or break every canonical link.
  */
-export const CHECKOUT_ENABLED = process.env.NEXT_PUBLIC_CHECKOUT_ENABLED === 'true';
+export function resolveSiteUrl(configured: string | undefined, fallback = DEFAULT_SITE_URL): string {
+  const value = configured?.trim();
+  if (!value) return fallback;
+  const candidate = /^https?:\/\//i.test(value) ? value : `https://${value}`;
+  try {
+    const url = new URL(candidate);
+    if (!url.hostname.includes('.') && url.hostname !== 'localhost') return fallback;
+    return url.origin;
+  } catch {
+    return fallback;
+  }
+}
+
+export const SITE_URL = resolveSiteUrl(process.env.NEXT_PUBLIC_SITE_URL);
+
+/**
+ * Checkout switch. Whether an order can actually be taken is decided on the
+ * server (database, payment provider and a shipping rate must exist); this is
+ * on by default. Set NEXT_PUBLIC_CHECKOUT_ENABLED=false to turn the storefront
+ * into a browse-only preview (for example on a design-review deployment).
+ */
+export const CHECKOUT_ENABLED = process.env.NEXT_PUBLIC_CHECKOUT_ENABLED !== 'false';
 
 export interface NavLink {
   readonly label: string;
@@ -40,48 +61,47 @@ export interface NavSection {
   readonly children?: readonly NavLink[];
 }
 
+/** The primary menu, exactly as the owner specified it. */
 export const PRIMARY_NAV: readonly NavSection[] = [
-  { label: 'New', href: '/shop?sort=newest' },
+  { label: 'Home', href: '/' },
   { label: 'Shop', href: '/shop' },
-  { label: 'Collections', href: '/collections' },
-  { label: 'The Vault', href: '/vault' },
-  { label: 'The Troop', href: '/troop' },
-  { label: 'About', href: '/about' },
+  { label: 'Styled By You', href: '/community' },
+  { label: 'Contact', href: '/contact' },
 ];
 
 export const FOOTER_NAV: ReadonlyArray<{ heading: string; links: readonly NavLink[] }> = [
   {
     heading: 'Shop',
     links: [
-      { label: 'All Products', href: '/shop' },
+      { label: 'Shop All', href: '/shop' },
       { label: 'New Arrivals', href: '/shop?sort=newest' },
-      { label: 'Collections', href: '/collections' },
-      { label: 'The Vault', href: '/vault' },
+      { label: 'Size Guide', href: '/size-guide' },
+      { label: 'Styled By You', href: '/community' },
     ],
   },
   {
     heading: 'Brand',
     links: [
       { label: 'About', href: '/about' },
-      { label: 'The Troop', href: '/troop' },
       { label: 'Contact', href: '/contact' },
-    ],
-  },
-  {
-    heading: 'Support',
-    links: [
       { label: 'FAQ', href: '/faq' },
-      { label: 'Shipping', href: '/shipping' },
-      { label: 'Returns', href: '/returns' },
-      { label: 'Size Guide', href: '/faq#sizing' },
     ],
   },
   {
     heading: 'Account',
     links: [
       { label: 'Account', href: '/account' },
-      { label: 'Orders', href: '/account/orders' },
+      { label: 'Order Tracking', href: '/account/orders' },
       { label: 'Wishlist', href: '/account/wishlist' },
+    ],
+  },
+  {
+    heading: 'Policies',
+    links: [
+      { label: 'Shipping', href: '/shipping' },
+      { label: 'Returns', href: '/returns' },
+      { label: 'Privacy', href: '/privacy' },
+      { label: 'Terms', href: '/terms' },
     ],
   },
 ];
@@ -91,9 +111,6 @@ export const LEGAL_NAV: readonly NavLink[] = [
   { label: 'Terms', href: '/terms' },
 ];
 
-/**
- * Social links are deliberately empty until the brand confirms its live
- * handles. Rendering a dead icon row would be worse than rendering none.
- * Tracked in docs/OPERATIONS_CONTENT_GAPS.md.
- */
-export const SOCIAL_LINKS: ReadonlyArray<{ label: string; href: string }> = [];
+/** The brand's verified Instagram handle, as linked from infinityclo.ca. */
+export const INSTAGRAM_HANDLE = '@infnity.clo';
+export const INSTAGRAM_URL = 'https://www.instagram.com/infnity.clo/';

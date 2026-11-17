@@ -15,12 +15,26 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "e2e": "playwright test",
-    "import:catalog": "tsx scripts/import-infnity-catalog.ts"
+    "import:catalog": "tsx scripts/import-infnity-catalog.ts",
+    "admin:setup": "node scripts/admin-setup.mjs",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "tsx --conditions=react-server scripts/db.ts migrate",
+    "db:seed": "tsx --conditions=react-server scripts/db.ts seed",
+    "db:status": "tsx --conditions=react-server scripts/db.ts status",
+    "db:inventory": "tsx --conditions=react-server scripts/db.ts inventory",
+    "migrate:customers": "tsx --conditions=react-server scripts/db.ts customers",
+    "migrate:orders": "tsx --conditions=react-server scripts/db.ts orders",
+    "migrate:reconcile": "tsx --conditions=react-server scripts/db.ts reconcile"
   },
   "dependencies": {
+    "@electric-sql/pglite": "^0.5.16",
+    "drizzle-orm": "^0.45.4",
     "next": "^16.3.0",
+    "pg": "^8.23.1",
     "react": "^19.2.8",
-    "react-dom": "^19.2.8"
+    "react-dom": "^19.2.8",
+    "server-only": "^0.0.1",
+    "stripe": "^23.1.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.62.1",
@@ -28,9 +42,11 @@
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.4",
     "@types/node": "^26.2.0",
+    "@types/pg": "^8.23.1",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
     "@vitejs/plugin-react": "^6.0.5",
+    "drizzle-kit": "^0.31.11",
     "eslint": "^9.39.5",
     "eslint-config-next": "^16.3.0",
     "jsdom": "^30.0.1",
