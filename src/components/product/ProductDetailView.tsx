@@ -15,27 +15,26 @@
  *
  * Both columns carry `min-w-0`. A grid item defaults to `min-width: auto`, which
  * means it refuses to be narrower than its content's minimum — and the gallery's
- * content is a scroll rail holding one slide per photograph. On a phone that
- * single-column grid sized its one track to the *whole* rail rather than to the
- * viewport, so a four-shot product laid the page out four screens wide: the
- * gallery and the buy panel ran off the right edge, everything measured in `vw`
- * (the header, the breadcrumb, the recommendations) shrank into the left
- * quarter, and iOS zoomed the whole document out to fit. The rail is meant to
- * scroll inside its column; this is what holds the column to the viewport.
+ * content is a scroll rail holding one slide per photograph. Without it a
+ * four-shot product lays the page out four screens wide on a phone.
  */
 import { useCallback, useState } from 'react';
 
+import type { ProductDetailSections } from '@/components/product/ProductDetails';
 import { ProductGallery } from '@/components/product/ProductGallery';
 import { ProductPurchasePanel } from '@/components/product/ProductPurchasePanel';
 import { orderedMedia } from '@/domain/product';
-import type { Product, SizeGuide } from '@/domain/types';
+import type { SizeChart } from '@/domain/size-charts';
+import type { Product } from '@/domain/types';
 
 export function ProductDetailView({
   product,
-  sizeGuide,
+  sizeChart,
+  details,
 }: {
   product: Product;
-  sizeGuide: SizeGuide | null;
+  sizeChart: SizeChart | null;
+  details: ProductDetailSections;
 }) {
   const [activeMediaId, setActiveMediaId] = useState<string | null>(null);
   const media = orderedMedia(product);
@@ -45,7 +44,7 @@ export function ProductDetailView({
   const handleActiveMediaChange = useCallback((id: string | null) => setActiveMediaId(id), []);
 
   return (
-    <div className="grid gap-10 md:grid-cols-[1.15fr_0.85fr] md:gap-12 lg:gap-20">
+    <div className="grid gap-8 md:grid-cols-[1.15fr_0.85fr] md:gap-12 lg:gap-20">
       <div className="min-w-0">
         <ProductGallery media={media} productName={product.name} activeMediaId={activeMediaId} />
       </div>
@@ -53,7 +52,8 @@ export function ProductDetailView({
       <div className="min-w-0 md:sticky md:top-28 md:self-start">
         <ProductPurchasePanel
           product={product}
-          sizeGuide={sizeGuide}
+          sizeChart={sizeChart}
+          details={details}
           onActiveMediaChange={handleActiveMediaChange}
         />
       </div>

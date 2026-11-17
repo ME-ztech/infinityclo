@@ -27,8 +27,10 @@ import {
 import { money } from '@/domain/money';
 import type { Cart } from '@/domain/types';
 import { track } from '@/lib/analytics';
+import { NO_EXTRAS, type CartExtras, type CartOfferSummary } from './extras';
 import { getServerSnapshot, getSnapshot, setPersistedCart, subscribe } from './store';
-import type { PersistedLine } from './storage';
+import type { PersistedCart, PersistedLine } from './storage';
+import type { Product } from '@/domain/types';
 
 const EMPTY_CART: Cart = {
   id: 'pending',
@@ -44,6 +46,16 @@ export interface CartContextValue {
   readonly isHydrated: boolean;
   readonly isPending: boolean;
   readonly isDrawerOpen: boolean;
+  /** The identities the cart is built from — what checkout is handed. */
+  readonly persisted: PersistedCart;
+  /** Estimates for live automatic offers. Empty when none exist. */
+  readonly offers: readonly CartOfferSummary[];
+  /** "You may also like", only when the owner has enabled it for the cart. */
+  readonly recommendations: readonly Product[];
+  readonly discountCode: string;
+  setDiscountCode(code: string): void;
+  /** Re-prices the cart against the live catalogue. */
+  refresh(): void;
   openDrawer(): void;
   closeDrawer(): void;
   addLine(input: {
@@ -59,15 +71,21 @@ export interface CartContextValue {
 
 const CartContext = createContext<CartContextValue | null>(null);
 
-async function priceCart(lines: readonly PersistedLine[], id: string): Promise<Cart> {
+async function priceCart(
+  lines: readonly PersistedLine[],
+  id: string,
+): Promise<{ cart: Cart; extras: CartExtras }> {
   const response = await fetch('/api/cart/resolve', {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({ id, lines }),
   });
   if (!response.ok) throw new Error(`Cart pricing failed: ${response.status}`);
-  const data = (await response.json()) as { cart: Cart };
-  return data.cart;
+  const data = (await response.json()) as { cart: Cart } & Partial<CartExtras>;
+  return {
+    cart: data.cart,
+    extras: { offers: data.offers ?? [], recommendations: data.recommendations ?? [] },
+  };
 }
 
 export function CartProvider({ children }: { children: ReactNode }) {
@@ -78,7 +96,13 @@ export function CartProvider({ children }: { children: ReactNode }) {
    * what lets "pricing is in flight" be derived rather than tracked as its own
    * state that can drift out of sync with the request.
    */
-  const [priced, setPriced] = useState<{ cart: Cart; forUpdatedAt: string } | null>(null);
+  const [priced, setPriced] = useState<{
+    cart: Cart;
+    extras: CartExtras;
+    forUpdatedAt: string;
+  } | null>(null);
+  const [discountCode, setDiscountCode] = useState('');
+  const [refreshToken, setRefreshToken] = useState(0);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   // Guards against a slow earlier response overwriting a newer one.
@@ -98,7 +122,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     void priceCart(persisted.lines, persisted.id)
       .then((next) => {
         if (!cancelled && seq === requestSeq.current) {
-          setPriced({ cart: next, forUpdatedAt: persisted.updatedAt });
+          setPriced({ ...next, forUpdatedAt: persisted.updatedAt });
         }
       })
       .catch(() => {
@@ -109,7 +133,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     return () => {
       cancelled = true;
     };
-  }, [persisted]);
+  }, [persisted, refreshToken]);
 
   const emptyCart = useMemo<Cart>(() => ({ ...EMPTY_CART, id: persisted.id }), [persisted.id]);
 
@@ -200,6 +224,9 @@ export function CartProvider({ children }: { children: ReactNode }) {
     [persisted.lines],
   );
 
+  const extras = persisted.lines.length === 0 ? NO_EXTRAS : (priced?.extras ?? NO_EXTRAS);
+  const refresh = useCallback(() => setRefreshToken((token) => token + 1), []);
+
   const openDrawer = useCallback(() => setIsDrawerOpen(true), []);
   const closeDrawer = useCallback(() => setIsDrawerOpen(false), []);
 
@@ -210,6 +237,12 @@ export function CartProvider({ children }: { children: ReactNode }) {
       isHydrated,
       isPending,
       isDrawerOpen,
+      persisted,
+      offers: extras.offers,
+      recommendations: extras.recommendations,
+      discountCode,
+      setDiscountCode,
+      refresh,
       openDrawer,
       closeDrawer,
       addLine,
@@ -222,11 +255,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
       cart,
       clear,
       closeDrawer,
+      discountCode,
+      extras,
       isDrawerOpen,
       isHydrated,
       isPending,
       lineCount,
       openDrawer,
+      persisted,
+      refresh,
       removeLine,
       updateQuantity,
     ],

@@ -40,48 +40,47 @@ export interface NavSection {
   readonly children?: readonly NavLink[];
 }
 
+/** The primary menu, exactly as the owner specified it. */
 export const PRIMARY_NAV: readonly NavSection[] = [
-  { label: 'New', href: '/shop?sort=newest' },
+  { label: 'Home', href: '/' },
   { label: 'Shop', href: '/shop' },
-  { label: 'Collections', href: '/collections' },
-  { label: 'The Vault', href: '/vault' },
-  { label: 'The Troop', href: '/troop' },
-  { label: 'About', href: '/about' },
+  { label: 'Styled By You', href: '/community' },
+  { label: 'Contact', href: '/contact' },
 ];
 
 export const FOOTER_NAV: ReadonlyArray<{ heading: string; links: readonly NavLink[] }> = [
   {
     heading: 'Shop',
     links: [
-      { label: 'All Products', href: '/shop' },
+      { label: 'Shop All', href: '/shop' },
       { label: 'New Arrivals', href: '/shop?sort=newest' },
-      { label: 'Collections', href: '/collections' },
-      { label: 'The Vault', href: '/vault' },
+      { label: 'Size Guide', href: '/size-guide' },
+      { label: 'Styled By You', href: '/community' },
     ],
   },
   {
     heading: 'Brand',
     links: [
       { label: 'About', href: '/about' },
-      { label: 'The Troop', href: '/troop' },
       { label: 'Contact', href: '/contact' },
-    ],
-  },
-  {
-    heading: 'Support',
-    links: [
       { label: 'FAQ', href: '/faq' },
-      { label: 'Shipping', href: '/shipping' },
-      { label: 'Returns', href: '/returns' },
-      { label: 'Size Guide', href: '/faq#sizing' },
     ],
   },
   {
     heading: 'Account',
     links: [
       { label: 'Account', href: '/account' },
-      { label: 'Orders', href: '/account/orders' },
+      { label: 'Order Tracking', href: '/account/orders' },
       { label: 'Wishlist', href: '/account/wishlist' },
+    ],
+  },
+  {
+    heading: 'Policies',
+    links: [
+      { label: 'Shipping', href: '/shipping' },
+      { label: 'Returns', href: '/returns' },
+      { label: 'Privacy', href: '/privacy' },
+      { label: 'Terms', href: '/terms' },
     ],
   },
 ];
@@ -91,9 +90,6 @@ export const LEGAL_NAV: readonly NavLink[] = [
   { label: 'Terms', href: '/terms' },
 ];
 
-/**
- * Social links are deliberately empty until the brand confirms its live
- * handles. Rendering a dead icon row would be worse than rendering none.
- * Tracked in docs/OPERATIONS_CONTENT_GAPS.md.
- */
-export const SOCIAL_LINKS: ReadonlyArray<{ label: string; href: string }> = [];
+/** The brand's verified Instagram handle, as linked from infinityclo.ca. */
+export const INSTAGRAM_HANDLE = '@infnity.clo';
+export const INSTAGRAM_URL = 'https://www.instagram.com/infnity.clo/';

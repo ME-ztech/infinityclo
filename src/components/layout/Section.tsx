@@ -29,6 +29,7 @@ interface SectionProps {
   className?: string;
   'aria-labelledby'?: string;
   'aria-label'?: string;
+  'data-testid'?: string;
 }
 
 const SPACING = {

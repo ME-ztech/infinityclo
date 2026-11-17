@@ -3,24 +3,17 @@
 /**
  * Global header.
  *
- * 1.0 ran a transparent-over-hero header that turned solid on scroll. With 1.1's
- * alternating rooms that is unworkable: the same bar now floats over bone, over
- * white and over void within one scroll, and no single text colour survives all
- * three. Worse, it was a class of contrast bug that only appears at specific
- * scroll positions — the kind nobody catches until a customer does.
+ * Three columns: navigation on the left, the brand mark dead centre, utilities
+ * on the right. The bar is always solid white with ink type — it sits above the
+ * campaign hero rather than over it, so there is no scroll position at which
+ * the navigation loses contrast against a photograph.
  *
- * So the bar is always solid bone with ink type. That is also the legacy
- * storefront's own treatment — a white bar carrying INFNITY.CLO and CART (0) —
- * and it is brand DNA worth keeping rather than a compromise.
- *
- * It still hides on scroll down and returns on scroll up, which keeps the
- * campaign imagery unobstructed on a phone without costing a tap to reach
- * navigation. The threshold is generous enough that scroll jitter never flickers
- * it, and it never hides while a panel is open.
+ * It is `sticky`, so it occupies its own space (no page guesses its height) and
+ * stays reachable all the way down the page.
  */
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { PreviewNotice } from '@/components/layout/PreviewNotice';
 import { SearchOverlay } from '@/components/search/SearchOverlay';
@@ -28,149 +21,134 @@ import { Wordmark } from '@/components/ui/Wordmark';
 import { useCart } from '@/lib/cart/CartProvider';
 import { cn } from '@/lib/cn';
 import { PRIMARY_NAV } from '@/lib/site';
-import { useWishlist } from '@/lib/wishlist/useWishlist';
 
 import { MobileNav } from './MobileNav';
 
-const HIDE_AFTER = 140;
+export interface Announcement {
+  readonly text: string;
+  readonly href: string;
+}
 
-export function Header() {
+export function Header({ announcement }: { announcement?: Announcement | null }) {
   const pathname = usePathname();
   const { lineCount, isHydrated, openDrawer } = useCart();
-  const wishlist = useWishlist();
 
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isHidden, setIsHidden] = useState(false);
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const lastScrollY = useRef(0);
 
   useEffect(() => {
-    function onScroll() {
-      const y = window.scrollY;
-      setIsScrolled(y > 16);
-
-      // Never hide while a panel is open, or the customer loses the close button.
-      if (isMobileNavOpen || isSearchOpen) {
-        setIsHidden(false);
-      } else if (y > HIDE_AFTER && y > lastScrollY.current + 8) {
-        setIsHidden(true);
-      } else if (y < lastScrollY.current - 8) {
-        setIsHidden(false);
-      }
-      lastScrollY.current = y;
-    }
-
+    const onScroll = () => setIsScrolled(window.scrollY > 8);
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
-  }, [isMobileNavOpen, isSearchOpen]);
+  }, []);
 
-  const savedCount = wishlist.isHydrated ? wishlist.slugs.length : 0;
+  const isActive = (href: string) => (href === '/' ? pathname === '/' : pathname.startsWith(href));
 
   return (
     <>
-      {/* One fixed stack for the whole top chrome. The preview notice lives
-          inside it rather than in page flow, so the two can never overlap and
-          steal each other's clicks, and they hide and return together. */}
-      <div
-        data-surface="bone"
-        className={cn(
-          // `sticky`, not `fixed`. A fixed bar is out of flow, so every page had
-          // to guess its height in top padding — and the guess was wrong the
-          // moment the preview notice wrapped to two lines on a 393px phone,
-          // putting the breadcrumb underneath the header. Sticky occupies its
-          // own space, so nothing can ever be hidden beneath it and no page
-          // carries a magic number.
-          'sticky top-0 z-50 transition-transform duration-300 ease-(--ease-brand)',
-          isHidden ? '-translate-y-full' : 'translate-y-0',
-        )}
-      >
+      <div data-surface="paper" className="sticky top-0 z-50">
         <PreviewNotice />
+
+        {announcement?.text && (
+          <div
+            data-surface="ink"
+            data-testid="announcement-bar"
+            className="bg-surface text-fg px-4 py-2 text-center text-[0.68rem] leading-snug font-semibold tracking-[0.16em] uppercase"
+          >
+            {announcement.href ? (
+              <Link href={announcement.href} className="underline-offset-4 hover:underline">
+                {announcement.text}
+              </Link>
+            ) : (
+              announcement.text
+            )}
+          </div>
+        )}
 
         <header
           data-testid="site-header"
           className={cn(
-            'bg-surface/95 text-fg border-b backdrop-blur-md transition-[border-color,box-shadow] duration-300',
-            isScrolled ? 'border-line/80 shadow-[0_1px_0_rgba(0,0,0,0.04)]' : 'border-transparent',
+            'bg-surface/95 text-fg border-b backdrop-blur-md transition-[border-color] duration-300',
+            isScrolled ? 'border-line' : 'border-hairline',
           )}
         >
-          <div className="edge flex h-16 items-center justify-between gap-4 md:h-[4.5rem]">
-            <div className="flex items-center gap-8">
+          <div className="edge grid h-16 grid-cols-[1fr_auto_1fr] items-center gap-3 md:h-[4.5rem]">
+            {/* Left: menu on small screens, navigation on large. */}
+            <div className="flex items-center">
               <button
                 type="button"
                 onClick={() => setIsMobileNavOpen(true)}
                 aria-label="Open menu"
                 aria-expanded={isMobileNavOpen}
-                className="text-fg hover:text-signal -ml-2 p-2 transition-colors lg:hidden"
+                aria-controls="mobile-nav"
+                data-testid="menu-button"
+                className="text-fg -ml-2.5 grid h-11 w-11 place-items-center lg:hidden"
               >
                 <MenuIcon />
               </button>
 
-              <Link href="/" aria-label="INFNITY — home" className="shrink-0">
-                <Wordmark className="text-lg md:text-xl" />
-              </Link>
-            </div>
-
-            <nav aria-label="Primary" className="hidden lg:block">
-              <ul className="flex items-center gap-7">
-                {PRIMARY_NAV.map((item) => {
-                  const base = item.href.split('?')[0] ?? item.href;
-                  const isActive =
-                    item.href === '/shop?sort=newest'
-                      ? false
-                      : base === '/shop'
-                        ? pathname === '/shop'
-                        : pathname.startsWith(base);
-                  return (
+              <nav aria-label="Primary" className="hidden lg:block">
+                <ul className="flex items-center gap-7">
+                  {PRIMARY_NAV.map((item) => (
                     <li key={item.label}>
                       <Link
                         href={item.href}
+                        aria-current={isActive(item.href) ? 'page' : undefined}
                         className={cn(
-                          'group relative py-2 text-[0.7rem] font-semibold tracking-[0.2em] uppercase transition-colors',
-                          isActive ? 'text-fg' : 'text-fg-muted hover:text-fg',
+                          'group relative py-2 text-[0.7rem] font-semibold tracking-[0.2em] whitespace-nowrap uppercase transition-colors',
+                          isActive(item.href) ? 'text-fg' : 'text-fg-muted hover:text-fg',
                         )}
                       >
                         {item.label}
                         <span
                           aria-hidden
                           className={cn(
-                            'bg-signal absolute inset-x-0 -bottom-0.5 h-px origin-left transition-transform duration-300 ease-(--ease-brand)',
-                            isActive ? 'scale-x-100' : 'scale-x-0 group-hover:scale-x-100',
+                            'bg-fg absolute inset-x-0 -bottom-0.5 h-px origin-left transition-transform duration-300 ease-(--ease-brand)',
+                            isActive(item.href)
+                              ? 'scale-x-100'
+                              : 'scale-x-0 group-hover:scale-x-100',
                           )}
                         />
                       </Link>
                     </li>
-                  );
-                })}
-              </ul>
-            </nav>
+                  ))}
+                </ul>
+              </nav>
+            </div>
 
-            <div className="flex items-center gap-0.5 md:gap-1">
+            {/* Centre: the brand. */}
+            <Link
+              href="/"
+              aria-label="INFNITY — home"
+              data-testid="brand-home"
+              className="flex min-h-11 items-center justify-self-center"
+            >
+              <Wordmark
+                withEmblem
+                emblemClassName="h-7 md:h-9"
+                className="text-[1.05rem] md:text-[1.35rem]"
+              />
+            </Link>
+
+            {/* Right: utilities. */}
+            <div className="flex items-center justify-end">
               <button
                 type="button"
                 onClick={() => setIsSearchOpen(true)}
                 aria-label="Search"
-                className="text-fg hover:text-signal p-2.5 transition-colors"
+                data-testid="search-button"
+                className="text-fg grid h-11 w-11 place-items-center transition-opacity hover:opacity-60"
               >
                 <SearchIcon />
               </button>
 
               <Link
-                href="/account/wishlist"
-                aria-label={savedCount > 0 ? `Wishlist, ${savedCount} saved` : 'Wishlist'}
-                className="text-fg hover:text-signal relative hidden p-2.5 transition-colors sm:block"
-              >
-                <HeartIcon />
-                {/* Rendered only after hydration so the server and first client
-                    paint agree; a 0 badge would flash on every cold load. */}
-                {savedCount > 0 && <Pip>{savedCount}</Pip>}
-              </Link>
-
-              <Link
                 href="/account"
                 aria-label="Account"
-                className="text-fg hover:text-signal hidden p-2.5 transition-colors sm:block"
+                data-testid="account-link"
+                className="text-fg hidden h-11 w-11 place-items-center transition-opacity hover:opacity-60 sm:grid"
               >
                 <AccountIcon />
               </Link>
@@ -180,10 +158,22 @@ export function Header() {
                 onClick={openDrawer}
                 aria-label={isHydrated && lineCount > 0 ? `Cart, ${lineCount} items` : 'Cart'}
                 data-testid="cart-button"
-                className="text-fg hover:text-signal relative p-2.5 transition-colors"
+                className="text-fg relative -mr-2.5 flex h-11 items-center gap-1.5 px-2.5 transition-opacity hover:opacity-60"
               >
                 <CartIcon />
-                {isHydrated && lineCount > 0 && <Pip testId="cart-count">{lineCount}</Pip>}
+                <span className="hidden text-[0.7rem] font-semibold tracking-[0.2em] uppercase lg:inline">
+                  Cart
+                </span>
+                {/* Rendered only after hydration so the server and first client
+                    paint agree; a 0 badge would flash on every cold load. */}
+                {isHydrated && lineCount > 0 && (
+                  <span
+                    data-testid="cart-count"
+                    className="bg-inverse-surface text-inverse-fg flex h-[1.15rem] min-w-[1.15rem] items-center justify-center rounded-full px-1 text-[0.6rem] font-bold tabular-nums"
+                  >
+                    {lineCount}
+                  </span>
+                )}
               </button>
             </div>
           </div>
@@ -193,18 +183,6 @@ export function Header() {
       <MobileNav isOpen={isMobileNavOpen} onClose={() => setIsMobileNavOpen(false)} />
       {isSearchOpen && <SearchOverlay onClose={() => setIsSearchOpen(false)} />}
     </>
-  );
-}
-
-/** The count badge. Red because a live count is exactly the kind of fact red is for. */
-function Pip({ children, testId }: { children: React.ReactNode; testId?: string }) {
-  return (
-    <span
-      data-testid={testId}
-      className="bg-signal text-paper absolute top-1 right-1 flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[0.58rem] font-bold tabular-nums"
-    >
-      {children}
-    </span>
   );
 }
 
@@ -223,19 +201,6 @@ function SearchIcon() {
     <svg width="19" height="19" viewBox="0 0 20 20" fill="none" aria-hidden focusable="false">
       <circle cx="9" cy="9" r="6" stroke="currentColor" strokeWidth="1.6" />
       <path d="m13.5 13.5 4 4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function HeartIcon() {
-  return (
-    <svg width="19" height="19" viewBox="0 0 20 20" fill="none" aria-hidden focusable="false">
-      <path
-        d="M10 16.5 3.7 10.4a3.7 3.7 0 1 1 5.2-5.2l1.1 1 1.1-1a3.7 3.7 0 1 1 5.2 5.2L10 16.5Z"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        strokeLinejoin="round"
-      />
     </svg>
   );
 }

@@ -1,3 +1,4 @@
+import { randomBytes, scryptSync } from 'node:crypto';
 import { existsSync } from 'node:fs';
 
 import { defineConfig, devices } from '@playwright/test';
@@ -9,19 +10,28 @@ const BASE_URL = `http://127.0.0.1:${PORT}`;
  * E2E runs against a production build, not the dev server, so what is tested is
  * what ships — including static generation, route handlers and hydration.
  *
- * Desktop and mobile are both first-class here rather than mobile being an
- * afterthought: a fashion storefront takes most of its traffic on a phone, and
- * several behaviours (the nav, the filter drawer, the gallery) have genuinely
- * different implementations by viewport.
- */
-/**
- * This image ships a pinned Chromium that will not match every @playwright/test
- * release. Point at that binary rather than downloading a matching build: the
- * environment pre-installs browsers deliberately and `playwright install` is not
- * to be run here. `CHROMIUM_PATH` overrides it for anyone running elsewhere.
+ * The server under test is deliberately isolated from the real store:
+ *
+ *   SHOPIFY_LIVE_CATALOG=off     the committed snapshot, so results are stable
+ *   COMMERCE_ADMIN_MODE=sandbox  admin writes go to a local sandbox, never Shopify
+ *   DATA_DIR=.data-e2e           a throwaway document store
+ *
+ * The admin owner account exists only for the run: a random password is
+ * generated here, hashed with the same scrypt parameters the app verifies, and
+ * handed to the specs through the environment. Nothing is committed.
  */
 const CHROMIUM_PATH = process.env.CHROMIUM_PATH ?? '/opt/pw-browsers/chromium';
 const executablePath = existsSync(CHROMIUM_PATH) ? CHROMIUM_PATH : undefined;
+
+const adminPassword = process.env.E2E_ADMIN_PASSWORD ?? randomBytes(18).toString('base64url');
+process.env.E2E_ADMIN_PASSWORD = adminPassword;
+process.env.E2E_ADMIN_EMAIL = 'owner@e2e.test';
+
+function scryptHash(password: string): string {
+  const salt = randomBytes(16);
+  const derived = scryptSync(password, salt, 64, { N: 16384, r: 8, p: 1 });
+  return `scrypt$${salt.toString('base64url')}$${derived.toString('base64url')}`;
+}
 
 export default defineConfig({
   testDir: './e2e',
@@ -49,7 +59,16 @@ export default defineConfig({
   webServer: {
     command: `npx next start --port ${PORT}`,
     url: BASE_URL,
-    reuseExistingServer: !process.env.CI,
+    reuseExistingServer: false,
     timeout: 120_000,
+    env: {
+      SHOPIFY_LIVE_CATALOG: 'off',
+      COMMERCE_ADMIN_MODE: 'sandbox',
+      DATA_DIR: '.data-e2e',
+      SESSION_SECRET: randomBytes(48).toString('base64url'),
+      ADMIN_OWNER_EMAIL: 'owner@e2e.test',
+      ADMIN_OWNER_PASSWORD_HASH: scryptHash(adminPassword),
+      NEXT_PUBLIC_SITE_URL: BASE_URL,
+    },
   },
 });

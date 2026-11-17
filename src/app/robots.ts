@@ -7,10 +7,12 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
-      // Cart and account are per-visitor; search fragments the catalog's
-      // canonical identity across query permutations.
-      disallow: ['/api/', '/cart', '/account', '/search'],
+      // Admin, account and cart are private or per-visitor; API routes are not
+      // pages; search fragments the catalogue's canonical identity across query
+      // permutations; drop previews are unpublished.
+      disallow: ['/admin', '/account', '/api/', '/cart', '/search', '/preview'],
     },
     sitemap: `${SITE_URL}/sitemap.xml`,
+    host: SITE_URL,
   };
 }

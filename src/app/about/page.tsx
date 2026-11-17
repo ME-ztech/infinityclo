@@ -2,94 +2,77 @@ import type { Metadata } from 'next';
 
 import { NewsletterForm } from '@/components/newsletter/NewsletterForm';
 import { ButtonLink } from '@/components/ui/Button';
+import { Emblem } from '@/components/ui/Wordmark';
+import { NEWSLETTER_CONSENT_TEXT } from '@/server/records';
 
 export const metadata: Metadata = {
   title: 'About',
-  description: 'INFNITY — raw identity, heavyweight construction. Be the Statement.',
+  description:
+    'INFNITY is where raw identity meets untouchable design. Streetwear from Winnipeg, Manitoba. Be the Statement.',
   alternates: { canonical: '/about' },
 };
 
 /**
  * Brand story.
  *
- * The structure is complete; the content is limited to what the brand itself
- * says publicly. No founding date, founder biography, city of origin or
- * production story appears here, because none of that could be verified from
- * the source material available. Those sections are held open and the questions
- * needed to fill them are in docs/BRAND_STORY_INPUTS_NEEDED.md.
+ * Every line here is the brand's own published language — its store
+ * description, its slogan, where it is based and its community invitation.
+ * No founder story, origin date or mission has been written on its behalf;
+ * docs/assets-and-rights.md lists what the owner can add.
  */
 export default function AboutPage() {
   return (
-    <div>
-      <section
-        data-surface="bone"
-        className="bg-surface edge flex min-h-[54svh] items-end pt-20 pb-16 md:pt-24"
-      >
-        <div>
-          <p className="text-fg-faint mb-5 text-[0.7rem] font-semibold tracking-[0.3em] uppercase">
-            The label
-          </p>
-          <h1 className="font-display text-statement text-fg max-w-[14ch]">Be the Statement</h1>
+    <div className="edge pb-(--spacing-section)">
+      <section className="mx-auto flex max-w-3xl flex-col items-center pt-16 pb-14 text-center md:pt-24">
+        <Emblem className="mb-8 h-16 md:h-20" priority />
+        <h1 className="font-display text-statement text-fg">Be the Statement</h1>
+      </section>
+
+      <section className="border-line mx-auto max-w-2xl border-t py-14 text-center">
+        <p className="font-display text-title text-fg text-balance">
+          Where raw identity meets untouchable design.
+        </p>
+        <p className="text-fg-muted mx-auto mt-7 max-w-xl text-base leading-relaxed">
+          Built for the ones who don’t fold, don’t follow — and never settle.
+        </p>
+        <p className="text-fg-muted mx-auto mt-4 max-w-xl text-base leading-relaxed">
+          For the FLY only. Question is… you got what it takes to be one?
+        </p>
+        <p className="text-fg-faint mt-8 text-[0.7rem] font-semibold tracking-[0.24em] uppercase">
+          Based in Winnipeg, Manitoba, Canada
+        </p>
+        <div className="mt-9 flex justify-center">
+          <ButtonLink href="/shop" size="lg">
+            Enter the Vault
+          </ButtonLink>
         </div>
       </section>
 
-      <div className="edge pb-(--spacing-section)">
-        <div className="grid gap-12 md:grid-cols-[1fr_1.4fr] md:gap-20">
-          <div>
-            <h2 className="text-fg-faint text-[0.68rem] font-semibold tracking-[0.24em] uppercase">
-              What it is
-            </h2>
-          </div>
-
-          <div className="max-w-2xl">
-            <p className="font-display text-title text-fg">
-              Raw identity meets untouchable design.
-            </p>
-            <p className="text-fg-muted mt-7 text-sm leading-relaxed md:text-base">
-              INFNITY is a streetwear label built for people who don&apos;t fold, don&apos;t follow,
-              and never settle. The pieces are made to be worn hard and to still read as a statement
-              — heavyweight where it matters, quiet where it doesn&apos;t.
-            </p>
-            <p className="text-fg-muted mt-5 text-sm leading-relaxed md:text-base">
-              The name is the point. Infinity without the second <em>i</em> — the mark is
-              deliberately incomplete, because the people wearing it are still becoming who they
-              are.
-            </p>
-          </div>
+      <section className="border-line mx-auto max-w-2xl border-t py-14 text-center">
+        <h2 className="font-display text-headline text-fg">The Troop in INFNITY</h2>
+        <p className="text-fg-muted mx-auto mt-6 max-w-xl text-base leading-relaxed">
+          Styled By You is the wall of people wearing it. Wanna be added to the wall? Post and tag
+          us @infnity.clo.
+        </p>
+        <div className="mt-8 flex justify-center">
+          <ButtonLink href="/community" variant="secondary" size="lg">
+            Styled By You
+          </ButtonLink>
         </div>
+      </section>
 
-        <div className="border-line mt-(--spacing-section) grid gap-12 border-t pt-16 md:grid-cols-[1fr_1.4fr] md:gap-20">
-          <div>
-            <h2 className="text-fg-faint text-[0.68rem] font-semibold tracking-[0.24em] uppercase">
-              The Troop
-            </h2>
-          </div>
-
-          <div className="max-w-2xl">
-            <p className="font-display text-title text-fg">The label is the people.</p>
-            <p className="text-fg-muted mt-7 text-sm leading-relaxed md:text-base">
-              The Troop is the community around INFNITY — the customers who wear it and make it mean
-              something. Their fits sit alongside the campaign imagery because they are the
-              campaign.
-            </p>
-            <div className="mt-8">
-              <ButtonLink href="/troop" variant="secondary" size="md">
-                See the Troop
-              </ButtonLink>
-            </div>
-          </div>
-        </div>
-
-        <div className="border-line mt-(--spacing-section) border-t pt-16">
-          <div className="max-w-xl">
-            <h2 className="font-display text-headline text-fg">Join the Troop</h2>
-            <p className="text-fg-muted mt-5 text-sm leading-relaxed">
-              Early access. Private drops. Restocks. No noise.
-            </p>
-            <NewsletterForm source="about" className="mt-7" />
-          </div>
-        </div>
-      </div>
+      <section className="border-line mx-auto max-w-xl border-t pt-14 text-center">
+        <h2 className="font-display text-headline text-fg">Join the Troop</h2>
+        <p className="text-fg-muted mt-5 text-sm leading-relaxed">
+          Early access to the next drop. Email only, unsubscribe any time.
+        </p>
+        <NewsletterForm
+          source="about"
+          consentText={NEWSLETTER_CONSENT_TEXT}
+          align="center"
+          className="mt-7"
+        />
+      </section>
     </div>
   );
 }

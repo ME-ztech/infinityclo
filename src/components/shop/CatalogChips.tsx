@@ -57,14 +57,6 @@ export function CatalogChips({
             </Chip>
           </li>
         ))}
-        <li>
-          {/* The Vault is a room, not a filter — it has its own page and its own
-              surface, so linking a filter chip at it would be a lie about where
-              the customer is about to end up. */}
-          <Chip href="/vault" isActive={false}>
-            Vault
-          </Chip>
-        </li>
       </ul>
     </nav>
   );

@@ -30,7 +30,9 @@ const PUBLIC_DEFAULTS = {
 } as const;
 
 export const config = {
-  isProduction: process.env.NODE_ENV === 'production',
+  get isProduction() {
+    return process.env.NODE_ENV === 'production';
+  },
 
   shopify: {
     /** The permanent `*.myshopify.com` domain. Survives any DNS cutover. */

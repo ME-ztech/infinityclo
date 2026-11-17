@@ -7,5 +7,5 @@ import { afterEach, vi } from 'vitest';
 afterEach(() => {
   vi.restoreAllMocks();
   vi.unstubAllGlobals();
-  window.localStorage.clear();
+  if (typeof window !== 'undefined') window.localStorage.clear();
 });

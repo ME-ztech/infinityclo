@@ -59,7 +59,7 @@ export function TroopGallery({
             />
 
             {entry.handle && (
-              <span className="text-fg absolute bottom-3 left-3 text-[0.7rem] font-semibold tracking-[0.1em] opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+              <span className="text-paper absolute bottom-3 left-3 text-[0.7rem] font-semibold tracking-[0.1em] opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                 {entry.handle}
               </span>
             )}
@@ -87,7 +87,7 @@ function TroopLightbox({ entry, onClose }: { entry: UGCEntry; onClose: () => voi
         type="button"
         aria-label="Close"
         onClick={onClose}
-        className="bg-surface/85 absolute inset-0 h-full w-full cursor-default"
+        className="absolute inset-0 h-full w-full cursor-default bg-black/60"
         tabIndex={-1}
       />
 
@@ -95,17 +95,17 @@ function TroopLightbox({ entry, onClose }: { entry: UGCEntry; onClose: () => voi
         ref={containerRef}
         role="dialog"
         aria-modal="true"
-        aria-label="Customer fit"
+        aria-label="Styled By You photo"
         tabIndex={-1}
         className="bg-surface-raised border-line relative flex max-h-[90svh] w-full max-w-3xl flex-col overflow-hidden border md:flex-row"
       >
-        <div className="relative min-h-[45svh] flex-1 md:min-h-0">
+        <div className="bg-surface-sunken relative min-h-[60svh] flex-1 md:min-h-[70svh]">
           <Image
             src={entry.media.url}
             alt={entry.media.alt}
             fill
             sizes="(min-width: 768px) 50vw, 100vw"
-            className="object-cover"
+            className="object-contain"
           />
         </div>
 

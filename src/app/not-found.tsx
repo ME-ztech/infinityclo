@@ -7,15 +7,14 @@ export default function NotFound() {
           and a page with no heading at all is unnavigable by screen reader. */}
       <h1 className="font-display text-statement text-fg leading-none">404</h1>
       <p className="text-fg-muted mt-6 max-w-sm text-sm leading-relaxed">
-        That page doesn&apos;t exist. It may have moved, or the piece may have sold through into the
-        Vault.
+        That page doesn&apos;t exist. It may have moved, or the piece may no longer be available.
       </p>
       <div className="mt-9 flex flex-wrap justify-center gap-3">
         <ButtonLink href="/shop" variant="primary" size="lg">
           Shop all
         </ButtonLink>
-        <ButtonLink href="/vault" variant="secondary" size="lg">
-          The Vault
+        <ButtonLink href="/" variant="secondary" size="lg">
+          Home
         </ButtonLink>
       </div>
     </div>

@@ -2,21 +2,30 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
+import { Section } from '@/components/layout/Section';
 import { ProductDetailView } from '@/components/product/ProductDetailView';
 import { ProductRack } from '@/components/product/ProductRack';
-import { Section, SectionHeader } from '@/components/layout/Section';
-import { TextLink } from '@/components/ui/Button';
-import { TroopGallery } from '@/components/troop/TroopGallery';
-import { catalogRepository, contentRepository } from '@/data';
-import { fromPrice, primaryMedia, productAvailability, relatedProducts } from '@/domain/product';
+import { catalogRepository } from '@/data';
+import { fromPrice, primaryMedia, productAvailability } from '@/domain/product';
 import { BRAND, SITE_URL } from '@/lib/site';
+import { getSiteContent } from '@/server/cms';
+import { getProductPresentation, recommendProducts } from '@/server/storefront';
 
-export const revalidate = 3600;
+/** Price and stock are live, so a product page is never more than a minute old. */
+export const revalidate = 60;
+
+/**
+ * A product published in Shopify after the last deployment has no pre-rendered
+ * page. `dynamicParams` lets it render on first request instead of 404ing.
+ */
+export const dynamicParams = true;
 
 export async function generateStaticParams() {
   const slugs = await catalogRepository.listProductSlugs();
   return slugs.map((slug) => ({ slug }));
 }
+
+const absolute = (url: string) => (url.startsWith('http') ? url : `${SITE_URL}${url}`);
 
 export async function generateMetadata({
   params,
@@ -26,11 +35,13 @@ export async function generateMetadata({
   const { slug } = await params;
   const product = await catalogRepository.getProductBySlug(slug);
 
-  if (!product) return { title: 'Not found' };
+  if (!product) return { title: 'Not found', robots: { index: false, follow: false } };
 
   const media = primaryMedia(product);
   const description =
-    product.tagline ?? product.description?.slice(0, 155) ?? `${product.name} from ${BRAND.name}.`;
+    product.tagline ??
+    product.description?.replace(/\s+/g, ' ').slice(0, 155) ??
+    `${product.name} from ${BRAND.name}.`;
 
   return {
     title: product.name,
@@ -41,7 +52,15 @@ export async function generateMetadata({
       title: `${product.name} — ${BRAND.name}`,
       description,
       url: `${SITE_URL}/products/${product.slug}`,
-      images: media ? [{ url: media.url, alt: media.alt }] : undefined,
+      images: media
+        ? [{ url: absolute(media.url), alt: media.alt, width: media.width, height: media.height }]
+        : undefined,
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: `${product.name} — ${BRAND.name}`,
+      description,
+      images: media ? [absolute(media.url)] : undefined,
     },
   };
 }
@@ -52,27 +71,27 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
   if (!product) notFound();
 
-  const [{ products: catalog }, ugc, sizeGuide] = await Promise.all([
+  const [{ products: catalog }, presentation, content] = await Promise.all([
     catalogRepository.listProducts(),
-    contentRepository.getUGCForProduct(product.slug),
-    product.sizeGuideId ? catalogRepository.getSizeGuide(product.sizeGuideId) : null,
+    getProductPresentation(product),
+    getSiteContent(),
   ]);
 
-  const related = relatedProducts(product, catalog, 4);
+  const recommended = content.upsell.productPage ? recommendProducts(catalog, [product], 4) : [];
   const price = fromPrice(product);
   const availability = productAvailability(product);
-  const media = primaryMedia(product);
 
   /**
    * Product structured data. Only fields backed by real values are emitted —
-   * no aggregateRating, since no reviews exist, and no fabricated brand or GTIN.
+   * no aggregateRating, since no reviews exist, and no fabricated GTIN.
    */
   const productSchema = {
     '@context': 'https://schema.org',
     '@type': 'Product',
     name: product.name,
     description: product.description ?? undefined,
-    image: media ? [`${SITE_URL}${media.url}`] : undefined,
+    image: product.media.slice(0, 6).map((media) => absolute(media.url)),
+    sku: product.variants.find((variant) => variant.sku)?.sku ?? undefined,
     brand: { '@type': 'Brand', name: BRAND.name },
     ...(price && {
       offers: {
@@ -90,22 +109,22 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
   return (
     <>
-      <Section surface="bone" spacing="none" className="pt-10 pb-(--spacing-section) md:pt-14">
+      <Section surface="paper" spacing="none" className="pt-6 pb-(--spacing-section) md:pt-10">
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
         />
 
-        <nav aria-label="Breadcrumb" className="mb-8">
+        <nav aria-label="Breadcrumb" className="mb-6">
           <ol className="text-fg-faint flex flex-wrap items-center gap-2 text-[0.7rem] tracking-[0.12em] uppercase">
             <li>
-              <Link href="/" className="hover:text-fg-muted">
+              <Link href="/" className="hover:text-fg">
                 Home
               </Link>
             </li>
             <li aria-hidden>/</li>
             <li>
-              <Link href="/shop" className="hover:text-fg-muted">
+              <Link href="/shop" className="hover:text-fg">
                 Shop
               </Link>
             </li>
@@ -116,35 +135,28 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           </ol>
         </nav>
 
-        <ProductDetailView product={product} sizeGuide={sizeGuide} />
+        <ProductDetailView
+          product={product}
+          sizeChart={presentation.sizeChart}
+          details={{ fit: presentation.fit, fabric: presentation.fabric, care: presentation.care }}
+        />
       </Section>
 
-      {ugc.length > 0 && (
-        <Section surface="paper" aria-labelledby="worn-heading">
-          <SectionHeader
-            id="worn-heading"
-            eyebrow="The Troop"
-            title="Worn by the Troop"
-            action={<TextLink href="/troop">See more</TextLink>}
-            className="mb-10 md:mb-14"
-          />
-          <TroopGallery entries={ugc} />
-        </Section>
-      )}
-
-      {related.length > 0 && (
-        <Section surface="concrete" aria-labelledby="related-heading">
-          <SectionHeader
+      {recommended.length > 0 && (
+        <Section
+          surface="paper"
+          spacing="tight"
+          aria-labelledby="related-heading"
+          data-testid="you-may-also-like"
+          className="border-line border-t"
+        >
+          <h2
             id="related-heading"
-            eyebrow="Goes with"
-            title="Complete the look"
-            action={<TextLink href="/shop">Shop all</TextLink>}
-            className="mb-10 md:mb-14"
-          />
-          {/* The rack rather than the grid: four related pieces in a 2-up mobile
-              grid is exactly the cramped presentation 1.1 removed everywhere
-              else, and a rail reads better at the foot of a long page. */}
-          <ProductRack products={related} priorityCount={0} columns={4} />
+            className="font-display text-headline text-fg mb-10 text-center md:mb-14"
+          >
+            You may also like
+          </h2>
+          <ProductRack products={recommended} priorityCount={0} columns={4} />
         </Section>
       )}
     </>
