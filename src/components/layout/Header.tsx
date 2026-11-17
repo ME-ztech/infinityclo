@@ -3,7 +3,7 @@
 /**
  * Global header.
  *
- * Three columns: navigation on the left, the brand mark dead centre, utilities
+ * Three columns: navigation on the left, the wordmark dead centre, utilities
  * on the right. The bar is always solid white with ink type — it sits above the
  * campaign hero rather than over it, so there is no scroll position at which
  * the navigation loses contrast against a photograph.
@@ -125,11 +125,9 @@ export function Header({ announcement }: { announcement?: Announcement | null })
               data-testid="brand-home"
               className="flex min-h-11 items-center justify-self-center"
             >
-              <Wordmark
-                withEmblem
-                emblemClassName="h-7 md:h-9"
-                className="text-[1.05rem] md:text-[1.35rem]"
-              />
+              {/* The wordmark alone: the emblem is the hero's statement, and a
+                  second one here would compete with it. */}
+              <Wordmark className="text-[1.2rem] md:text-[1.5rem]" />
             </Link>
 
             {/* Right: utilities. */}
