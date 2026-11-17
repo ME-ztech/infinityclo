@@ -42,3 +42,6 @@ yarn-error.log*
 # local document store, dev session secret, uploads
 .data/
 .data-*/
+
+# Shopify exports used for migration contain personal data
+exports/

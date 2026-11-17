@@ -32,7 +32,7 @@ export async function createOfferDraft(input: OfferInput, actor: string): Promis
     id: newId('off'),
     status: 'draft',
     marginCheckedBy: null,
-    shopifyDiscountId: null,
+    discountId: null,
     sandbox: false,
     createdAt: now,
     updatedAt: now,
@@ -92,7 +92,7 @@ export class OfferValidationError extends Error {
 export async function listStorefrontOffers(now: Date = new Date()): Promise<Offer[]> {
   try {
     const offers = await getStore().list<Offer>('offers');
-    return offers.filter((offer) => isOfferActive(offer, now) && !offer.sandbox && offer.shopifyDiscountId !== null);
+    return offers.filter((offer) => isOfferActive(offer, now) && !offer.sandbox && offer.discountId !== null);
   } catch {
     return [];
   }

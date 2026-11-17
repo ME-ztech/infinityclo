@@ -132,7 +132,7 @@ export async function activateOffer(
   if (confirmation !== ACTIVATE_CONFIRMATION) throw new Error(`Type ${ACTIVATE_CONFIRMATION} to confirm.`);
   if (!gateway) throw new Error('The commerce database is not configured, so a discount cannot be created. The offer stays a draft.');
 
-  let discountId = offer.shopifyDiscountId;
+  let discountId = offer.discountId;
   if (discountId) {
     await gateway.setDiscountActive(discountId, offer.method, true);
   } else {
@@ -143,7 +143,7 @@ export async function activateOffer(
   return saveOffer({
     ...offer,
     status: 'live',
-    shopifyDiscountId: discountId,
+    discountId: discountId,
     sandbox: gateway.mode === 'sandbox',
     activatedAt: new Date().toISOString(),
     activatedBy: session.email,
@@ -156,7 +156,7 @@ export async function pauseOffer(id: string, session: AdminSession, gateway: Com
   const offer = await mustGet(id);
   if (offer.status !== 'live') throw new Error('Only a live offer can be paused.');
   if (!gateway) throw new Error('The commerce database is not configured, so the discount cannot be deactivated from here.');
-  if (offer.shopifyDiscountId) await gateway.setDiscountActive(offer.shopifyDiscountId, offer.method, false);
+  if (offer.discountId) await gateway.setDiscountActive(offer.discountId, offer.method, false);
   // Pausing invalidates the margin sign-off: reactivation needs a fresh check.
   return saveOffer({ ...offer, status: 'paused', marginCheckedBy: null });
 }
@@ -167,9 +167,9 @@ export async function endOffer(id: string, session: AdminSession, gateway: Comme
   const offer = await mustGet(id);
   if (offer.status === 'draft') throw new Error('A draft has nothing to end. Delete it instead.');
   if (offer.status === 'ended') return offer;
-  if (offer.shopifyDiscountId) {
+  if (offer.discountId) {
     if (!gateway) throw new Error('The commerce database is not configured, so the discount cannot be removed from here.');
-    await gateway.deleteDiscount(offer.shopifyDiscountId, offer.method);
+    await gateway.deleteDiscount(offer.discountId, offer.method);
   }
-  return saveOffer({ ...offer, status: 'ended', shopifyDiscountId: null });
+  return saveOffer({ ...offer, status: 'ended', discountId: null });
 }

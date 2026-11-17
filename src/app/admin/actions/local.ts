@@ -131,7 +131,7 @@ export async function activateOfferAction(form: FormData): Promise<void> {
     refreshStorefront();
     return {
       message: offer.sandbox ? 'Activated in the SANDBOX. No real discount exists and shoppers are unaffected.' : 'Offer is LIVE. The discount is now enforced at checkout.',
-      detail: `Activated; discount ${offer.shopifyDiscountId ?? 'n/a'}${offer.sandbox ? ' (sandbox)' : ''}.`,
+      detail: `Activated; discount ${offer.discountId ?? 'n/a'}${offer.sandbox ? ' (sandbox)' : ''}.`,
     };
   });
 }

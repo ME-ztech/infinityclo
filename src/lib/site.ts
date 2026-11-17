@@ -21,7 +21,8 @@ export const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, '') ?? 'https://infinityclo.ca';
 
 /**
- * Checkout switch. Checkout is Shopify-hosted and needs no credential, so it is
+ * Checkout switch. Whether an order can actually be taken is decided on the
+ * server (database, payment provider and a shipping rate must exist); this is
  * on by default. Set NEXT_PUBLIC_CHECKOUT_ENABLED=false to turn the storefront
  * into a browse-only preview (for example on a design-review deployment).
  */

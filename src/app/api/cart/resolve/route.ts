@@ -9,7 +9,7 @@
  *
  *   offers           estimates for live automatic offers (and bundle "add one
  *                    more" nudges). Empty unless such an offer really exists in
- *                    Shopify; the figures are estimates and checkout is final.
+ *                    the checkout engine; the figures are estimates and checkout is final.
  *   recommendations  "you may also like" products, only when the owner has
  *                    switched the cart placement on.
  */

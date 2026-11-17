@@ -5,7 +5,7 @@
  *
  * A modal dialog from the right edge: focus-trapped, closed by Escape, the
  * backdrop or the close button. Lines can be changed or removed in place, and
- * the checkout button hands the cart to Shopify.
+ * the checkout button starts the on-site checkout.
  */
 import Link from 'next/link';
 

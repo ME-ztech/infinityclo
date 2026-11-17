@@ -3,9 +3,9 @@
 /**
  * The checkout control.
  *
- * Checkout is Shopify-hosted. This button posts the cart's identities to
+ * This button posts the cart's identities to
  * `/api/checkout`, which re-validates every line against the live catalogue and
- * returns the Shopify checkout URL; the browser is then sent there. No price and
+ * prices it, reserves the stock and returns where to go next (the checkout page). No price and
  * no payment detail ever passes through this component.
  *
  * It refuses, with a reason, in three cases: checkout is switched off for this
@@ -76,7 +76,7 @@ export function CheckoutAction({ cart, disabled }: { cart: Cart; disabled?: bool
       const data = (await response.json().catch(() => ({}))) as { url?: string; error?: string };
 
       if (response.ok && data.url) {
-        // A full navigation: checkout lives on Shopify's domain.
+        // A full navigation, so the checkout page is rendered fresh with its cookie.
         window.location.assign(data.url);
         return;
       }

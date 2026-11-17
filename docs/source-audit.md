@@ -121,7 +121,7 @@ website, not an instruction from the owner; it was noted and not acted on.
 | 10% discount | "Persistent 10% discount" | "10% — scrap", then "(Persistent 10% discount) — offer/discount" | Seeded as a **draft**, never live. **Owner decision.** |
 | Bundles | "Bundle offers" | "Bundle offers" | Built as an admin capability; seeded as a draft |
 | Footer | "Important stuff, legal & policies" | Same | Built |
-| Accounts | "Login/sign up, email capture, track order, full customer management" | "Login / Sign in", "My account" | Built on Shopify customer accounts |
+| Accounts | "Login/sign up, email capture, track order, full customer management" | "Login / Sign in", "My account" | Built as INFNITY's own accounts |
 
 ## Gap list (evidence-based)
 
@@ -133,4 +133,4 @@ website, not an instruction from the owner; it was noted and not acted on.
 | No fit, care or (mostly) fabric copy | Product descriptions | FIT / CARE sections omitted until entered in admin |
 | No published contact email, phone or address | Contact page is a form only | Contact page shows the form and Instagram only |
 | No shipping rates, regions or carriers published | Shipping policy | Nothing promised beyond the two processing sentences |
-| No Shopify credentials | Repository and environment contain none | Admin, customer sign-in and webhooks are built and gated; see `launch-checklist.md` |
+| No Shopify credentials | Repository and environment contain none | Not needed at runtime: the platform is now proprietary. Customer, order and stock data arrive by CSV export from the owner; see `migration-plan.md` |

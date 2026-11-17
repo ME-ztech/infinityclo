@@ -3,7 +3,7 @@
  *
  * Requires explicit consent (`consent: true`) — an email address alone is not
  * permission to market to someone. The consent record is stored, and mirrored
- * to the Shopify customer when the Admin API is connected.
+ * onto the customer account with the same address, if there is one.
  *
  * The confirmation says only what is true: the address is on the list. It does
  * not promise a welcome email, because nothing here sends one.

@@ -63,7 +63,7 @@ export interface Offer {
   readonly showOnStorefront: boolean;
   /** Owner's margin sign-off, required before activation. */
   readonly marginCheckedBy: string | null;
-  readonly shopifyDiscountId: string | null;
+  readonly discountId: string | null;
   /** True when the "activation" happened in the admin sandbox, not in Shopify. */
   readonly sandbox: boolean;
   readonly internalNote: string;

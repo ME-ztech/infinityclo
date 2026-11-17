@@ -58,7 +58,7 @@ export function CartPageView() {
               </ButtonLink>
             </div>
             <p className="text-fg-faint mt-4 text-center text-[0.7rem] leading-relaxed">
-              Secure checkout is handled by Shopify. Guest checkout is available.
+              Secure checkout. Card details are handled by Stripe. Guest checkout is available.
             </p>
           </div>
         </aside>

@@ -19,6 +19,7 @@ import { readFile } from 'node:fs/promises';
 import { sql } from 'drizzle-orm';
 
 import { products as snapshotProducts } from '../src/data/adapters/local/snapshot';
+import { importCustomers, importOrders, reconcile } from '../src/server/commerce/migration';
 import { importInventoryCounts, seedCatalog, unverifiedStock } from '../src/server/commerce/seed';
 import { closeDb, databaseEngine, databaseUrl, getDb, runMigrations } from '../src/server/db/client';
 
@@ -109,11 +110,32 @@ async function main(): Promise<void> {
       if (report.unmatched.length) console.log(report.unmatched.join('\n'));
       break;
     }
+    case 'customers':
+    case 'orders': {
+      if (!argument) throw new Error(`Usage: npm run migrate:${command} -- <path-to-csv> [--dry-run]`);
+      const dryRun = process.argv.includes('--dry-run');
+      const csv = await readFile(argument, 'utf8');
+      const report = command === 'customers' ? await importCustomers(csv, { dryRun }) : await importOrders(csv, { dryRun });
+      console.log(`${dryRun ? 'DRY RUN — nothing written. ' : ''}Rows read: ${report.rows}`);
+      console.log(`  created            ${report.created}`);
+      console.log(`  already present    ${report.skippedExisting}`);
+      console.log(`  rejected           ${report.rejected.length}`);
+      if (report.totalCents !== undefined) console.log(`  order total        ${(report.totalCents / 100).toFixed(2)}`);
+      for (const entry of report.rejected) console.log(`  row ${entry.row}: ${entry.reason}`);
+      break;
+    }
+    case 'reconcile': {
+      const figures = await reconcile();
+      for (const [key, value] of Object.entries(figures)) {
+        console.log(`  ${key.padEnd(32)} ${key.endsWith('Cents') ? (value / 100).toFixed(2) : value}`);
+      }
+      break;
+    }
     case 'status':
       await status();
       break;
     default:
-      throw new Error('Usage: db.ts migrate | seed | status | inventory <csv>');
+      throw new Error('Usage: db.ts migrate | seed | status | inventory <csv> | customers <csv> | orders <csv> | reconcile');
   }
 }
 

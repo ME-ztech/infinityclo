@@ -1,212 +1,222 @@
 # Architecture Decision
 
-**Decision: Shopify stays the single system of record for commerce. This
-repository is a bespoke storefront and a branded operations dashboard on top of
-it. No second catalogue, inventory, order or payment system is built.**
+**Decision (revised 2026-11-16): INFNITY owns its commerce platform. Catalogue,
+inventory, customers, checkout, orders, discounts and content live in INFNITY's
+own PostgreSQL database and are governed by code in this repository. Stripe
+moves money. Shopify is a temporary migration source and nothing at runtime
+depends on it.**
 
-Decided 2026-11-16, after inspecting the repository and the live store.
+This supersedes the decision recorded earlier the same day, which kept Shopify
+as the permanent system of record. That decision was sound for its stated goal
+(lowest-risk relaunch) and wrong for the owner's actual goal (own the platform).
+The owner's correction is the authority here.
 
-## What was already installed
+## What changed, and what it cost
 
-| Area | Found in the repository | Decision |
-| ---- | ----------------------- | -------- |
-| Framework | Next.js 16 App Router, React 19, TypeScript strict, Tailwind v4 | Keep |
-| Storefront UI | Complete design system, cart, search, filters, PDP | Keep, restyle to the white theme |
-| Data layer | Repository interfaces + local JSON adapter | Keep the seam; add a Shopify adapter behind it |
-| Commerce backend | **None.** The previous plan (`PHASE_2_COMMERCE_BACKEND.md`) proposed PostgreSQL, Stripe, hand-rolled accounts, carts, inventory and orders | **Rejected** — see below |
-| Shopify / Stripe code | None | Add Shopify; no Stripe |
-| Auth, admin, webhooks | None | Add |
+| | First decision | This decision |
+| --- | --- | --- |
+| System of record | Shopify | INFNITY's PostgreSQL |
+| Checkout | Shopify-hosted | On-site, Stripe Payment Element |
+| Customer login | Shopify Customer Account API | INFNITY accounts (email + password) |
+| Admin | Dashboard over Shopify's Admin API | Dashboard over INFNITY's database |
+| Tax, shipping rates | Shopify computes | INFNITY computes from its own rate tables |
+| Refunds, cancellation | Done in Shopify | Done here, through Stripe |
 
-## Why not the previous PostgreSQL + Stripe plan
+Removed from the codebase: the Shopify admin gateway, Shopify customer OAuth,
+the live Storefront API catalogue adapter and the Shopify webhook route. Kept:
+the importers that read Shopify's exports.
 
-The store already runs on Shopify with a real catalogue, real customers, real
-orders and a configured checkout. Building a parallel backend would have meant:
+The trade is deliberate and has a price, set out honestly in
+`build-vs-shopify.md`: INFNITY now carries responsibilities Shopify carried —
+tax correctness, fraud and chargebacks, uptime, security patching, backups.
 
-- two inventories that can disagree, which is how overselling happens;
-- migrating customers and order history out of the system that holds them;
-- re-implementing tax, shipping rates, payment methods, fraud checks, refunds
-  and PCI scope that Shopify already provides and the owner already pays for;
-- two places to edit a product.
+## Why the earlier PostgreSQL + Stripe plan was rejected, and why it now applies
 
-None of that buys the owner anything. The brief asks for exactly one authority.
+The repository's original plan (`PHASE_2_COMMERCE_BACKEND.md`, now deleted) was
+PostgreSQL + Stripe + hand-rolled accounts. It was rejected on the assumption
+that the store should stay on Shopify, where a second backend would have meant
+two inventories that could disagree. With Shopify leaving, that objection
+disappears: there is again exactly one system of record. The plan's shape was
+right; what was built follows it, with these differences:
+
+| Original plan | Built |
+| --- | --- |
+| "Drizzle or Prisma" | **Drizzle.** See below. |
+| Stripe Checkout or Payment Element | **Payment Element**, so checkout stays on-site and on-brand |
+| Auth.js or hand-rolled sessions | Hand-rolled: a session table, hashed tokens, scrypt |
+| Slices delivered over time | Delivered together, behind one schema |
+
+### Drizzle rather than Prisma
+
+The owner's note said "PostgreSQL + Prisma — reinstate, subject to repo audit".
+The audit found Prisma was never installed; the plan named it only as an option.
+Drizzle was chosen for one decisive reason: it runs unchanged on **PGlite**,
+PostgreSQL compiled to WebAssembly. That gives:
+
+- a working store on `npm run dev` with no database to install;
+- an integration test suite that executes real PostgreSQL — real constraints,
+  real transactions, real `SELECT … FOR UPDATE` — in memory, in seconds;
+- migrations as reviewable SQL files (`drizzle/`).
+
+Prisma needs a query-engine binary and a running server for the same tests. If
+the owner prefers Prisma for hiring or familiarity, the schema maps one-to-one
+and the swap is contained to `src/server/db` and the query modules in
+`src/server/commerce`.
 
 ## Target architecture
 
 ```
-                     ┌───────────────────────────────────────────────┐
-  Customer ─────────►│  INFNITY storefront  (this repo, Next.js)      │
-                     │  pages · cart · search · content · community   │
-                     └───────┬───────────────────────────┬───────────┘
-                             │ read (cached 60s)         │ cart permalink
-                             ▼                           ▼
-                     Storefront API              Shopify-hosted checkout
-                     products · price · stock    payment · tax · shipping
-                             ▲                           │
-  Owner / staff ────►┌───────┴───────────────┐           │ order
-                     │  /admin dashboard      │           ▼
-                     │  RBAC · audit log      │──────► Admin API ◄── webhooks
-                     └───────┬───────────────┘   products · inventory ·     │
-                             │                    orders · customers ·       │
-                             ▼                    discounts                  │
-                     Document store (KV/file)  ◄─────────────────────────────┘
-                     content · offer drafts · drops · waitlists ·   cache
-                     consent records · submissions · tickets ·      invalidation
-                     staff · audit · webhook receipts               + receipts
-
-  Customer account ──► Customer Account API (OAuth, passwordless, Shopify-hosted)
+                ┌──────────────────────────────────────────────────────────┐
+  Customer ────►│  Storefront (Next.js, this repo)                          │
+                │  home · shop · product · cart · checkout · account        │
+                └───────┬─────────────────────────────────┬────────────────┘
+                        │                                 │ card details go
+                        ▼                                 ▼ browser → Stripe
+        ┌───────────────────────────────┐          ┌─────────────┐
+        │  INFNITY commerce engine       │◄─────────│   Stripe    │
+        │  src/server/commerce           │ signed   │ (payments)  │
+        │                                │ webhook  └─────────────┘
+        │  catalog    inventory          │
+        │  checkout   orders             │          ┌─────────────┐
+        │  customers  discounts          │─────────►│   Resend    │
+        │  payments   migration          │  email   │  (email)    │
+        └───────┬───────────────────────┘          └─────────────┘
+                │
+                ▼
+        ┌───────────────────────────────┐
+        │  PostgreSQL (Neon or any)      │   one database, one backup
+        │  relational commerce tables    │
+        │  + documents (content, drafts, │
+        │    consent, tickets, audit)    │
+        └───────▲───────────────────────┘
+                │
+  Staff ───────►│  /admin  (RBAC, audit log)  — same engine, same rules
 ```
+
+Third parties and what each is allowed to own:
+
+| Service | Role | Owns business logic? | Replaceable by |
+| --- | --- | --- | --- |
+| PostgreSQL host (e.g. Neon) | Stores data | No | Any PostgreSQL |
+| Stripe | Moves money, holds card data | No — amount, order and refund rules are ours | Any provider behind `PaymentProvider` |
+| Resend | Delivers email | No — templates and triggers are ours | Any SMTP/API sender |
+| Vercel | Runs the app | No | Any Node host |
+| Shopify | Migration source only | No | — |
 
 ## Data ownership
 
-| Data | Owner | This app |
-| ---- | ----- | -------- |
-| Products, variants, prices, media | **Shopify** | Reads live (Storefront API); writes via Admin API from `/admin` |
-| Inventory | **Shopify** | Reads availability; sets quantities via Admin API with compare-and-set |
-| Cart | Browser (identities only) | Re-priced server-side on every read; never trusted |
-| Checkout, payment, tax, shipping rates | **Shopify** | Hands off; computes nothing |
-| Orders, fulfilment, refunds | **Shopify** | Reads; adds notes and tracking via Admin API. Refunds and cancellations are done in Shopify |
-| Customers, addresses, login | **Shopify** | Customer Account API; no passwords stored here |
-| Discounts | **Shopify** once activated | Authors drafts; activation creates the Shopify discount |
-| Marketing consent | **Shopify** customer record | Records the consent event, then syncs it to Shopify |
-| Homepage content, hero, lookbook | This app | Document store |
-| Drops, waitlists | This app | Document store |
-| Community submissions, tickets | This app | Document store |
-| Staff accounts, audit log | This app | Document store |
+Every row below lives in INFNITY's database. There is no field two systems
+both write.
 
-There is no field that two systems both write.
+| Data | Table(s) | Written by |
+| --- | --- | --- |
+| Products, variants, options, media | `products`, `product_variants`, `product_options`, `product_media` | Admin |
+| Collections | `collections`, `collection_products` | Admin |
+| Stock | `inventory_levels`, `inventory_movements`, `inventory_reservations` | Checkout, fulfilment, admin |
+| Customers and sign-in | `customers`, `customer_sessions`, `customer_tokens`, `customer_addresses` | Customer |
+| Carts | Browser for guests; `carts`, `cart_items` reserved for signed-in sync | Customer |
+| Checkouts | `checkouts` | Checkout engine |
+| Orders | `orders`, `order_items`, `order_events` | Payment webhook, admin |
+| Money movements | `payments` | Payment webhook, refund action |
+| Shipments | `fulfillments` | Admin |
+| Discounts | `discounts`, `discount_redemptions` | Admin (activation), checkout |
+| Shipping and tax rates | `shipping_rates`, `tax_rates` | Admin |
+| Content, offer drafts, drops, waitlists, consent records, tickets, staff, audit | `documents` | Admin, public forms |
+| Webhook receipts | `webhook_events` | Payment webhook |
 
-## Catalogue: live, with a committed fallback
+Card numbers are never stored, logged or seen by this application.
 
-`src/data/adapters/shopify/catalog.ts` reads the Storefront API and caches for 60
-seconds. A product published in Shopify appears on the storefront within a
-minute, with no deployment; webhooks shorten that to seconds.
+## The rules the engine enforces
 
-The snapshot committed under `src/data/catalog/` is the fallback when Shopify is
-unreachable, and the source of locally hosted photography. A stale "in stock" in
-the fallback cannot become a wrongly accepted order, because Shopify checkout
-re-validates stock.
+These are the properties that make it safe to take money. Each is covered by
+tests named in `test-evidence.md`.
 
-The Storefront API is used in its **tokenless** mode, verified against the live
-store on 2026-11-16 (`2026-10`): products, variants, prices and availability are
-readable with no credential. `quantityAvailable` is not (it needs the
-`unauthenticated_read_product_inventory` scope), so the storefront shows
-in-stock / sold-out and never a count. Exact quantities are an admin-only view.
-
-## Checkout: cart permalink
-
-Checkout is handed to Shopify with a cart permalink:
-
-```
-https://<store>/cart/<variantId>:<qty>,<variantId>:<qty>?discount=<CODE>
-```
-
-`POST /api/checkout` re-resolves every line against the live catalogue, refuses
-sold-out or vanished lines, and returns that URL. It needs no credential, writes
-nothing to the store, and works today.
-
-Alternative considered: the Storefront Cart API (`cartCreate` → `checkoutUrl`).
-It creates a cart object in the store for every visitor and adds a network
-dependency to "add to cart" for no benefit at this catalogue size. The permalink
-keeps the cart instant and offline-tolerant. The seam (`buildCheckoutUrl`) is one
-function if this is revisited — for example to support cart-level attributes or
-Shopify Markets pricing per region.
-
-**Consequence to know about:** the cart subtotal on this site is the sum of
-catalogue prices in CAD. If the store uses Shopify Markets with different
-regional pricing, checkout shows the regional price. The cart says, in words,
-that final prices, tax, shipping and discounts are confirmed at checkout.
-
-## Offers: drafts here, enforcement in Shopify
-
-An offer is authored as a draft in `/admin`. Only an Owner can activate it, after
-ticking a margin acknowledgement. Activation creates a native Shopify discount:
-
-| Offer | Shopify object |
-| ----- | -------------- |
-| X% off with a code | `discountCodeBasicCreate` |
-| X% off, first order only | Code discount limited to a customer segment `number_of_orders = 0`, once per customer |
-| Bundle: X% off when buying N or more | `discountAutomaticBasicCreate` with a minimum-quantity requirement |
-
-Because both kinds are native discounts, the saving estimated in the cart and the
-total at checkout cannot disagree by design. The storefront advertises an offer
-only when it is live **and** has a Shopify discount id.
-
-Not supported, deliberately: fixed "any two for $X" bundle prices. Those need a
-Shopify Functions app or the Shopify Bundles app; a percentage bundle covers the
-request without a second pricing engine.
+1. **The server prices everything.** The browser sends variant ids and
+   quantities. Prices, shipping, tax and discounts are computed from the
+   database (`src/domain/pricing.ts`, integer cents only).
+2. **Stock is reserved when checkout opens.** A single conditional `UPDATE`
+   decides who gets the last unit; reservations expire after 30 minutes and are
+   released.
+3. **An order is created in exactly one place** — the handler for a
+   signature-verified payment webhook whose amount equals the frozen checkout
+   total. No page, redirect or client call can create or mark an order paid.
+4. **Everything is idempotent.** Webhook event ids are a primary key; an order
+   is unique per checkout and per payment reference; refunds carry an
+   idempotency key to both Stripe and the database.
+5. **Status is derived, never asserted.** Fulfilment and payment status come
+   from recorded quantities and cents. "Delivered" requires a recorded delivery.
+6. **A customer can only reach their own data.** The customer id is in the
+   `WHERE` clause of every account query.
+7. **Consent is explicit and recorded.** Marketing consent is its own field with
+   time and source; an account or an order never implies it.
+8. **Checkout stays closed until it can finish.** No database, no payment
+   provider or no shipping rate means checkout says so, rather than opening a
+   flow that cannot complete.
 
 ## Authentication
 
 | Who | Mechanism |
-| --- | --------- |
-| Customers | Shopify Customer Account API — OAuth 2.0 authorization code + PKCE, Shopify-hosted passwordless login. Tokens held in an encrypted, httpOnly cookie. No password is ever stored here. |
-| Staff | Email + password (scrypt) into a sealed 8-hour session cookie. Roles: Owner, Operations, Content, Support. Every action is permission-checked on the server and audited. |
-| Shopify → app | Webhook HMAC-SHA256 over the raw body, constant-time compare |
+| --- | --- |
+| Customers | Email + password (scrypt). Email must be verified before first sign-in. Random session tokens, stored only as SHA-256, 30-day expiry, revocable, all revoked on password change. Single-use, expiring, hashed tokens for verification and reset. |
+| Staff | Email + password (scrypt) into a sealed 8-hour cookie. Roles: Owner, Operations, Content, Support. Every action permission-checked on the server and audited. |
+| Stripe → app | `Stripe-Signature` HMAC over timestamp + raw body, five-minute tolerance |
+| Scheduler → app | Bearer `CRON_SECRET` |
 
-Staff accounts are local rather than Shopify staff accounts because the Admin API
-is reached with one app token; mapping roles here gives least privilege *inside*
-that token's reach.
+## Tax and shipping — what the platform does and does not do
 
-## API and webhook map
+Shopify computed these; now INFNITY's tables do.
 
-| Route | Purpose | Auth |
-| ----- | ------- | ---- |
-| `POST /api/cart/resolve` | Price a cart from identities; estimate live offers | Public |
-| `POST /api/checkout` | Validate cart, return Shopify checkout URL | Same-origin, rate-limited |
-| `GET /api/search` | Product search | Public |
-| `POST /api/newsletter` | Record marketing consent; sync to Shopify | Same-origin, rate-limited |
-| `POST /api/waitlist` | Join a drop waitlist | Same-origin, rate-limited |
-| `POST /api/contact` | Create a support ticket; optional email | Same-origin, rate-limited, honeypot |
-| `POST /api/community/submit` | Upload a community photo for moderation | Same-origin, rate-limited |
-| `GET /api/auth/customer/login` · `callback` · `POST logout` | Customer OAuth | PKCE + state |
-| `/api/admin/*` and admin server actions | Dashboard operations | Staff session + permission |
-| `POST /api/webhooks/shopify` | Shopify events | HMAC |
+- **Shipping:** flat rates by country and optional province, with an optional
+  free-shipping threshold (`shipping_rates`). No carrier-calculated rates.
+- **Tax:** percentage rates by country and optional province; several can apply
+  to one address (GST + PST) and each is its own line on the order
+  (`tax_rates`). Tables start **empty**: no rate is pre-filled, because whether
+  INFNITY must charge GST/HST depends on its registration status, which only the
+  owner and their accountant know.
 
-Webhook topics to subscribe: `products/create`, `products/update`,
-`products/delete`, `inventory_levels/update`, `collections/update`,
-`orders/create`, `orders/paid`, `orders/updated`, `orders/cancelled`,
-`orders/fulfilled`, `fulfillments/create`, `fulfillments/update`,
-`refunds/create`, plus the mandatory privacy topics `customers/data_request`,
-`customers/redact`, `shop/redact`.
+This covers a Canadian apparel seller shipping domestically. It does **not**
+cover US state sales-tax nexus, EU/UK VAT with import one-stop-shop rules, or
+duties. Selling there means either adding a tax service (Stripe Tax is the
+natural fit and slots in behind `priceOrder`) or limiting where the store ships.
+This is a known limitation, listed in `production-readiness.md`.
 
-Handlers invalidate caches and keep a receipt. They never rebuild order state
-from payloads: order data is always read back from Shopify.
+## Environments
 
-## Storage
+`APP_ENV` (or Vercel's environment) names the deployment: `development`,
+`staging`, `production`. Each has its own `DATABASE_URL`, Stripe keys and
+secrets. The admin shows the environment in a banner on every screen — red only
+for production. Staging uses Stripe **test** keys; orders paid in test mode are
+flagged `test` and excluded from reports.
 
-One `DocumentStore` interface, three adapters:
+## API map
 
-| Adapter | When | Durable |
-| ------- | ---- | ------- |
-| KV (Vercel KV / Upstash Redis REST) | `KV_REST_API_URL` + `KV_REST_API_TOKEN` set | Yes |
-| File (`./.data`) | A server or a laptop | Yes, on that machine |
-| File (`/tmp`) | Vercel without KV | **No** — admin Settings says so in plain words |
-
-A relational database was considered and not added: nothing stored here is
-relational commerce data, and a KV store is one click on the existing Vercel
-deployment path.
+| Route | Purpose | Guard |
+| --- | --- | --- |
+| `POST /api/cart/resolve` | Price a cart from identities | Public, server-priced |
+| `POST /api/checkout` | Create a checkout, reserve stock | Same-origin, rate limit |
+| `GET/PATCH/DELETE /api/checkout/session` | Read, update, abandon the checkout | httpOnly cookie, same-origin |
+| `POST /api/checkout/payment` | Raise the payment | httpOnly cookie, same-origin |
+| `GET /api/checkout/status` | Has it become an order? (read-only) | httpOnly cookie |
+| `POST /api/webhooks/stripe` | **Creates orders** | Stripe signature |
+| `GET /api/cron/maintenance` | Release expired holds; consented reminders | Bearer secret |
+| Account server actions | Register, sign in, reset, profile, addresses | Origin check, rate limit, session |
+| Admin server actions | All back-office operations | Staff session, permission, audit |
+| `POST /api/newsletter`, `/waitlist`, `/contact`, `/community/submit` | Public forms | Same-origin, rate limit, honeypot |
 
 ## Migration risks
 
-| Risk | Mitigation |
-| ---- | ---------- |
-| Pointing `infinityclo.ca` at this app breaks checkout links | Checkout uses the permanent `*.myshopify.com` domain by default; a `checkout.` subdomain can be configured later |
-| Lost search rankings | Product URLs are unchanged (`/products/<handle>`); every other legacy path has a permanent redirect; sitemap regenerated |
-| Shopify emails link to the old theme's account pages | Customer accounts stay Shopify-hosted; links keep working |
-| Duplicate marketing email | One list: consent syncs to Shopify; abandoned-checkout email stays a Shopify automation; this app sends none |
-| Rollback | The Shopify theme is untouched. Rollback is a DNS change back to Shopify |
+Detailed in `migration-plan.md`. In short: passwords and saved cards cannot
+move; historical orders arrive as read-only records; stock quantities must come
+from a Shopify inventory export because the public feed only says in or out of
+stock; and the cutover is a DNS change that is reversible until Shopify is
+closed.
 
-## External configuration required
+## Decisions deliberately deferred
 
-Nothing below can be done from this repository; each needs the owner's Shopify
-admin. Full steps are in `launch-checklist.md`.
-
-| Capability | What the owner provides | Variable |
-| ---------- | ----------------------- | -------- |
-| Browse, cart, checkout | Nothing | — |
-| Admin dashboard on real data | A custom app's Admin API token | `SHOPIFY_ADMIN_ACCESS_TOKEN` |
-| Customer sign-in on this site | Customer Account API client (Headless channel) | `SHOPIFY_CUSTOMER_ACCOUNT_CLIENT_ID` |
-| Instant catalogue updates, order events | Webhook subscriptions + signing secret | `SHOPIFY_WEBHOOK_SECRET` |
-| Persistent admin data on Vercel | A KV store | `KV_REST_API_URL`, `KV_REST_API_TOKEN` |
-| Staff sign-in | Run `npm run admin:setup` | `ADMIN_OWNER_EMAIL`, `ADMIN_OWNER_PASSWORD_HASH`, `SESSION_SECRET` |
-| Contact form email | A Resend account (optional) | `RESEND_API_KEY`, `CONTACT_TO_EMAIL`, `EMAIL_FROM` |
+| Topic | Current | Revisit when |
+| --- | --- | --- |
+| Media storage | Product photos are files in the repository | The owner needs to upload photos from the admin — add object storage (R2/S3) |
+| Tax service | Own rate table | Shipping outside Canada |
+| Search | In-process scoring | The catalogue passes a few hundred products |
+| Multi-location stock | One stock location | A second warehouse or a retail location |
+| Gift cards, store credit | Not built | Asked for |

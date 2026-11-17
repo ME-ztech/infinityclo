@@ -38,9 +38,9 @@ export default async function AdminOfferPage({ params, searchParams }: { params:
   const problems = validateOffer(offer);
 
   let usage: number | null = null;
-  if (offer.shopifyDiscountId && gateway) {
+  if (offer.discountId && gateway) {
     try {
-      usage = await gateway.discountUsage(offer.shopifyDiscountId, offer.method);
+      usage = await gateway.discountUsage(offer.discountId, offer.method);
     } catch {
       usage = null;
     }
@@ -77,7 +77,7 @@ export default async function AdminOfferPage({ params, searchParams }: { params:
           <div>
             <dt className="text-xs font-semibold text-neutral-600 uppercase">Times used</dt>
             <dd data-testid="offer-usage">
-              {offer.shopifyDiscountId ? (usage === null ? 'Unavailable' : `${usage} order${usage === 1 ? '' : 's'}`) : 'Not activated yet'}
+              {offer.discountId ? (usage === null ? 'Unavailable' : `${usage} order${usage === 1 ? '' : 's'}`) : 'Not activated yet'}
             </dd>
           </div>
           <div>

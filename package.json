@@ -21,7 +21,10 @@
     "db:migrate": "tsx --conditions=react-server scripts/db.ts migrate",
     "db:seed": "tsx --conditions=react-server scripts/db.ts seed",
     "db:status": "tsx --conditions=react-server scripts/db.ts status",
-    "db:inventory": "tsx --conditions=react-server scripts/db.ts inventory"
+    "db:inventory": "tsx --conditions=react-server scripts/db.ts inventory",
+    "migrate:customers": "tsx --conditions=react-server scripts/db.ts customers",
+    "migrate:orders": "tsx --conditions=react-server scripts/db.ts orders",
+    "migrate:reconcile": "tsx --conditions=react-server scripts/db.ts reconcile"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.5.16",

@@ -48,7 +48,7 @@ const offer = (overrides: Partial<Offer> = {}): Offer => ({
   combinesWith: { productDiscounts: false, orderDiscounts: false, shippingDiscounts: true },
   showOnStorefront: false,
   marginCheckedBy: 'owner@example.com',
-  shopifyDiscountId: null,
+  discountId: null,
   sandbox: false,
   internalNote: '',
   createdAt: '2026-11-01T00:00:00.000Z',

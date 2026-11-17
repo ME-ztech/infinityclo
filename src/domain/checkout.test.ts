@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { buildCheckoutUrl, checkoutAvailability } from './checkout';
+import { checkoutAvailability } from './checkout';
 import { money } from './money';
 import type { Cart, CartLine } from './types';
 
@@ -56,68 +56,5 @@ describe('checkoutAvailability', () => {
         reason: 'items_unavailable',
       });
     }
-  });
-});
-
-describe('buildCheckoutUrl', () => {
-  const checkoutDomain = 'example.myshopify.com';
-
-  it('builds a Shopify cart permalink from variant ids and quantities', () => {
-    const url = buildCheckoutUrl({
-      checkoutDomain,
-      lines: [
-        { variantId: '51497122169052', quantity: 2 },
-        { variantId: '51496288223452', quantity: 1 },
-      ],
-    });
-    expect(url).toBe('https://example.myshopify.com/cart/51497122169052:2,51496288223452:1');
-  });
-
-  it('merges repeated variants so no quantity is lost', () => {
-    const url = buildCheckoutUrl({
-      checkoutDomain,
-      lines: [
-        { variantId: '51497122169052', quantity: 1 },
-        { variantId: '51497122169052', quantity: 3 },
-      ],
-    });
-    expect(url).toBe('https://example.myshopify.com/cart/51497122169052:4');
-  });
-
-  it('carries a well-formed discount code and drops a malformed one', () => {
-    const lines = [{ variantId: '51497122169052', quantity: 1 }];
-    expect(buildCheckoutUrl({ checkoutDomain, lines, discountCode: 'TROOP10' })).toContain(
-      '?discount=TROOP10',
-    );
-    expect(buildCheckoutUrl({ checkoutDomain, lines, discountCode: 'bad code&x=1' })).not.toContain(
-      'discount',
-    );
-  });
-
-  it('throws on anything that is not a numeric variant id', () => {
-    expect(() =>
-      buildCheckoutUrl({ checkoutDomain, lines: [{ variantId: '1:99,2', quantity: 1 }] }),
-    ).toThrow(/variant id/);
-    expect(() =>
-      buildCheckoutUrl({ checkoutDomain, lines: [{ variantId: 'v-m', quantity: 1 }] }),
-    ).toThrow(/variant id/);
-  });
-
-  it('throws on a non-positive or absurd quantity', () => {
-    for (const quantity of [0, -1, 1.5, 100]) {
-      expect(() =>
-        buildCheckoutUrl({ checkoutDomain, lines: [{ variantId: '51497122169052', quantity }] }),
-      ).toThrow(/Quantity/);
-    }
-  });
-
-  it('throws on an empty cart or an invalid host', () => {
-    expect(() => buildCheckoutUrl({ checkoutDomain, lines: [] })).toThrow(/empty/);
-    expect(() =>
-      buildCheckoutUrl({
-        checkoutDomain: 'evil.example/path?x=',
-        lines: [{ variantId: '51497122169052', quantity: 1 }],
-      }),
-    ).toThrow(/host/);
   });
 });

@@ -41,7 +41,7 @@ function offer(overrides: Partial<Offer> = {}): Offer {
     id: 'off_1',
     status: 'live',
     marginCheckedBy: 'owner@example.com',
-    shopifyDiscountId: 'gid://shopify/DiscountCodeNode/1',
+    discountId: 'gid://shopify/DiscountCodeNode/1',
     sandbox: false,
     createdAt: '2026-11-01T00:00:00.000Z',
     updatedAt: '2026-11-01T00:00:00.000Z',

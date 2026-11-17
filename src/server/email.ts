@@ -1,5 +1,5 @@
 /**
- * Outbound email — contact-form routing only.
+ * Outbound email — contact-form routing to the team inbox.
  *
  * Order confirmations, shipping notifications and login emails are sent by
  * Shopify. This module sends exactly one kind of message: a copy of a support

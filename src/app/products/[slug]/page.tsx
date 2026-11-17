@@ -15,7 +15,7 @@ import { getProductPresentation, recommendProducts } from '@/server/storefront';
 export const revalidate = 60;
 
 /**
- * A product published in Shopify after the last deployment has no pre-rendered
+ * A product published in the admin after the last deployment has no pre-rendered
  * page. `dynamicParams` lets it render on first request instead of 404ing.
  */
 export const dynamicParams = true;

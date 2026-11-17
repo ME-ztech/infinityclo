@@ -4,7 +4,7 @@
  * Cart totals, shared by the slide-out cart and the cart page.
  *
  * Only the subtotal is a known figure. Shipping, tax and any discount are
- * decided by Shopify checkout, so they are described rather than estimated — the
+ * computed by the server at checkout, so they are described rather than estimated — the
  * one exception is a live automatic offer, whose saving is shown clearly labelled
  * as an estimate that checkout confirms.
  */
