@@ -55,7 +55,7 @@ export default async function AdminOrdersPage({ searchParams }: { searchParams: 
           gateway ? (
             <>
               {can(session.role, 'orders.export') && (
-                <LinkButton href={`/api/admin/export/orders${exportQuery ? `?${exportQuery}` : ''}`} external testId="orders-export">Export CSV</LinkButton>
+                <LinkButton href={`/admin/orders/export${exportQuery ? `?${exportQuery}` : ''}`} external testId="orders-export">Export CSV</LinkButton>
               )}
               {gateway.mode === 'sandbox' && can(session.role, 'orders.edit') && (
                 <form action={createTestOrderAction}>

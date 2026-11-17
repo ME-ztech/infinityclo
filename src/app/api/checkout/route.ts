@@ -12,7 +12,7 @@ import { parsePersistedCartValue } from '@/lib/cart/storage';
 import { CHECKOUT_ENABLED } from '@/lib/site';
 import { CheckoutError, createCheckout, updateCheckout } from '@/server/commerce/checkout';
 import { InsufficientStockError } from '@/server/commerce/inventory';
-import { checkoutReadiness } from '@/server/commerce/service';
+import { checkoutReadiness, refreshAvailability } from '@/server/commerce/service';
 import { currentCustomer, setCheckoutCookie } from '@/server/commerce/session';
 import { clientAddress, isSameOrigin, rateLimit } from '@/server/security';
 
@@ -49,7 +49,7 @@ export async function POST(request: Request): Promise<NextResponse> {
   const customer = await currentCustomer();
 
   try {
-    const { token } = await createCheckout({
+    const { token, checkout } = await createCheckout({
       lines: persisted.lines.map((line) => ({ variantId: line.variantId, quantity: line.quantity })),
       customerId: customer?.id ?? null,
       email: customer?.email ?? null,
@@ -58,6 +58,7 @@ export async function POST(request: Request): Promise<NextResponse> {
       await updateCheckout(token, { discountCode: body.discountCode });
     }
     await setCheckoutCookie(token);
+    refreshAvailability(checkout.lines.map((line) => line.productHandle));
     return NextResponse.json({ url: '/checkout' });
   } catch (error) {
     if (error instanceof InsufficientStockError) {

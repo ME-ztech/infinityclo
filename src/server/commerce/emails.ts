@@ -50,6 +50,19 @@ const headerSafe = (value: string): string => value.replace(/[\r\n]+/g, ' ').sli
 
 export async function sendEmail(email: OutboundEmail, fetcher: typeof fetch = fetch): Promise<boolean> {
   if (globalEmail.__infnityEmailSender) return globalEmail.__infnityEmailSender(email);
+
+  // Browser tests read mail from a file instead of an inbox. Only honoured
+  // outside production or in the E2E harness's explicitly marked build.
+  const outbox = process.env.INFNITY_EMAIL_OUTBOX;
+  if (outbox && (!config.isProduction || process.env.INFNITY_E2E === '1')) {
+    const { appendFile, mkdir } = await import('node:fs/promises');
+    const { dirname, resolve } = await import('node:path');
+    const file = resolve(process.cwd(), outbox);
+    await mkdir(dirname(file), { recursive: true });
+    await appendFile(file, `${JSON.stringify({ to: email.to, subject: email.subject, text: email.text })}\n`);
+    return true;
+  }
+
   const { resendKey, from } = config.email;
   if (!resendKey || !from) {
     if (!config.isProduction) {

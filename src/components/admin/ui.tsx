@@ -293,33 +293,23 @@ export function Stat({ label, value, note, testId }: { label: string; value: Rea
   );
 }
 
-/** Shown in place of a commerce module when no Shopify Admin token is configured. */
+/** Shown in place of a commerce module when no commerce database is configured. */
 export function Disconnected({ module, scopes }: { module: string; scopes: readonly string[] }) {
   return (
     <div className="border border-amber-600 bg-amber-50 p-5" data-testid="disconnected">
-      <h2 className="text-sm font-black text-amber-950 uppercase">{module} needs the Shopify Admin API</h2>
+      <h2 className="text-sm font-black text-amber-950 uppercase">{module} needs the commerce database</h2>
       <p className="mt-2 max-w-3xl text-sm leading-relaxed text-amber-950">
-        Shopify is the system of record for this data, and no Admin API token is configured, so nothing is shown here —
-        this dashboard does not invent commerce data. To connect it:
+        Products, stock, orders and customers live in INFNITY’s own database, and none is configured for this
+        deployment, so nothing is shown here — this dashboard does not invent commerce data. To connect it:
       </p>
       <ol className="mt-3 max-w-3xl list-decimal space-y-1 pl-5 text-sm leading-relaxed text-amber-950">
-        <li>In Shopify admin, go to Settings → Apps and sales channels → Develop apps, and create a custom app.</li>
-        <li>
-          Grant these Admin API scopes:
-          <ul className="mt-1 list-disc pl-5 font-mono text-xs">
-            {scopes.map((scope) => (
-              <li key={scope}>{scope}</li>
-            ))}
-          </ul>
-        </li>
-        <li>
-          Install the app and set its Admin API access token as <code className="font-mono font-bold">SHOPIFY_ADMIN_ACCESS_TOKEN</code> in
-          this deployment’s environment (never in the repository).
-        </li>
+        {scopes.map((step) => (
+          <li key={step}>{step}</li>
+        ))}
       </ol>
       <p className="mt-3 max-w-3xl text-sm leading-relaxed text-amber-950">
         To learn the dashboard first, run it with <code className="font-mono font-bold">COMMERCE_ADMIN_MODE=sandbox</code>: a
-        clearly labelled local sandbox that never touches the real store.
+        clearly labelled local sandbox that customers never see.
       </p>
     </div>
   );

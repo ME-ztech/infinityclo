@@ -78,12 +78,13 @@ export async function seedDefaultOffers(actor: string): Promise<void> {
 }
 
 /**
- * Turns an offer's eligibility into explicit Shopify product ids.
+ * Turns an offer's eligibility into explicit product ids, and — more usefully —
+ * proves the offer matches something before it can go live.
  *
- * Returns null for "every product". Category scopes and "exclude sale items"
- * have no native equivalent on a basic discount, so they are resolved against
- * the catalogue *as it is at activation*: a product added or put on sale later
- * is not picked up until the offer is paused and reactivated.
+ * Returns null for "every product". The native checkout evaluates eligibility
+ * itself from the stored rule (product handles, category groups, sale items),
+ * so the ids are only consumed by the sandbox; the check that at least one
+ * product matches applies everywhere.
  */
 export async function resolveEligibleProductIds(offer: Offer): Promise<string[] | null> {
   const { scope, productSlugs, categories, excludeSaleItems } = offer.eligibility;
@@ -129,7 +130,7 @@ export async function activateOffer(
   if (offer.status === 'ended') throw new Error('An ended offer cannot be reactivated. Duplicate it as a new draft instead.');
   if (!offer.marginCheckedBy) throw new Error('Record the margin check before activating this offer.');
   if (confirmation !== ACTIVATE_CONFIRMATION) throw new Error(`Type ${ACTIVATE_CONFIRMATION} to confirm.`);
-  if (!gateway) throw new Error('Shopify is not connected, so a discount cannot be created. The offer stays a draft.');
+  if (!gateway) throw new Error('The commerce database is not configured, so a discount cannot be created. The offer stays a draft.');
 
   let discountId = offer.shopifyDiscountId;
   if (discountId) {
@@ -154,7 +155,7 @@ export async function pauseOffer(id: string, session: AdminSession, gateway: Com
   authorise(session, 'offers.activate');
   const offer = await mustGet(id);
   if (offer.status !== 'live') throw new Error('Only a live offer can be paused.');
-  if (!gateway) throw new Error('Shopify is not connected, so the discount cannot be deactivated from here.');
+  if (!gateway) throw new Error('The commerce database is not configured, so the discount cannot be deactivated from here.');
   if (offer.shopifyDiscountId) await gateway.setDiscountActive(offer.shopifyDiscountId, offer.method, false);
   // Pausing invalidates the margin sign-off: reactivation needs a fresh check.
   return saveOffer({ ...offer, status: 'paused', marginCheckedBy: null });
@@ -167,7 +168,7 @@ export async function endOffer(id: string, session: AdminSession, gateway: Comme
   if (offer.status === 'draft') throw new Error('A draft has nothing to end. Delete it instead.');
   if (offer.status === 'ended') return offer;
   if (offer.shopifyDiscountId) {
-    if (!gateway) throw new Error('Shopify is not connected, so the discount cannot be removed from here.');
+    if (!gateway) throw new Error('The commerce database is not configured, so the discount cannot be removed from here.');
     await gateway.deleteDiscount(offer.shopifyDiscountId, offer.method);
   }
   return saveOffer({ ...offer, status: 'ended', shopifyDiscountId: null });

@@ -7,7 +7,7 @@
 import { NextResponse } from 'next/server';
 
 import { CheckoutError, cancelCheckout, getCheckoutByToken, updateCheckout } from '@/server/commerce/checkout';
-import { checkoutView } from '@/server/commerce/service';
+import { checkoutView, refreshAvailability } from '@/server/commerce/service';
 import { checkoutToken, clearCheckoutCookie } from '@/server/commerce/session';
 import { clientAddress, isSameOrigin, rateLimit } from '@/server/security';
 
@@ -65,7 +65,11 @@ export async function PATCH(request: Request): Promise<NextResponse> {
 export async function DELETE(request: Request): Promise<NextResponse> {
   if (!isSameOrigin(request)) return NextResponse.json({ error: 'Cross-site request refused.' }, { status: 403 });
   const token = await checkoutToken();
-  if (token) await cancelCheckout(token);
+  if (token) {
+    const checkout = await getCheckoutByToken(token);
+    await cancelCheckout(token);
+    if (checkout) refreshAvailability(checkout.lines.map((line) => line.productHandle));
+  }
   await clearCheckoutCookie();
   return NextResponse.json({ ok: true });
 }

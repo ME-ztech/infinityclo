@@ -23,7 +23,7 @@ const GUEST_NAV = [
 ];
 
 export const FIELD =
-  'border-line bg-field text-fg placeholder:text-fg-faint h-12 w-full rounded-(--radius-control) border px-3 text-sm ' +
+  'border-field bg-surface text-fg placeholder:text-fg-faint h-12 w-full rounded-(--radius-control) border px-3 text-sm ' +
   'focus:border-fg focus:outline-none';
 export const LABEL = 'text-fg-muted mb-2 block text-[0.68rem] font-semibold tracking-[0.16em] uppercase';
 export const SUBMIT =

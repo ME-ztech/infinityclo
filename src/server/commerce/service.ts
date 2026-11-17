@@ -52,6 +52,21 @@ export async function checkoutReadiness(): Promise<CheckoutReadiness> {
   };
 }
 
+/**
+ * Refreshes the cached pages that show stock for these products. Called
+ * whenever a checkout takes or gives back stock, so a size that just sold out
+ * is struck through on the next page view rather than a minute later.
+ */
+export function refreshAvailability(handles: readonly string[]): void {
+  try {
+    for (const handle of new Set(handles)) revalidatePath(`/products/${handle}`);
+    revalidatePath('/shop');
+    revalidatePath('/');
+  } catch {
+    // Outside a request (tests, scripts) there is no cache to refresh.
+  }
+}
+
 export interface CheckoutView {
   readonly status: Checkout['status'];
   readonly expiresAt: string;

@@ -10,6 +10,7 @@
  * Both steps are idempotent: running this twice sends nothing twice.
  */
 import { and, eq, isNull, lt } from 'drizzle-orm';
+import { revalidatePath } from 'next/cache';
 import { NextResponse } from 'next/server';
 
 import { SITE_URL } from '@/lib/site';
@@ -69,6 +70,8 @@ export async function GET(request: Request): Promise<NextResponse> {
   if (!isDatabaseConfigured()) return NextResponse.json({ error: 'Database not configured.' }, { status: 503 });
 
   const released = await releaseExpiredReservations();
+  // Stock came back on sale: let the cached catalogue pages show it.
+  if (released > 0) revalidatePath('/', 'layout');
   const reminders = await sendRecoveryReminders();
   return NextResponse.json({ releasedReservations: released, recoveryReminders: reminders });
 }

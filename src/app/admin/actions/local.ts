@@ -130,7 +130,7 @@ export async function activateOfferAction(form: FormData): Promise<void> {
     const offer = await activateOffer(id, session, field(form, 'confirm', 20), gateway);
     refreshStorefront();
     return {
-      message: offer.sandbox ? 'Activated in the SANDBOX. No real discount exists and shoppers are unaffected.' : 'Offer is LIVE. The discount now exists in Shopify.',
+      message: offer.sandbox ? 'Activated in the SANDBOX. No real discount exists and shoppers are unaffected.' : 'Offer is LIVE. The discount is now enforced at checkout.',
       detail: `Activated; discount ${offer.shopifyDiscountId ?? 'n/a'}${offer.sandbox ? ' (sandbox)' : ''}.`,
     };
   });
@@ -252,7 +252,7 @@ export async function saveContentAction(form: FormData): Promise<void> {
 
     const emailRaw = field(form, 'contact.email', 254);
     const notes = [
-      rejected ? `${rejected} image link(s) were not saved: images must be on this site or cdn.shopify.com.` : '',
+      rejected ? `${rejected} image link(s) were not saved: images must be hosted on this site.` : '',
       emailRaw && !normaliseEmail(emailRaw) ? 'The contact email was not a valid address and was cleared.' : '',
     ].filter(Boolean);
     return { message: ['Storefront content saved.', ...notes].join(' '), detail: `Homepage content saved (${slides.length} slides, ${lookbook.length} lookbook images).` };
@@ -281,7 +281,7 @@ export async function updateDropAction(form: FormData): Promise<void> {
     if (!internalName) throw new Error('The internal name cannot be empty.');
 
     const image = imageFrom(form, 'image');
-    if (image === 'rejected') throw new Error('The image must be on this site or cdn.shopify.com.');
+    if (image === 'rejected') throw new Error('The image must be hosted on this site.');
     if (image && !image.alt) throw new Error('Describe the image for customers using screen readers.');
 
     const releaseAt = dateTime(form, 'releaseAt');
@@ -319,7 +319,7 @@ export async function transitionDropAction(form: FormData): Promise<void> {
       throw new Error(`A drop cannot move from “${drop.stage}” to “${stage}”.`);
     }
     if ((stage === 'published' || stage === 'sold_out') && !drop.productSlug) {
-      throw new Error('Link the Shopify product (its handle) before marking the drop published.');
+      throw new Error('Link the product (its handle) before marking the drop published.');
     }
     await saveDrop({ ...drop, stage, updatedAt: new Date().toISOString(), updatedBy: session.email });
     refreshStorefront();

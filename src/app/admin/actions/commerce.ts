@@ -5,7 +5,7 @@
  *
  * Each one runs inside `runAction`, which enforces same-origin, the permission,
  * the audit entry and the redirect. The bodies below only validate input and
- * call the gateway — Shopify (or the sandbox) is where the change is persisted.
+ * call the gateway — the INFNITY database (or the sandbox) is where the change is persisted.
  */
 import { revalidatePath, revalidateTag } from 'next/cache';
 
@@ -24,11 +24,11 @@ import {
 import { SandboxAdminGateway } from '@/server/admin/sandbox';
 import { logOrderNote, saveAdminSettings } from '@/server/admin/settings';
 import { saveProductContent } from '@/server/cms';
-import { createTicket } from '@/server/records';
-import { maskEmail } from '@/server/security';
+import { shippedEmail, sendEmail } from '@/server/commerce/emails';
+import { getOrder } from '@/server/commerce/orders';
 
 function need(gateway: CommerceGateway | null): CommerceGateway {
-  if (!gateway) throw new GatewayError('Shopify is not connected, so this change cannot be saved.');
+  if (!gateway) throw new GatewayError('The commerce database is not configured, so this change cannot be saved.');
   return gateway;
 }
 
@@ -263,39 +263,23 @@ export async function fulfillOrderAction(form: FormData): Promise<void> {
     if (trackingUrl && !/^https:\/\/[^\s]+$/i.test(trackingUrl)) throw new GatewayError('The tracking link must start with https://');
     if (trackingUrl && !trackingNumber) throw new GatewayError('Add the tracking number that goes with the tracking link.');
     const notifyCustomer = checked(form, 'notifyCustomer');
-    await need(gateway).fulfillOrder(id, { trackingNumber, trackingCompany: field(form, 'trackingCompany', 60) || null, trackingUrl, notifyCustomer });
+    const backend = need(gateway);
+    await backend.fulfillOrder(id, { trackingNumber, trackingCompany: field(form, 'trackingCompany', 60) || null, trackingUrl, notifyCustomer });
     const summary = trackingNumber ? `Fulfilled with tracking ${trackingNumber}.` : 'Fulfilled without tracking.';
-    await logOrderNote({ orderId: id, by: session.email, text: `${summary}${notifyCustomer ? ' Customer notified by Shopify.' : ''}`, kind: 'fulfilment' });
-    return { message: summary, detail: summary };
-  });
-}
 
-/**
- * Cancellations and refunds move money, so they are not executed here. This
- * records the request for an Owner and points at the order in Shopify, where
- * the supported workflow (restock, refund amounts, notifications) lives.
- */
-export async function requestOrderChangeAction(form: FormData): Promise<void> {
-  const id = field(form, 'id', 80);
-  await runAction({ permission: 'orders.edit', action: 'order.change_request', back: `/admin/orders/${id}#requests`, commerce: true, target: `order:${id}` }, async ({ session }) => {
-    const kind = field(form, 'kind', 20) === 'refund' ? 'refund' : 'cancel';
-    const reason = field(form, 'reason', 1000);
-    if (reason.length < 5) throw new GatewayError('Explain why, so the Owner can decide.');
-    const name = field(form, 'orderName', 40);
-    await logOrderNote({ orderId: id, by: session.email, text: reason, kind: kind === 'refund' ? 'refund_request' : 'cancel_request' });
-    await createTicket({
-      topic: kind === 'refund' ? 'return' : 'order',
-      name: `Staff request (${session.name})`,
-      email: session.email,
-      phone: null,
-      orderNumber: name || id,
-      message: `${kind === 'refund' ? 'REFUND' : 'CANCELLATION'} requested for order ${name || id}.\n\n${reason}`,
-      customerId: null,
-    });
-    return {
-      message: `${kind === 'refund' ? 'Refund' : 'Cancellation'} request recorded in the Inbox. It is completed in Shopify by an Owner.`,
-      detail: `${kind} requested by ${maskEmail(session.email)}.`,
-    };
+    // The shipping email is sent here, once, for the shipment just recorded.
+    let notice = '';
+    if (notifyCustomer && backend.mode === 'native') {
+      const detail = await getOrder(id);
+      const shipment = detail?.fulfillments.at(-1);
+      const sent = detail && shipment && detail.order.email ? await sendEmail(shippedEmail(detail, shipment)) : false;
+      notice = sent ? ' Shipping email sent to the customer.' : ' The shipping email was NOT sent: no email provider is connected.';
+    } else if (notifyCustomer) {
+      notice = ' No email was sent: the sandbox never contacts customers.';
+    }
+    await logOrderNote({ orderId: id, by: session.email, text: `${summary}${notice}`, kind: 'fulfilment' });
+    revalidatePath('/account/orders');
+    return { message: `${summary}${notice}`, detail: summary };
   });
 }
 

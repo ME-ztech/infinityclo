@@ -56,7 +56,15 @@ async function connect(url: string): Promise<Connection> {
     const { PGlite } = await import('@electric-sql/pglite');
     const { drizzle } = await import('drizzle-orm/pglite');
     const { migrate } = await import('drizzle-orm/pglite/migrator');
-    const client = target === 'memory' ? new PGlite() : new PGlite(path.resolve(process.cwd(), target));
+    let client: InstanceType<typeof PGlite>;
+    if (target === 'memory') {
+      client = new PGlite();
+    } else {
+      const directory = path.resolve(process.cwd(), target);
+      const { mkdir } = await import('node:fs/promises');
+      await mkdir(path.dirname(directory), { recursive: true });
+      client = new PGlite(directory);
+    }
     const db = drizzle(client, { schema });
     return {
       db: db as unknown as Database,

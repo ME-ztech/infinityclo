@@ -111,7 +111,10 @@ export async function seedCatalog(source: readonly Product[], actor = 'migration
       }
 
       for (const [position, variant] of product.variants.entries()) {
-        const variantId = newId('var');
+        // Migrated variants keep their legacy id as their id. Carts saved in
+        // customers' browsers before the cutover, and pages rendered from the
+        // snapshot, therefore still point at the right variant afterwards.
+        const variantId = variant.id;
         const soldOut = variant.availability === 'sold_out' || variant.availability === 'archived';
         await tx.insert(productVariants).values({
           id: variantId,

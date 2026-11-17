@@ -135,11 +135,29 @@ export function CheckoutForm({ initial, countries }: Props) {
     }
   }, []);
 
-  async function saveDetails(event: React.FormEvent) {
+  async function saveDetails(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    // Read what is actually in the fields, not only React's copy of it. Browser
+    // autofill, and anything typed before this component finished loading, can
+    // fill an input without firing the change events state depends on.
+    const data = new FormData(event.currentTarget);
+    const value = (name: string): string => String(data.get(name) ?? '').trim();
+    const submitted = {
+      firstName: value('firstName'),
+      lastName: value('lastName'),
+      line1: value('line1'),
+      line2: value('line2'),
+      city: value('city'),
+      province: value('province'),
+      postalCode: value('postalCode'),
+      country: value('country').toUpperCase(),
+      phone: value('phone'),
+    };
+    setEmail(value('email'));
+    setAddress(submitted);
     // Any change to the details invalidates a payment form already on screen.
     setPayment(null);
-    await patch({ email, recoveryConsent: consent, shippingAddress: address });
+    await patch({ email: value('email'), recoveryConsent: data.get('recoveryConsent') === 'on', shippingAddress: submitted });
   }
 
   async function startPayment() {
@@ -224,6 +242,7 @@ export function CheckoutForm({ initial, countries }: Props) {
       </label>
       <input
         id={`co-${name}`}
+        name={name}
         className={FIELD}
         value={address[name]}
         onChange={(event) => setAddress((current) => ({ ...current, [name]: event.target.value }))}
@@ -242,6 +261,7 @@ export function CheckoutForm({ initial, countries }: Props) {
           </label>
           <input
             id="co-email"
+            name="email"
             type="email"
             autoComplete="email"
             required
@@ -252,6 +272,7 @@ export function CheckoutForm({ initial, countries }: Props) {
           <label className="text-fg-muted mt-4 flex items-start gap-3 text-sm leading-snug">
             <input
               type="checkbox"
+              name="recoveryConsent"
               className="mt-1 h-4 w-4"
               checked={consent}
               onChange={(event) => setConsent(event.target.checked)}
@@ -275,6 +296,7 @@ export function CheckoutForm({ initial, countries }: Props) {
               {anywhere ? (
                 <input
                   id="co-country"
+                  name="country"
                   className={FIELD}
                   maxLength={2}
                   placeholder="CA"
@@ -286,6 +308,7 @@ export function CheckoutForm({ initial, countries }: Props) {
               ) : (
                 <select
                   id="co-country"
+                  name="country"
                   className={FIELD}
                   autoComplete="country"
                   value={address.country}
@@ -311,6 +334,7 @@ export function CheckoutForm({ initial, countries }: Props) {
               {address.country === 'CA' ? (
                 <select
                   id="co-province"
+                  name="province"
                   className={FIELD}
                   autoComplete="address-level1"
                   value={address.province}
@@ -326,6 +350,7 @@ export function CheckoutForm({ initial, countries }: Props) {
               ) : (
                 <input
                   id="co-province"
+                  name="province"
                   className={FIELD}
                   autoComplete="address-level1"
                   value={address.province}

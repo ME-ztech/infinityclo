@@ -38,7 +38,7 @@ export interface OrderNoteEntry {
   readonly at: string;
   readonly by: string;
   readonly text: string;
-  readonly kind: 'note' | 'fulfilment' | 'cancel_request' | 'refund_request';
+  readonly kind: 'note' | 'fulfilment' | 'cancel_request' | 'refund_request' | 'refund' | 'cancel' | 'delivered';
 }
 
 export async function logOrderNote(entry: Omit<OrderNoteEntry, 'id' | 'at'>): Promise<void> {
