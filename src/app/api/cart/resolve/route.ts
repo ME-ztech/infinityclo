@@ -7,7 +7,12 @@
  */
 import { NextResponse } from 'next/server';
 
+import { catalogRepository } from '@/data';
+import { primaryMedia, fromPrice, isSoldOut } from '@/domain/product';
+import { estimatedTotalSaving, previewOffers } from '@/domain/promotions';
 import { resolveCart } from '@/lib/cart/resolve';
+import { getSettings } from '@/server/content/cms';
+import { livePromotions } from '@/server/promotions';
 import type { PersistedCart, PersistedLine } from '@/lib/cart/storage';
 
 const MAX_LINES = 50;
@@ -43,5 +48,34 @@ export async function POST(request: Request): Promise<NextResponse> {
   };
 
   const { cart, droppedLines } = await resolveCart(persisted);
-  return NextResponse.json({ cart, droppedLines });
+
+  // Estimates from LIVE (Shopify-backed) promotions only; Shopify's checkout is final.
+  const promotions = await livePromotions();
+  const offers = previewOffers(
+    promotions,
+    cart.lines.map((line) => ({
+      productSlug: line.productSlug,
+      quantity: line.quantity,
+      unitPrice: line.unitPrice,
+      compareAtUnitPrice: line.compareAtUnitPrice,
+    })),
+  );
+  const estimatedSavingCents = estimatedTotalSaving(offers, promotions);
+
+  // Cart upsell is an owner switch (off by default); suggestions are links, never auto-added.
+  const settings = await getSettings();
+  let upsell: Array<{ slug: string; name: string; price: unknown; image: { url: string; alt: string } | null }> = [];
+  if (settings.cartUpsellEnabled && cart.lines.length > 0) {
+    const inCart = new Set(cart.lines.map((line) => line.productSlug));
+    const { products } = await catalogRepository.listProducts({ sort: 'featured' });
+    upsell = products
+      .filter((product) => !inCart.has(product.slug) && !isSoldOut(product))
+      .slice(0, 3)
+      .map((product) => {
+        const media = primaryMedia(product);
+        return { slug: product.slug, name: product.name, price: fromPrice(product), image: media ? { url: media.url, alt: media.alt } : null };
+      });
+  }
+
+  return NextResponse.json({ cart, droppedLines, offers, estimatedSavingCents, upsell });
 }

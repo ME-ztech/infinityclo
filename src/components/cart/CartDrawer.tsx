@@ -3,15 +3,14 @@
 import Link from 'next/link';
 
 import { Button, ButtonLink } from '@/components/ui/Button';
-import { formatMoney } from '@/domain/money';
 import { useCart } from '@/lib/cart/CartProvider';
 import { useFocusTrap } from '@/lib/useFocusTrap';
 
 import { CartLineRow } from './CartLineRow';
-import { CheckoutAction } from './CheckoutAction';
+import { CartSummary } from './CartSummary';
 
 export function CartDrawer() {
-  const { cart, isDrawerOpen, closeDrawer, isHydrated, isPending } = useCart();
+  const { cart, isDrawerOpen, closeDrawer, isHydrated, lineCount } = useCart();
   const containerRef = useFocusTrap(isDrawerOpen, closeDrawer);
 
   if (!isDrawerOpen) return null;
@@ -38,7 +37,7 @@ export function CartDrawer() {
       >
         <div className="border-line flex h-16 shrink-0 items-center justify-between border-b px-5">
           <h2 className="text-xs font-semibold tracking-[0.18em] uppercase">
-            Cart{isHydrated && !isEmpty ? ` (${cart.lines.length})` : ''}
+            Cart{isHydrated && !isEmpty ? ` (${lineCount})` : ''}
           </h2>
           <button
             type="button"
@@ -75,21 +74,9 @@ export function CartDrawer() {
             </ul>
 
             <div className="border-line shrink-0 border-t p-5">
-              <div className="flex items-baseline justify-between">
-                <span className="text-xs font-semibold tracking-[0.16em] uppercase">Subtotal</span>
-                <span
-                  data-testid="cart-subtotal"
-                  className="font-display text-fg text-2xl tabular-nums"
-                >
-                  {formatMoney(cart.subtotal)}
-                </span>
-              </div>
-              <p className="text-fg-faint mt-2 text-[0.7rem] leading-relaxed">
-                Shipping and taxes are calculated at checkout.
-              </p>
+              <CartSummary cart={cart} onNavigate={closeDrawer} />
 
-              <div className="mt-5 flex flex-col gap-3">
-                <CheckoutAction cart={cart} disabled={isPending} />
+              <div className="mt-3 flex flex-col gap-3">
                 <Button variant="secondary" size="md" onClick={closeDrawer} fullWidth>
                   Continue shopping
                 </Button>

@@ -1,3 +1,5 @@
+import 'server-only';
+
 /**
  * Resolves persisted cart identities into a fully priced cart.
  *
@@ -10,9 +12,9 @@ import { catalogRepository } from '@/data';
 import { addMoney, money, multiplyMoney } from '@/domain/money';
 import { mediaById, primaryMedia } from '@/domain/product';
 import type { Cart, CartLine, CurrencyCode } from '@/domain/types';
+import { MAX_QUANTITY_PER_LINE } from './limits';
 import type { PersistedCart, PersistedLine } from './storage';
 
-const MAX_QUANTITY_PER_LINE = 10;
 
 export interface ResolvedCart {
   readonly cart: Cart;
@@ -84,4 +86,4 @@ export function cartLineCount(cart: Cart): number {
   return cart.lines.reduce((total, line) => total + line.quantity, 0);
 }
 
-export { MAX_QUANTITY_PER_LINE };
+export { MAX_QUANTITY_PER_LINE } from './limits';

@@ -8,8 +8,12 @@ import { Section, SectionHeader } from '@/components/layout/Section';
 import { TextLink } from '@/components/ui/Button';
 import { TroopGallery } from '@/components/troop/TroopGallery';
 import { catalogRepository, contentRepository } from '@/data';
-import { fromPrice, primaryMedia, productAvailability, relatedProducts } from '@/domain/product';
+import { fromPrice, isSoldOut, primaryMedia, productAvailability, relatedProducts } from '@/domain/product';
+import { previewOffers } from '@/domain/promotions';
+import type { Product } from '@/domain/types';
 import { BRAND, SITE_URL } from '@/lib/site';
+import { getSettings } from '@/server/content/cms';
+import { livePromotions } from '@/server/promotions';
 
 export const revalidate = 3600;
 
@@ -52,13 +56,27 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
   if (!product) notFound();
 
-  const [{ products: catalog }, ugc, sizeGuide] = await Promise.all([
+  const [{ products: catalog }, ugc, sizeGuide, promotions, settings] = await Promise.all([
     catalogRepository.listProducts(),
     contentRepository.getUGCForProduct(product.slug),
     product.sizeGuideId ? catalogRepository.getSizeGuide(product.sizeGuideId) : null,
+    livePromotions(),
+    getSettings(),
   ]);
 
-  const related = relatedProducts(product, catalog, 4);
+  // "You may also like": only pieces a customer can actually buy right now.
+  const related = settings.pdpRecommendationsEnabled
+    ? relatedProducts(product, catalog.filter((candidate) => !isSoldOut(candidate)), 4)
+    : [];
+  const siblings = colourSiblings(product, catalog);
+  const firstVariant = product.variants[0];
+  const offerMessages = firstVariant
+    ? previewOffers(promotions, [
+        { productSlug: product.slug, quantity: 1, unitPrice: firstVariant.price, compareAtUnitPrice: firstVariant.compareAtPrice },
+      ])
+        .filter((offer) => offer.kind !== 'percentage' || offer.qualified || offer.code)
+        .map((offer) => offer.message)
+    : [];
   const price = fromPrice(product);
   const availability = productAvailability(product);
   const media = primaryMedia(product);
@@ -72,7 +90,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     '@type': 'Product',
     name: product.name,
     description: product.description ?? undefined,
-    image: media ? [`${SITE_URL}${media.url}`] : undefined,
+    image: media ? [media.url.startsWith('http') ? media.url : `${SITE_URL}${media.url}`] : undefined,
     brand: { '@type': 'Brand', name: BRAND.name },
     ...(price && {
       offers: {
@@ -116,7 +134,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           </ol>
         </nav>
 
-        <ProductDetailView product={product} sizeGuide={sizeGuide} />
+        <ProductDetailView product={product} sizeGuide={sizeGuide} offerMessages={offerMessages} siblings={siblings} />
       </Section>
 
       {ugc.length > 0 && (
@@ -125,7 +143,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             id="worn-heading"
             eyebrow="The Troop"
             title="Worn by the Troop"
-            action={<TextLink href="/troop">See more</TextLink>}
+            action={<TextLink href="/styled-by-you">See more</TextLink>}
             className="mb-10 md:mb-14"
           />
           <TroopGallery entries={ugc} />
@@ -133,11 +151,11 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       )}
 
       {related.length > 0 && (
-        <Section surface="concrete" aria-labelledby="related-heading">
+        <Section surface="paper" aria-labelledby="related-heading">
           <SectionHeader
             id="related-heading"
             eyebrow="Goes with"
-            title="Complete the look"
+            title="You may also like"
             action={<TextLink href="/shop">Shop all</TextLink>}
             className="mb-10 md:mb-14"
           />
@@ -149,4 +167,18 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       )}
     </>
   );
+}
+
+/**
+ * Some colourways are separate Shopify products with the same title (e.g. the
+ * three Varsity Hoodies). Link them as "Also in" so a customer sees every
+ * colour from any one of them.
+ */
+function colourSiblings(product: Product, catalog: readonly Product[]) {
+  return catalog
+    .filter((candidate) => candidate.slug !== product.slug && candidate.name === product.name)
+    .map((candidate) => {
+      const colour = candidate.variants[0]?.selectedOptions.Color ?? candidate.variants[0]?.selectedOptions.Colour;
+      return { slug: candidate.slug, label: colour ?? candidate.slug.replace(/-/g, ' ') };
+    });
 }

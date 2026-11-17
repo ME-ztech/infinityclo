@@ -86,6 +86,13 @@ async function connect(): Promise<Db> {
     throw new DatabaseNotConfiguredError();
   }
 
+  // `next build` pre-renders in several worker processes at once; an on-disk
+  // PGlite directory must not be opened concurrently. Pages fall back to their
+  // defaults at build time and pick up stored content on the first ISR render.
+  if (process.env.NEXT_PHASE === 'phase-production-build' && pgliteDir() !== 'memory://') {
+    throw new Error('No database during build (PGlite is single-process); using defaults.');
+  }
+
   const dir = pgliteDir();
   const { PGlite } = await import('@electric-sql/pglite');
   const { drizzle } = await import('drizzle-orm/pglite');

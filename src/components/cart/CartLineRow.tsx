@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { formatMoney, isDiscounted, multiplyMoney } from '@/domain/money';
 import type { CartLine } from '@/domain/types';
 import { useCart } from '@/lib/cart/CartProvider';
-import { MAX_QUANTITY_PER_LINE } from '@/lib/cart/resolve';
+import { MAX_QUANTITY_PER_LINE } from '@/lib/cart/limits';
 
 export function CartLineRow({ line }: { line: CartLine }) {
   const { updateQuantity, removeLine, isPending } = useCart();

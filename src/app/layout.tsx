@@ -1,11 +1,15 @@
 import type { Metadata, Viewport } from 'next';
-import { Anton, Archivo } from 'next/font/google';
+import { Archivo, Poppins } from 'next/font/google';
 
 import { CartDrawer } from '@/components/cart/CartDrawer';
+import { AnnouncementBar } from '@/components/layout/AnnouncementBar';
 import { Footer } from '@/components/layout/Footer';
 import { Header } from '@/components/layout/Header';
 import { CartProvider } from '@/lib/cart/CartProvider';
 import { BRAND, SITE_URL } from '@/lib/site';
+import { StoreConfigProvider, type StoreConfig } from '@/lib/store-config';
+import { getCms, getSettings } from '@/server/content/cms';
+import { checkoutMode, isCustomerAccountConfigured, shopifyConfig } from '@/server/shopify/config';
 
 import './globals.css';
 
@@ -13,80 +17,79 @@ const archivo = Archivo({
   subsets: ['latin'],
   variable: '--font-archivo',
   display: 'swap',
-  weight: ['400', '500', '600', '700', '800', '900'],
+  weight: ['400', '500', '600', '700'],
 });
 
-const anton = Anton({
+/** Display face: an OFL stand-in for the live store's ITC Avant Garde Gothic Bold Oblique. */
+const poppins = Poppins({
   subsets: ['latin'],
-  variable: '--font-anton',
+  variable: '--font-poppins',
   display: 'swap',
-  weight: '400',
+  weight: ['700', '800'],
+  style: ['normal', 'italic'],
 });
+
+const DESCRIPTION =
+  'Infnity.clo is where raw identity meets untouchable design. Built for the ones who don’t fold, don’t follow — and never settle.';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: {
-    default: `${BRAND.name} — ${BRAND.tagline}`,
-    template: `%s — ${BRAND.name}`,
-  },
-  description:
-    'INFNITY is a streetwear label built on raw identity and heavyweight construction. Be the Statement.',
+  title: { default: `${BRAND.name} — ${BRAND.tagline}`, template: `%s — ${BRAND.name}` },
+  description: DESCRIPTION,
   applicationName: BRAND.name,
+  icons: { icon: '/brand/infnity-mark.png' },
   openGraph: {
     type: 'website',
     siteName: BRAND.name,
     title: `${BRAND.name} — ${BRAND.tagline}`,
-    description: 'Streetwear built on raw identity and heavyweight construction.',
+    description: DESCRIPTION,
     url: SITE_URL,
     locale: 'en_CA',
   },
-  twitter: {
-    card: 'summary_large_image',
-    title: `${BRAND.name} — ${BRAND.tagline}`,
-    description: 'Streetwear built on raw identity and heavyweight construction.',
-  },
-  robots: { index: true, follow: true },
+  twitter: { card: 'summary_large_image', title: `${BRAND.name} — ${BRAND.tagline}`, description: DESCRIPTION },
+  robots: { index: process.env.NEXT_PUBLIC_NOINDEX !== 'true', follow: true },
   alternates: { canonical: '/' },
 };
 
 export const viewport: Viewport = {
-  // Matches the header's bone bar, so iOS tints its chrome to the same material
-  // the page starts on rather than to the black it used to start on.
-  themeColor: '#f6f3ed',
+  themeColor: '#ffffff',
   colorScheme: 'light',
   width: 'device-width',
   initialScale: 1,
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const [settings, announcement] = await Promise.all([getSettings(), getCms('announcement')]);
+  const storeConfig: StoreConfig = {
+    checkoutMode: checkoutMode(),
+    cartUpsellEnabled: settings.cartUpsellEnabled,
+    nativeAccounts: isCustomerAccountConfigured(),
+    accountUrl: isCustomerAccountConfigured() ? '/account' : shopifyConfig().hostedAccountUrl,
+  };
+
   return (
-    <html lang="en-CA" className={`${archivo.variable} ${anton.variable}`}>
-      {/* `data-surface` on the body is the root of the token cascade: every
-          section overrides it, and anything outside a section — drawers,
-          dialogs, the skip link — resolves against bone. */}
+    <html lang="en-CA" className={`${archivo.variable} ${poppins.variable}`}>
       <head>
-        {/* Scroll reveals start at opacity 0 and are brought in by an
-            IntersectionObserver. With scripting off that observer never runs,
-            which would leave the manifesto and the campaign sections as blank
-            rectangles. The animation is an enhancement; the content is not. */}
         <noscript>
           <style>{'[data-reveal]{opacity:1!important;transform:none!important}'}</style>
         </noscript>
       </head>
-      <body data-surface="bone" className="bg-surface text-fg min-h-dvh antialiased">
-        <CartProvider>
-          <a
-            href="#main"
-            className="sr-only-focusable bg-signal text-paper absolute top-2 left-2 z-[100] px-4 py-2 text-sm font-semibold"
-          >
-            Skip to content
-          </a>
-          {/* The preview notice is rendered inside Header's fixed stack. */}
-          <Header />
-          <main id="main">{children}</main>
-          <Footer />
-          <CartDrawer />
-        </CartProvider>
+      <body data-surface="paper" className="bg-surface text-fg min-h-dvh antialiased">
+        <StoreConfigProvider value={storeConfig}>
+          <CartProvider>
+            <a
+              href="#main"
+              className="sr-only-focusable bg-fg text-paper absolute top-2 left-2 z-[100] px-4 py-2 text-sm font-semibold"
+            >
+              Skip to content
+            </a>
+            <AnnouncementBar content={announcement.value} />
+            <Header />
+            <main id="main">{children}</main>
+            <Footer settings={settings} />
+            <CartDrawer />
+          </CartProvider>
+        </StoreConfigProvider>
       </body>
     </html>
   );

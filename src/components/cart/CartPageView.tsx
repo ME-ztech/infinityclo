@@ -1,14 +1,13 @@
 'use client';
 
 import { CartLineRow } from '@/components/cart/CartLineRow';
-import { CheckoutAction } from '@/components/cart/CheckoutAction';
+import { CartSummary } from '@/components/cart/CartSummary';
 import { ButtonLink } from '@/components/ui/Button';
 import { EmptyState } from '@/components/ui/EmptyState';
-import { formatMoney } from '@/domain/money';
 import { useCart } from '@/lib/cart/CartProvider';
 
 export function CartPageView() {
-  const { cart, isHydrated, isPending } = useCart();
+  const { cart, isHydrated } = useCart();
 
   if (!isHydrated) {
     return (
@@ -49,19 +48,11 @@ export function CartPageView() {
         <div className="border-line border p-6">
           <h2 className="text-xs font-semibold tracking-[0.18em] uppercase">Summary</h2>
 
-          <div className="mt-6 flex items-baseline justify-between">
-            <span className="text-fg-muted text-sm">Subtotal</span>
-            <span className="font-display text-fg text-2xl tabular-nums">
-              {formatMoney(cart.subtotal)}
-            </span>
+          <div className="mt-6">
+            <CartSummary cart={cart} />
           </div>
 
-          <p className="text-fg-faint mt-3 text-[0.7rem] leading-relaxed">
-            Shipping and taxes are calculated at checkout.
-          </p>
-
-          <div className="mt-6 flex flex-col gap-3">
-            <CheckoutAction cart={cart} disabled={isPending} />
+          <div className="mt-3 flex flex-col gap-3">
             <ButtonLink href="/shop" variant="secondary" size="md" fullWidth>
               Continue shopping
             </ButtonLink>

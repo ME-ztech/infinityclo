@@ -21,7 +21,9 @@
  */
 import { useEffect, useMemo, useRef, useState } from 'react';
 
-import { ProductDetails } from '@/components/product/ProductDetails';
+import Link from 'next/link';
+
+import { ProductDescription, ProductDetails } from '@/components/product/ProductDetails';
 import { SizeGuideDialog } from '@/components/product/SizeGuideDialog';
 import { Button } from '@/components/ui/Button';
 import { discountPercent, formatMoney, isDiscounted } from '@/domain/money';
@@ -36,9 +38,13 @@ interface PanelProps {
   product: Product;
   sizeGuide: SizeGuide | null;
   onActiveMediaChange?: (mediaId: string | null) => void;
+  /** Live, Shopify-backed offers that apply to this piece (never drafts). */
+  offerMessages?: readonly string[];
+  /** Other colourways sold as separate products with the same name. */
+  siblings?: ReadonlyArray<{ slug: string; label: string }>;
 }
 
-export function ProductPurchasePanel({ product, sizeGuide, onActiveMediaChange }: PanelProps) {
+export function ProductPurchasePanel({ product, sizeGuide, onActiveMediaChange, offerMessages = [], siblings = [] }: PanelProps) {
   const { addLine, isPending } = useCart();
   const wishlist = useWishlist();
 
@@ -99,7 +105,7 @@ export function ProductPurchasePanel({ product, sizeGuide, onActiveMediaChange }
       quantity: 1,
       productName: product.name,
     });
-    setFeedback('Added to bag');
+    setFeedback('Added to cart');
     window.setTimeout(() => setFeedback(null), 2500);
   }
 
@@ -142,6 +148,33 @@ export function ProductPurchasePanel({ product, sizeGuide, onActiveMediaChange }
         )}
       </div>
 
+      {siblings.length > 0 && (
+        <div className="mt-6">
+          <p className="text-fg-faint mb-3 text-[0.66rem] font-semibold tracking-[0.24em] uppercase">Also in</p>
+          <div className="flex flex-wrap gap-2">
+            {siblings.map((sibling) => (
+              <Link
+                key={sibling.slug}
+                href={`/products/${sibling.slug}`}
+                className="border-line hover:border-fg text-fg flex h-11 items-center border px-4 text-[0.78rem] font-semibold tracking-[0.06em] uppercase transition-colors"
+              >
+                {sibling.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {offerMessages.length > 0 && (
+        <ul className="mt-6 flex flex-col gap-1.5" data-testid="pdp-offers">
+          {offerMessages.map((message) => (
+            <li key={message} className="border-fg text-fg border-l-2 pl-3 text-xs font-medium">
+              {message}
+            </li>
+          ))}
+        </ul>
+      )}
+
       {/* ── Options ─────────────────────────────────────────────────── */}
       <div className="mt-9 flex flex-col gap-8">
         {product.options.map((option) => {
@@ -158,15 +191,24 @@ export function ProductPurchasePanel({ product, sizeGuide, onActiveMediaChange }
                   )}
                 </legend>
 
-                {isSize && sizeGuide && (
-                  <button
-                    type="button"
-                    onClick={() => setIsSizeGuideOpen(true)}
-                    className="text-fg-muted hover:text-fg text-[0.66rem] tracking-[0.14em] uppercase underline underline-offset-4 transition-colors"
-                  >
-                    Size guide
-                  </button>
-                )}
+                {isSize &&
+                  (sizeGuide ? (
+                    <button
+                      type="button"
+                      onClick={() => setIsSizeGuideOpen(true)}
+                      data-testid="size-guide-button"
+                      className="text-fg-muted hover:text-fg min-h-11 text-[0.7rem] tracking-[0.14em] uppercase underline underline-offset-4 transition-colors"
+                    >
+                      Size guide
+                    </button>
+                  ) : (
+                    <Link
+                      href="/size-guide"
+                      className="text-fg-muted hover:text-fg flex min-h-11 items-center text-[0.7rem] tracking-[0.14em] uppercase underline underline-offset-4 transition-colors"
+                    >
+                      Size help
+                    </Link>
+                  ))}
               </div>
 
               <div className="flex flex-wrap gap-2">
@@ -237,7 +279,11 @@ export function ProductPurchasePanel({ product, sizeGuide, onActiveMediaChange }
         ) : null}
       </div>
 
-      <div ref={inlineButtonRef} className="mt-4 flex items-stretch gap-2.5">
+      <div className="mt-6">
+        <ProductDetails product={product} />
+      </div>
+
+      <div ref={inlineButtonRef} className="mt-8 flex items-stretch gap-2.5">
         <Button
           variant="primary"
           size="lg"
@@ -252,7 +298,7 @@ export function ProductPurchasePanel({ product, sizeGuide, onActiveMediaChange }
               : 'Sold out'
             : isPending
               ? 'Adding…'
-              : 'Add to bag'}
+              : `Add to cart${price ? ` — ${formatMoney(price)}` : ''}`}
         </Button>
 
         <button
@@ -278,15 +324,22 @@ export function ProductPurchasePanel({ product, sizeGuide, onActiveMediaChange }
         </button>
       </div>
 
+      <Link
+        href="/shop"
+        className="border-fg text-fg hover:bg-fg hover:text-paper mt-2.5 flex h-14 items-center justify-center border text-[0.78rem] font-semibold tracking-[0.2em] uppercase transition-colors"
+      >
+        Continue shopping →
+      </Link>
+
       <p role="status" className="text-fg-muted mt-3 min-h-4 text-center text-xs">
         {feedback}
       </p>
 
-      <ProductDetails product={product} />
+      <ProductDescription product={product} />
 
       {/* ── Sticky mobile purchase bar ──────────────────────────────── */}
       <div
-        data-surface="bone"
+        data-surface="paper"
         className={cn(
           'bg-surface/95 border-line sticky bottom-0 z-30 -mx-(--spacing-gutter) mt-8 border-t px-(--spacing-gutter) py-3 backdrop-blur-md transition-opacity duration-200 md:hidden',
           isInlineButtonVisible ? 'pointer-events-none opacity-0' : 'opacity-100',
@@ -314,7 +367,7 @@ export function ProductPurchasePanel({ product, sizeGuide, onActiveMediaChange }
             onClick={() => void handleAdd()}
             className="shrink-0"
           >
-            {isSoldOut ? 'Sold out' : 'Add'}
+            {isSoldOut ? 'Sold out' : 'Add to cart'}
           </Button>
         </div>
       </div>

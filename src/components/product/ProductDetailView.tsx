@@ -33,9 +33,13 @@ import type { Product, SizeGuide } from '@/domain/types';
 export function ProductDetailView({
   product,
   sizeGuide,
+  offerMessages,
+  siblings,
 }: {
   product: Product;
   sizeGuide: SizeGuide | null;
+  offerMessages?: readonly string[];
+  siblings?: ReadonlyArray<{ slug: string; label: string }>;
 }) {
   const [activeMediaId, setActiveMediaId] = useState<string | null>(null);
   const media = orderedMedia(product);
@@ -55,6 +59,8 @@ export function ProductDetailView({
           product={product}
           sizeGuide={sizeGuide}
           onActiveMediaChange={handleActiveMediaChange}
+          offerMessages={offerMessages}
+          siblings={siblings}
         />
       </div>
     </div>

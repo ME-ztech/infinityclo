@@ -1,103 +1,224 @@
-import { MediaFrame } from '@/components/ui/MediaFrame';
-import { cn } from '@/lib/cn';
-import { ButtonLink } from '@/components/ui/Button';
-import type { ProductMedia } from '@/domain/types';
+'use client';
 
 /**
- * Homepage hero.
+ * Campaign hero — a slideshow composed from the owner's own photography.
  *
- * 1.0 put white type over a black void and, with no campaign asset imported, the
- * first screen of the storefront was a black rectangle. 1.1 inverts it: the hero
- * is bone, the type is ink, and a single red rule marks the drop. Arriving on
- * light and dropping into the white product showroom is what makes the
- * hero → products transition read as walking through a door rather than
- * scrolling a page.
+ * Composition follows the areas the owner circled on the reference screenshot:
+ * the brand mark top-centre (the header sits translucent over the hero on the
+ * homepage), and a stacked list of statements bottom-left with the active one
+ * lit — "Be the Statement" above it, as the notes ask — then the call to
+ * action. A pause control sits bottom-right.
  *
- * Two compositions, chosen by whether campaign photography exists:
- *
- * - **With a photograph**: an asymmetric split. Type owns the left, the
- *   photograph runs off the right edge of the glass. On a phone the type leads
- *   and the photograph becomes a full-bleed band beneath it — never a scrim over
- *   the image, which is where legibility goes to die on a bright packshot.
- * - **Without one**: the type *is* the composition. Set at full statement scale
- *   with a red rule and the drop line, it reads as an intentional typographic
- *   landing page rather than as a photograph that failed to load.
- *
- * The second case is not hypothetical — it is what ships until the catalogue
- * import runs — so it is designed, not degraded.
+ * - Wide screens show the slide's lineup (up to three studio shots side by
+ *   side); phones show one purpose-chosen shot cropped on its focal point.
+ * - Only the first slide's image is requested up front (and preloaded); the
+ *   rest load once the page is idle.
+ * - Autoplay stops for reduced-motion users, on hover/focus, and whenever the
+ *   pause control is used. Every slide is reachable with the keyboard.
  */
-export function Hero({ media }: { media: ProductMedia | null }) {
+import Image from 'next/image';
+import Link from 'next/link';
+import { useCallback, useEffect, useRef, useState } from 'react';
+
+import type { HeroContent, HeroSlide } from '@/domain/cms';
+import { cn } from '@/lib/cn';
+
+export function Hero({ content }: { content: HeroContent }) {
+  const slides = content.slides;
+  const [active, setActive] = useState(0);
+  const [isPaused, setIsPaused] = useState(!content.autoplay);
+  const [isInteracting, setIsInteracting] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(false);
+  const [loadRest, setLoadRest] = useState(false);
+  const regionRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const query = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const update = () => setReducedMotion(query.matches);
+    update();
+    query.addEventListener('change', update);
+    return () => query.removeEventListener('change', update);
+  }, []);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setLoadRest(true), 1200);
+    return () => window.clearTimeout(timer);
+  }, []);
+
+  const isPlaying = slides.length > 1 && !isPaused && !reducedMotion && !isInteracting;
+
+  useEffect(() => {
+    if (!isPlaying) return;
+    const timer = window.setInterval(() => setActive((index) => (index + 1) % slides.length), content.intervalSeconds * 1000);
+    return () => window.clearInterval(timer);
+  }, [isPlaying, slides.length, content.intervalSeconds]);
+
+  const goTo = useCallback((index: number) => {
+    setLoadRest(true);
+    setActive(index);
+  }, []);
+
+  const current = slides[active] ?? slides[0]!;
+  const tone = current.tone;
+
   return (
     <section
-      data-surface="bone"
-      className="bg-surface text-fg relative overflow-hidden"
-      aria-labelledby="hero-heading"
+      ref={regionRef}
+      aria-roledescription="carousel"
+      aria-label="INFNITY campaign"
+      data-testid="hero"
+      onMouseEnter={() => setIsInteracting(true)}
+      onMouseLeave={() => setIsInteracting(false)}
+      onFocusCapture={() => setIsInteracting(true)}
+      onBlurCapture={(event) => {
+        if (!regionRef.current?.contains(event.relatedTarget as Node | null)) setIsInteracting(false);
+      }}
+      className="relative -mt-16 h-[max(36rem,calc(100svh-2rem))] w-full overflow-hidden bg-white md:-mt-[4.75rem] md:h-[min(92vh,60rem)]"
     >
-      {/* The split only exists when there is a photograph to put in it. Holding
-          a second column open for an image that never arrives is what produces
-          the half-empty hero; without one, the statement takes the whole
-          canvas, which is a stronger composition anyway. */}
+      {slides.map((slide, index) => (
+        <SlideMedia key={slide.id} slide={slide} index={index} count={slides.length} isActive={index === active} load={index === 0 || loadRest} />
+      ))}
+
+      {/* Legibility wash behind the copy, toned to the photograph. */}
+      <div
+        aria-hidden
+        className={cn(
+          'pointer-events-none absolute inset-x-0 bottom-0 h-[62%] transition-colors duration-700',
+          tone === 'light'
+            ? 'bg-gradient-to-t from-white via-white/75 to-transparent md:from-white/95 md:via-white/40'
+            : 'bg-gradient-to-t from-black/85 via-black/45 to-transparent',
+        )}
+      />
+      {current.overlay > 0 && (
+        <div aria-hidden className={cn('pointer-events-none absolute inset-0', tone === 'light' ? 'bg-white' : 'bg-black')} style={{ opacity: current.overlay / 100 }} />
+      )}
+
       <div
         className={cn(
-          'edge grid items-center gap-10 pt-16 pb-16 md:min-h-[82svh] md:gap-14 md:pt-10 md:pb-24',
-          media && 'md:grid-cols-[1.05fr_0.95fr] md:pr-0',
+          'edge absolute inset-x-0 bottom-0 flex items-end justify-between gap-6 pb-8 md:pb-12',
+          tone === 'light' ? 'text-ink' : 'text-paper',
         )}
       >
-        <div className={media ? 'max-w-xl' : 'max-w-4xl'}>
-          <div className="mb-7 flex items-center gap-4">
-            <span aria-hidden className="bg-signal h-px w-12" />
-            <p className="text-fg-faint text-[0.66rem] font-semibold tracking-[0.32em] uppercase">
-              Infnity
-            </p>
-          </div>
-
-          <h1
-            id="hero-heading"
-            className={cn(
-              'font-display text-statement text-fg oblique text-balance',
-              media ? 'max-w-[11ch]' : 'max-w-[9ch]',
-            )}
-          >
-            Be the Statement
-          </h1>
-
-          {/* The brand's own description of itself, as published on
-              infinityclo.ca. Not a rewrite of it. */}
-          <p className="text-fg-muted mt-7 max-w-md text-[0.95rem] leading-relaxed">
-            Where raw identity meets untouchable design — built for the ones who don&apos;t fold,
-            don&apos;t follow, and never settle.
+        <div className="max-w-xl">
+          <p className="font-display text-[clamp(2.4rem,9vw,5.6rem)] leading-[0.88]" data-testid="hero-slogan">
+            {content.slogan}
           </p>
 
-          {/* Equal-width on a phone so the stacked pair reads as one block
-              instead of a ragged edge; content-width side by side above that. */}
-          <div className="mt-10 grid max-w-sm grid-cols-1 gap-3 sm:flex sm:max-w-none sm:flex-wrap">
-            <ButtonLink href="/shop" variant="primary" size="lg">
-              Shop all pieces
-            </ButtonLink>
-            <ButtonLink href="/shop?sort=newest" variant="secondary" size="lg">
-              New arrivals
-            </ButtonLink>
+          {/* The stacked statements: each one is a slide; the lit one is current. */}
+          <ul className="mt-5 flex flex-col gap-0.5" aria-label="Choose a slide">
+            {slides.map((slide, index) => (
+              <li key={slide.id}>
+                <button
+                  type="button"
+                  onClick={() => goTo(index)}
+                  aria-current={index === active ? 'true' : undefined}
+                  aria-label={`Slide ${index + 1} of ${slides.length}: ${slide.label}`}
+                  className={cn(
+                    'font-display min-h-8 text-left text-[clamp(1rem,3.6vw,1.45rem)] leading-tight transition-opacity duration-300',
+                    index === active ? 'opacity-100' : 'opacity-35 hover:opacity-70',
+                  )}
+                >
+                  {slide.label}
+                </button>
+              </li>
+            ))}
+          </ul>
+
+          <p className="mt-4 max-w-sm text-sm leading-snug font-medium opacity-80" aria-live={isPlaying ? 'off' : 'polite'}>
+            {current.headline}
+          </p>
+
+          <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
+            <Link
+              href={current.ctaHref}
+              data-testid="hero-cta"
+              className={cn(
+                'font-display inline-flex h-13 min-w-40 items-center justify-center px-8 text-[0.82rem] transition-colors',
+                tone === 'light' ? 'bg-ink text-paper hover:bg-signal' : 'bg-paper text-ink hover:bg-signal hover:text-paper',
+              )}
+            >
+              {current.ctaLabel}
+            </Link>
+            <Link
+              href={content.secondaryCtaHref}
+              className="font-display inline-flex min-h-11 items-center text-[0.82rem] underline-offset-4 hover:underline"
+            >
+              {content.secondaryCtaLabel} →
+            </Link>
           </div>
         </div>
 
-        {media ? (
-          /* Runs off the right edge on desktop; a full-bleed band on mobile.
-             `-mx` cancels the section gutter rather than nesting another
-             container, so the image touches the glass exactly. */
-          <div className="-mx-(--spacing-gutter) md:mx-0 md:h-full md:self-stretch">
-            <div data-surface="paper" className="bg-surface h-full">
-              <MediaFrame
-                src={media.url}
-                alt={media.alt}
-                sizes="(min-width: 768px) 48vw, 100vw"
-                priority
-                fallbackLabel="INFNITY"
-                ratioClassName="aspect-[4/5] md:aspect-auto md:h-full md:min-h-[70svh]"
-              />
-            </div>
-          </div>
-        ) : null}
+        {slides.length > 1 && (
+          <button
+            type="button"
+            onClick={() => setIsPaused((paused) => !paused)}
+            aria-pressed={isPaused}
+            aria-label={isPaused ? 'Play slideshow' : 'Pause slideshow'}
+            data-testid="hero-pause"
+            className={cn(
+              'font-display flex h-12 min-w-24 shrink-0 items-center justify-center rounded-full border px-5 text-[0.72rem] transition-colors',
+              tone === 'light' ? 'border-ink/70 hover:bg-ink hover:text-paper' : 'border-paper/70 hover:bg-paper hover:text-ink',
+            )}
+          >
+            {isPaused || reducedMotion ? 'Play' : 'Pause'}
+          </button>
+        )}
       </div>
     </section>
+  );
+}
+
+function SlideMedia({ slide, index, count, isActive, load }: { slide: HeroSlide; index: number; count: number; isActive: boolean; load: boolean }) {
+  const phone = slide.mobileImage ?? slide.images[0]!;
+  const priority = index === 0;
+  return (
+    <div
+      role="group"
+      aria-roledescription="slide"
+      aria-label={`${index + 1} of ${count}: ${slide.label}`}
+      aria-hidden={!isActive}
+      inert={!isActive}
+      className={cn('absolute inset-0 transition-opacity duration-700 ease-out', isActive ? 'opacity-100' : 'opacity-0')}
+    >
+      {load && slide.mobileImage && (
+        <div className="absolute inset-0 md:hidden">
+          <Image
+            src={phone.url}
+            alt={phone.alt}
+            fill
+            priority={priority}
+            sizes="100vw"
+            className="object-cover"
+            style={{ objectPosition: `${phone.focalX}% ${phone.focalY}%` }}
+          />
+        </div>
+      )}
+      {load && (
+        /* One grid for both: on a phone only the first shot shows, full-bleed and
+           cropped on its focal point; on wide screens the full lineup. Rendering
+           the shared first image once means a single preload. */
+        <div
+          className={cn(
+            'absolute inset-0 grid grid-cols-1',
+            slide.mobileImage && 'hidden md:grid',
+            slide.images.length === 2 ? 'md:grid-cols-2' : slide.images.length >= 3 ? 'md:grid-cols-3' : 'md:grid-cols-1',
+          )}
+        >
+          {slide.images.map((image, imageIndex) => (
+            <div key={image.url} className={cn('relative h-full', imageIndex > 0 && 'hidden md:block')}>
+              <Image
+                src={image.url}
+                alt={image.alt}
+                fill
+                priority={priority && imageIndex === 0 && !slide.mobileImage}
+                sizes={imageIndex === 0 ? `(min-width: 768px) ${Math.round(100 / slide.images.length)}vw, 100vw` : `${Math.round(100 / slide.images.length)}vw`}
+                className="object-cover"
+                style={{ objectPosition: `${image.focalX}% ${image.focalY}%` }}
+              />
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }

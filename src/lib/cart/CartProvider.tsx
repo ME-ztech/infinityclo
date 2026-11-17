@@ -25,7 +25,8 @@ import {
 } from 'react';
 
 import { money } from '@/domain/money';
-import type { Cart } from '@/domain/types';
+import type { OfferPreview } from '@/domain/promotions';
+import type { Cart, Money } from '@/domain/types';
 import { track } from '@/lib/analytics';
 import { getServerSnapshot, getSnapshot, setPersistedCart, subscribe } from './store';
 import type { PersistedLine } from './storage';
@@ -46,6 +47,8 @@ export interface CartContextValue {
   readonly isDrawerOpen: boolean;
   /** Identities only — what `/api/checkout` re-prices server-side. */
   readonly persistedLines: readonly PersistedLine[];
+  /** Live-offer estimates and (if enabled) suggestions for the current cart. */
+  readonly extras: CartExtras;
   openDrawer(): void;
   closeDrawer(): void;
   addLine(input: {
@@ -59,17 +62,28 @@ export interface CartContextValue {
   clear(): Promise<void>;
 }
 
+export interface CartExtras {
+  readonly offers: readonly OfferPreview[];
+  readonly estimatedSavingCents: number;
+  readonly upsell: ReadonlyArray<{ slug: string; name: string; price: Money | null; image: { url: string; alt: string } | null }>;
+}
+
+const NO_EXTRAS: CartExtras = { offers: [], estimatedSavingCents: 0, upsell: [] };
+
 const CartContext = createContext<CartContextValue | null>(null);
 
-async function priceCart(lines: readonly PersistedLine[], id: string): Promise<Cart> {
+async function priceCart(lines: readonly PersistedLine[], id: string): Promise<{ cart: Cart; extras: CartExtras }> {
   const response = await fetch('/api/cart/resolve', {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({ id, lines }),
   });
   if (!response.ok) throw new Error(`Cart pricing failed: ${response.status}`);
-  const data = (await response.json()) as { cart: Cart };
-  return data.cart;
+  const data = (await response.json()) as { cart: Cart } & Partial<CartExtras>;
+  return {
+    cart: data.cart,
+    extras: { offers: data.offers ?? [], estimatedSavingCents: data.estimatedSavingCents ?? 0, upsell: data.upsell ?? [] },
+  };
 }
 
 export function CartProvider({ children }: { children: ReactNode }) {
@@ -80,7 +94,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
    * what lets "pricing is in flight" be derived rather than tracked as its own
    * state that can drift out of sync with the request.
    */
-  const [priced, setPriced] = useState<{ cart: Cart; forUpdatedAt: string } | null>(null);
+  const [priced, setPriced] = useState<{ cart: Cart; extras: CartExtras; forUpdatedAt: string } | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   // Guards against a slow earlier response overwriting a newer one.
@@ -100,7 +114,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     void priceCart(persisted.lines, persisted.id)
       .then((next) => {
         if (!cancelled && seq === requestSeq.current) {
-          setPriced({ cart: next, forUpdatedAt: persisted.updatedAt });
+          setPriced({ cart: next.cart, extras: next.extras, forUpdatedAt: persisted.updatedAt });
         }
       })
       .catch(() => {
@@ -213,6 +227,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       isPending,
       isDrawerOpen,
       persistedLines: persisted.lines,
+      extras: persisted.lines.length === 0 ? NO_EXTRAS : (priced?.extras ?? NO_EXTRAS),
       openDrawer,
       closeDrawer,
       addLine,
@@ -231,6 +246,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       lineCount,
       openDrawer,
       persisted.lines,
+      priced?.extras,
       removeLine,
       updateQuantity,
     ],

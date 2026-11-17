@@ -37,3 +37,6 @@ yarn-error.log*
 
 # importer scratch space (raw legacy payloads before normalisation)
 .import-cache/
+
+# local PGlite database
+.data/

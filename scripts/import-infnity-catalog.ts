@@ -37,7 +37,6 @@ import type {
   Product,
   ProductMedia,
   ProductOption,
-  ProductSpecification,
   ProductVariant,
 } from '../src/domain/types';
 import { extractSpecification, htmlToText } from '../src/domain/product-copy';
